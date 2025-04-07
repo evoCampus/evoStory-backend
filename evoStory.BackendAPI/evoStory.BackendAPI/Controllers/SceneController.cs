@@ -50,6 +50,5 @@ namespace evoStory.BackendAPI.Controllers
             scenes.Remove(result);
             return NoContent();
         }
-
     }
 }
