@@ -6,22 +6,20 @@ namespace evoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
     public class SceneController : ControllerBase
     {
         public static List<Scene> scenes = new();
-
         [HttpPut]
-        public ActionResult CreateScene(CreateSceneDTO story)
+        public ActionResult CreateScene(CreateSceneDTO scene)
         {
             var newScene = new Scene
             {
                 Id = Guid.NewGuid(),
-                
+                Content = scene.Content,
+                Choices = scene.Choices.ToList(),
             };
             scenes.Add(newScene);
             return Created();
-
         }
 
         [HttpGet("{sceneId}")]

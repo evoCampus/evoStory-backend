@@ -9,7 +9,6 @@ namespace evoStory.BackendAPI.Controllers
     public class ChoiceController : ControllerBase
     {
         public static List<Choice> choices = new();
-
         [HttpPut]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {

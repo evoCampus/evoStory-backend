@@ -19,11 +19,9 @@ namespace evoStory.BackendAPI.Controllers
                 Scenes = story.Scenes.ToList(),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
-
             };
             stories.Add(newStory);
             return Created();
-
         }
         [HttpGet("{storyId}")]
         public ActionResult GetStory(Guid storyId)
@@ -42,8 +40,6 @@ namespace evoStory.BackendAPI.Controllers
             return Ok(stories);
         }
 
-        //new
-
         [HttpDelete("{storyId}")]
         public ActionResult DeleteStory(Guid storyId)
         {
@@ -55,28 +51,22 @@ namespace evoStory.BackendAPI.Controllers
             stories.Remove(result);
             return NoContent();
         }
-        
-        //Didnt manage to understand fully
-        /*
-        [HttpPatch("{storyId}")]
+
+        //Needs doing 
+        [HttpPut("{storyId}")]
         public ActionResult EditStory(Guid storyId, EditStoryDTO story)
         {
             var existingStory = stories.FirstOrDefault(story => story.Id == storyId);
-
             var editedStory = new Story
             {
                 Scenes = story.Scenes.ToList(),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
-                
             };
-
             existingStory.Title = story.Title;
             existingStory.Scenes = story.Scenes.ToList();
             existingStory.StartingSceneId = (Guid)story.StartingSceneId;
-            
             return Ok(existingStory);
         }
-        */
     }
 }

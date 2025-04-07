@@ -8,6 +8,5 @@ namespace evoStory.BackendAPI.DTO
         public Guid Id { get; set; }
         public IEnumerable<Scene>? Scenes { get; set; }
         public Guid? StartingSceneId { get; set; }
-
     }
 }
