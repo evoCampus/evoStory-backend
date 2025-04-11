@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evostory.Story", "Evostory.Story\Evostory.Story.csproj", "{010A7220-9709-4F4A-90DB-ACF296F374D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{010A7220-9709-4F4A-90DB-ACF296F374D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{010A7220-9709-4F4A-90DB-ACF296F374D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{010A7220-9709-4F4A-90DB-ACF296F374D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{010A7220-9709-4F4A-90DB-ACF296F374D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {259ABAB1-6875-45AD-80DF-67DDE1D40744}
+	EndGlobalSection
+EndGlobal
