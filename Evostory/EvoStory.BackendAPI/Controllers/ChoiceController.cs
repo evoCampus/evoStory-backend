@@ -1,6 +1,6 @@
-﻿using evoStory.BackendAPI.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using evoStory.BackendAPI.DTO;
+using Evostory.Story.Models;
 
 namespace evoStory.BackendAPI.Controllers
 {
@@ -8,11 +8,11 @@ namespace evoStory.BackendAPI.Controllers
     [ApiController]
     public class ChoiceController : ControllerBase
     {
-        public static List<Choice> choices = new();
+        public static List<ChoiceDTO> choices = new();
         [HttpPut]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
-            var newChoice = new Choice
+            var newChoice = new ChoiceDTO
             {
                 Id = Guid.NewGuid(),
                 NextSceneId = choice.NextSceneId,

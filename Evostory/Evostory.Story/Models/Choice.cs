@@ -1,8 +1,8 @@
 ﻿namespace Evostory.Story.Models
 {
-    public class Choice
+    public class ChoiceDTO
     {
-        public Guid ChoiceId { get; set; }
+        public Guid Id { get; set; }
         public Guid NextSceneId { get; set; }
         public string ChoiceText { get; set; }
     }

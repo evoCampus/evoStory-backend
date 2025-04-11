@@ -1,4 +1,5 @@
-﻿using evoStory.BackendAPI.Models;
+﻿
+using Evostory.Story.Models;
 
 namespace evoStory.BackendAPI.DTO
 {
@@ -6,7 +7,7 @@ namespace evoStory.BackendAPI.DTO
     {
         public required string Title { get; set; }
         public Guid Id { get; set; }
-        public IEnumerable<Scene>? Scenes { get; set; }
+        public IEnumerable<SceneDTO>? Scenes { get; set; }
         public Guid? StartingSceneId { get; set; }
     }
 }

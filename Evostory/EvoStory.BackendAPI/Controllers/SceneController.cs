@@ -1,5 +1,5 @@
 ﻿using evoStory.BackendAPI.DTO;
-using evoStory.BackendAPI.Models;
+using Evostory.Story.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace evoStory.BackendAPI.Controllers
@@ -8,11 +8,11 @@ namespace evoStory.BackendAPI.Controllers
     [ApiController]
     public class SceneController : ControllerBase
     {
-        public static List<Scene> scenes = new();
+        public static List<SceneDTO> scenes = new();
         [HttpPut]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
-            var newScene = new Scene
+            var newScene = new SceneDTO
             {
                 Id = Guid.NewGuid(),
                 Content = scene.Content,

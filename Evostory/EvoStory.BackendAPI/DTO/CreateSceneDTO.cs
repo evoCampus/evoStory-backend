@@ -1,4 +1,4 @@
-﻿using evoStory.BackendAPI.Models;
+﻿using Evostory.Story.Models;
 
 namespace evoStory.BackendAPI.DTO
 {
@@ -6,6 +6,6 @@ namespace evoStory.BackendAPI.DTO
     {
         public Content? Content {  get; set; }
         public Guid StoryId { get; set; }
-        public IEnumerable<Choice>?  Choices { get; set; }
+        public IEnumerable<ChoiceDTO>? Choices { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using evoStory.BackendAPI.DTO;
-using evoStory.BackendAPI.Models;
+using Evostory.Story.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace evoStory.BackendAPI.Controllers
