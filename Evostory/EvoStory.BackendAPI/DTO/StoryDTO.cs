@@ -1,10 +1,10 @@
-﻿namespace Evostory.Story.Models
+﻿namespace EvoStory.BackendAPI.DTO
 {
-    public class Story
+    public class StoryDTO
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public IEnumerable<Scene> Scenes { get; set; }
+        public IEnumerable<SceneDTO> Scenes { get; set; }
         public Guid StartingSceneId { get; set; }
     }
 }

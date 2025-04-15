@@ -1,8 +1,8 @@
-﻿using evoStory.BackendAPI.DTO;
+﻿using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace evoStory.BackendAPI.Controllers
+namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,7 +16,17 @@ namespace evoStory.BackendAPI.Controllers
             var newStory = new Story
             {
                 Id = Guid.NewGuid(),
-                Scenes = story.Scenes.ToList(),
+                Scenes = story.Scenes.Select(sceneDTO => new Scene()
+                {
+                    Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
+                    {
+                        ChoiceText = choiceDTO.ChoiceText,
+                        Id = Guid.NewGuid(),
+                        NextSceneId = choiceDTO.NextSceneId
+                    }).ToList(),
+                    Content = sceneDTO.Content,
+                    Id = Guid.NewGuid()
+                }),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
@@ -59,13 +69,13 @@ namespace evoStory.BackendAPI.Controllers
             var existingStory = stories.FirstOrDefault(story => story.Id == storyId);
             var editedStory = new Story
             {
-                Scenes = story.Scenes.ToList(),
+                Scenes = existingStory.Scenes,
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
-            existingStory.Title = story.Title;
-            existingStory.Scenes = story.Scenes.ToList();
-            existingStory.StartingSceneId = (Guid)story.StartingSceneId;
+            existingStory.Title = editedStory.Title;
+            existingStory.Scenes = editedStory.Scenes.ToList();
+            existingStory.StartingSceneId = (Guid)editedStory.StartingSceneId;
             return Ok(existingStory);
         }
     }

@@ -1,6 +1,6 @@
-﻿namespace Evostory.Story.Models
+﻿namespace EvoStory.BackendAPI.DTO
 {
-    public class Choice
+    public class ChoiceDTO
     {
         public Guid Id { get; set; }
         public Guid NextSceneId { get; set; }

@@ -1,22 +1,27 @@
-﻿using evoStory.BackendAPI.DTO;
+﻿using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace evoStory.BackendAPI.Controllers
+namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SceneController : ControllerBase
     {
-        public static List<SceneDTO> scenes = new();
+        public static List<Scene> scenes = new();
         [HttpPut]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
-            var newScene = new SceneDTO
+            var newScene = new Scene
             {
                 Id = Guid.NewGuid(),
                 Content = scene.Content,
-                Choices = scene.Choices.ToList(),
+                Choices = scene.Choices.Select(choiceDTO => new Choice()
+                {
+                    ChoiceText = choiceDTO.ChoiceText,
+                    Id = Guid.NewGuid(),
+                    NextSceneId = choiceDTO.NextSceneId
+                }).ToList()
             };
             scenes.Add(newScene);
             return Created();

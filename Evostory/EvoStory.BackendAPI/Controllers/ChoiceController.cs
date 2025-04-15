@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using evoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
+using System.Net.Mime;
+using EvoStory.BackendAPI.DTO;
 
-namespace evoStory.BackendAPI.Controllers
+namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ChoiceController : ControllerBase
     {
-        public static List<ChoiceDTO> choices = new();
+        public static List<Choice> choices = new();
         [HttpPut]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
-            var newChoice = new ChoiceDTO
+            var newChoice = new Choice
             {
                 Id = Guid.NewGuid(),
                 NextSceneId = choice.NextSceneId,
