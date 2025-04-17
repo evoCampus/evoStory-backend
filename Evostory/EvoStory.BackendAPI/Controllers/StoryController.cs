@@ -1,6 +1,8 @@
 ﻿using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -9,8 +11,14 @@ namespace EvoStory.BackendAPI.Controllers
     public class StoryController : ControllerBase
     {
         public static List<Story> stories = new();
-
+        /// <summary>
+        /// Creates a Story.
+        /// </summary>
+        /// <param name="story"></param>
+        /// <response code="200">The Story was successfully created.</response>
         [HttpPut]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
             var newStory = new Story
@@ -33,7 +41,17 @@ namespace EvoStory.BackendAPI.Controllers
             stories.Add(newStory);
             return Created();
         }
+
+        /// <summary>
+        /// Get Story by Id.
+        /// </summary>
+        /// <param name="storyId"></param>
+        /// <response code="200">The Story was successfully retrieved.</response>
+        /// <response code="400">Story not found.</response>
         [HttpGet("{storyId}")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetStory(Guid storyId)
         {
             var result = stories.FirstOrDefault(story => story.Id == storyId);
@@ -44,13 +62,28 @@ namespace EvoStory.BackendAPI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Get all Stories.
+        /// </summary>
+        /// <response code="200">The Stories were successfully retrieved..</response>
         [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
             return Ok(stories);
         }
 
+        /// <summary>
+        /// Deletes a Story by Id.
+        /// </summary>
+        /// <param name="storyId"></param>
+        /// <response code="200">The Story was successfully deleted.</response>
+        /// <response code="400">Story not found.</response>
         [HttpDelete("{storyId}")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
             var result = stories.FirstOrDefault(story => story.Id == storyId);
@@ -62,8 +95,15 @@ namespace EvoStory.BackendAPI.Controllers
             return NoContent();
         }
 
-        //Needs doing 
+        /// <summary>
+        /// Edits an existing story.
+        /// </summary>
+        /// <param name="storyId"></param>
+        /// <param name="story"></param>
+        /// <response code="200">The Story was successfully edited.</response>
         [HttpPut("{storyId}")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         public ActionResult EditStory(Guid storyId, EditStoryDTO story)
         {
             var existingStory = stories.FirstOrDefault(story => story.Id == storyId);
