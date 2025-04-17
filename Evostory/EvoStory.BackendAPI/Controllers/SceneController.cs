@@ -23,7 +23,12 @@ namespace EvoStory.BackendAPI.Controllers
             var newScene = new Scene
             {
                 Id = Guid.NewGuid(),
-                Content = scene.Content,
+                Content = new Content
+                {
+                    Text = scene.Content.Text,
+                    ImageId = scene.Content.ImageId,
+                    SoundId = scene.Content.SoundId
+                },
                 Choices = scene.Choices.Select(choiceDTO => new Choice()
                 {
                     ChoiceText = choiceDTO.ChoiceText,

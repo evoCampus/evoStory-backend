@@ -1,8 +1,7 @@
-﻿using EvoStory.BackendAPI.DTO;
-using Evostory.Story.Models;
+﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -32,7 +31,13 @@ namespace EvoStory.BackendAPI.Controllers
                         Id = Guid.NewGuid(),
                         NextSceneId = choiceDTO.NextSceneId
                     }).ToList(),
-                    Content = sceneDTO.Content,
+                    Content = new Content
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = sceneDTO.Content.Text,
+                        ImageId = sceneDTO.Content.ImageId,
+                        SoundId = sceneDTO.Content.SoundId
+                    },
                     Id = Guid.NewGuid()
                 }),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
@@ -115,7 +120,7 @@ namespace EvoStory.BackendAPI.Controllers
             };
             existingStory.Title = editedStory.Title;
             existingStory.Scenes = editedStory.Scenes.ToList();
-            existingStory.StartingSceneId = (Guid)editedStory.StartingSceneId;
+            existingStory.StartingSceneId = editedStory.StartingSceneId;
             return Ok(existingStory);
         }
     }
