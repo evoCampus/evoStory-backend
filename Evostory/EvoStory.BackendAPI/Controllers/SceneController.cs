@@ -14,10 +14,10 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates a Scene.
         /// </summary>
         /// <param name="scene"></param>
-        /// <response code="200">The Scene was successfully created.</response>
+        /// <response code="204">The Scene was successfully created.</response>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status204NoContent)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
             var newScene = new Scene
@@ -45,7 +45,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         /// <param name="sceneId"></param>
         /// <response code="200">The Scene was successfully retrieved.</response>
-        /// <response code="400">Scene not found.</response>
+        /// <response code="404">Scene not found.</response>
         [HttpGet("{sceneId}")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status200OK)]
@@ -76,11 +76,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// Deletes a Scene by Id.
         /// </summary>
         /// <param name="sceneId"></param>
-        /// <response code="200">The Scene was successfully deleted.</response>
-        /// <response code="400">Scene not found.</response>
+        /// <response code="204">The Scene was successfully deleted.</response>
+        /// <response code="404">Scene not found.</response>
         [HttpDelete]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteScene(Guid sceneId)
         {

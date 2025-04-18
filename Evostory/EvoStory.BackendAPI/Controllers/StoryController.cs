@@ -14,10 +14,10 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates a Story.
         /// </summary>
         /// <param name="story"></param>
-        /// <response code="200">The Story was successfully created.</response>
+        /// <response code="204">The Story was successfully created.</response>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status204NoContent)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
             var newStory = new Story
@@ -52,7 +52,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         /// <param name="storyId"></param>
         /// <response code="200">The Story was successfully retrieved.</response>
-        /// <response code="400">Story not found.</response>
+        /// <response code="404">Story not found.</response>
         [HttpGet("{storyId}")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
@@ -83,11 +83,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// Deletes a Story by Id.
         /// </summary>
         /// <param name="storyId"></param>
-        /// <response code="200">The Story was successfully deleted.</response>
-        /// <response code="400">Story not found.</response>
+        /// <response code="204">The Story was successfully deleted.</response>
+        /// <response code="404">Story not found.</response>
         [HttpDelete("{storyId}")]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
