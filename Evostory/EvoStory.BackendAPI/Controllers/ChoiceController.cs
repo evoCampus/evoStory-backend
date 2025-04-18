@@ -3,12 +3,13 @@ using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using System.Net.Mime;
 using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.Services;
 
 namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChoiceController : ControllerBase
+    public class ChoiceController(IChoiceService choiceService) : ControllerBase
     {
         public static List<Choice> choices = new();
         /// <summary>
@@ -21,13 +22,14 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
-            var newChoice = new Choice
+            try
             {
-                Id = Guid.NewGuid(),
-                NextSceneId = choice.NextSceneId,
-                ChoiceText = choice.ChoiceText
-            };
-            choices.Add(newChoice);
+                choiceService.CreateChoice(choice);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
             return Created();
         }
 

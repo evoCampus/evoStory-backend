@@ -44,7 +44,7 @@ namespace EvoStory.BackendAPI.Controllers
                 Title = story.Title
             };
             stories.Add(newStory);
-            return Created();
+            return Created("", newStory);
         }
 
         /// <summary>
