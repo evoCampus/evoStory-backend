@@ -1,5 +1,6 @@
 ﻿using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
+using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -7,7 +8,7 @@ namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SceneController : ControllerBase
+    public class SceneController(ISceneService sceneService) : ControllerBase
     {
         public static List<Scene> scenes = new();
         /// <summary>
@@ -20,23 +21,31 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status204NoContent)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
-            var newScene = new Scene
+            //var newScene = new Scene
+            //{
+            //    Id = Guid.NewGuid(),
+            //    Content = new Content
+            //    {
+            //        Text = scene.Content.Text,
+            //        ImageId = scene.Content.ImageId,
+            //        SoundId = scene.Content.SoundId
+            //    },
+            //    Choices = scene.Choices.Select(choiceDTO => new Choice()
+            //    {
+            //        ChoiceText = choiceDTO.ChoiceText,
+            //        Id = Guid.NewGuid(),
+            //        NextSceneId = choiceDTO.NextSceneId
+            //    }).ToList()
+            //};
+            //scenes.Add(newScene);
+            try
             {
-                Id = Guid.NewGuid(),
-                Content = new Content
-                {
-                    Text = scene.Content.Text,
-                    ImageId = scene.Content.ImageId,
-                    SoundId = scene.Content.SoundId
-                },
-                Choices = scene.Choices.Select(choiceDTO => new Choice()
-                {
-                    ChoiceText = choiceDTO.ChoiceText,
-                    Id = Guid.NewGuid(),
-                    NextSceneId = choiceDTO.NextSceneId
-                }).ToList()
-            };
-            scenes.Add(newScene);
+                sceneService.CreateScene(scene);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
             return Created();
         }
 
@@ -52,7 +61,8 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
+            //var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
+            var result = sceneService.GetScene(sceneId);
             if (result == null)
             {
                 return NotFound();
@@ -69,7 +79,8 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
         public ActionResult GetScenes()
         {
-            return Ok(scenes);
+            var result = sceneService.GetScenes();
+            return Ok(result);
         }
 
         /// <summary>
@@ -84,12 +95,20 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
-            if (result == null)
+            //var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
+            //if (result == null)
+            //{
+            //    return NotFound();
+            //}
+            //scenes.Remove(result);
+            try
+            {
+                sceneService.DeleteScene(sceneId);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-            scenes.Remove(result);
             return NoContent();
         }
     }
