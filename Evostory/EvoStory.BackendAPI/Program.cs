@@ -1,5 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using EvoStory.BackendAPI.Data;
+using EvoStory.BackendAPI.Repository;
+using EvoStory.BackendAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddDbContext<ApiContext>(options =>
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
+builder.Services.AddSingleton<IStoryService, StoryService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
