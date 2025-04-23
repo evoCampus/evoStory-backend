@@ -2,13 +2,13 @@
 using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using System.Net.Mime;
-using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.Services;
 
 namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChoiceController : ControllerBase
+    public class ChoiceController(IChoiceService choiceService) : ControllerBase
     {
         public static List<Choice> choices = new();
         /// <summary>
@@ -16,18 +16,21 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         /// <param name="choice"></param>
         /// <response code="204">The Choice was succesfully created.</response>
-        [HttpPut]
+        /// <response code="400">Bad request.</response>
+        [HttpPut(Name = nameof(CreateChoice))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status400BadRequest)]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
-            var newChoice = new Choice
+            try
             {
-                Id = Guid.NewGuid(),
-                NextSceneId = choice.NextSceneId,
-                ChoiceText = choice.ChoiceText
-            };
-            choices.Add(newChoice);
+                choiceService.CreateChoice(choice);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
             return Created();
         }
 
@@ -37,13 +40,13 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="choiceId"></param>
         /// <response code="200">The Choice was succesfully retrieved.</response>
         /// <response code="404">Choice not found.</response>
-        [HttpGet("{choiceId}")]
+        [HttpGet("{choiceId}", Name = nameof(GetChoice))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetChoice(Guid choiceId)
         {
-            var result = choices.FirstOrDefault(choice => choice.Id == choiceId);
+            var result = choiceService.GetChoice(choiceId);
             if (result == null)
             {
                 return NotFound();
@@ -55,12 +58,13 @@ namespace EvoStory.BackendAPI.Controllers
         /// Get all Choices.
         /// </summary>
         /// <response code="200">The Choices were succesfully retrieved.</response>
-        [HttpGet]
+        [HttpGet(Name = nameof(GetChoices))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<CreateChoiceDTO>), StatusCodes.Status200OK)]
         public ActionResult GetChoices()
         {
-            return Ok(choices);
+            var result = choiceService.GetChoices();
+            return Ok(result);
         }
 
         /// <summary>
@@ -69,18 +73,20 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="choiceId"></param>
         /// <response code="204">The Choice was succesfully deleted.</response>
         /// <response code="404">Choice not found.</response>
-        [HttpDelete("{choiceId}")]
+        [HttpDelete("{choiceId}", Name = nameof(DeleteChoice))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteChoice(Guid choiceId)
         {
-            var result = choices.FirstOrDefault(choice => choice.Id == choiceId);
-            if (result == null)
+            try
+            {
+                choiceService.DeleteChoice(choiceId);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-            choices.Remove(result);
             return NoContent();
         }
     }
