@@ -48,7 +48,14 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+
+            var choiceDTO = new ChoiceDTO
+            {
+                Id = result.Id,
+                NextSceneId = result.NextSceneId,
+                ChoiceText = result.ChoiceText
+            };
+            return Ok(choiceDTO);
         }
 
         /// <summary>
@@ -60,7 +67,13 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<CreateChoiceDTO>), StatusCodes.Status200OK)]
         public ActionResult GetChoices()
         {
-            return Ok(choices);
+            var choicesDTO = choices.Select(choice => new ChoiceDTO
+            {
+                Id = choice.Id,
+                NextSceneId = choice.NextSceneId,
+                ChoiceText = choice.ChoiceText
+            }).ToList();
+            return Ok(choicesDTO);
         }
 
         /// <summary>
