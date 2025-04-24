@@ -1,9 +1,9 @@
 ﻿namespace Evostory.Story.Models
 {
-    public class SceneDTO
+    public class Scene
     {
         public Guid Id { get; set; }
         public Content Content { get; set; }
-        public IEnumerable<ChoiceDTO> Choices { get; set; }
+        public IEnumerable<Choice> Choices { get; set; }
     }
 }

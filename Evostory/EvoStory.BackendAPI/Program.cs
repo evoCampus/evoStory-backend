@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using evoStory.BackendAPI.Data;
+using EvoStory.BackendAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

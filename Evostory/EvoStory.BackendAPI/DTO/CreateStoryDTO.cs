@@ -1,11 +1,11 @@
 ﻿using Evostory.Story.Models;
 
-namespace evoStory.BackendAPI.DTO
+namespace EvoStory.BackendAPI.DTO
 {
     public class CreateStoryDTO
     {
         public required string Title { get; set; }
-        public IEnumerable<SceneDTO>? Scenes { get; set; }
+        public IEnumerable<CreateSceneDTO>? Scenes { get; set; }
         public Guid? StartingSceneId { get; set; }
     }
 }
