@@ -1,5 +1,4 @@
 ﻿using Evostory.Story.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace EvoStory.BackendAPI.Repository
 {
@@ -16,7 +15,7 @@ namespace EvoStory.BackendAPI.Repository
             var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
             if (result == null)
             {
-                throw new Exception("Not Found");
+                throw new KeyNotFoundException($"No scene with {sceneId} found.");
             }
             scenes.Remove(result);
         }

@@ -17,26 +17,19 @@ namespace EvoStory.BackendAPI.Services
                     ImageId = scene.Content.ImageId,
                     SoundId = scene.Content.SoundId
                 },
-                Choices = scene.Choices.Select(choiceDTO => new Choice()
+                Choices = scene.Choices.Select(choiceDTO => new Choice
                 {
                     ChoiceText = choiceDTO.ChoiceText,
                     Id = Guid.NewGuid(),
                     NextSceneId = choiceDTO.NextSceneId
-                }).ToList()
+                })
             };
             sceneRepository.CreateScene(newScene);
         }
 
         public void DeleteScene(Guid sceneId)
         {
-            try
-            {
-                sceneRepository.DeleteScene(sceneId);
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Not Found", ex);
-            }
+            sceneRepository.DeleteScene(sceneId);
         }
 
         public SceneDTO? GetScene(Guid sceneId)
@@ -60,7 +53,7 @@ namespace EvoStory.BackendAPI.Services
                     ChoiceText = choice.ChoiceText,
                     Id = choice.Id,
                     NextSceneId = choice.NextSceneId
-                }).ToList()
+                })
             };
             return sceneDTO;
         }
@@ -86,7 +79,7 @@ namespace EvoStory.BackendAPI.Services
                     ChoiceText = choice.ChoiceText,
                     Id = choice.Id,
                     NextSceneId = choice.NextSceneId
-                }).ToList()
+                })
             });
             return scenesDTO;
         }

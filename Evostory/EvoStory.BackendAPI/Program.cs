@@ -11,9 +11,9 @@ builder.Services.AddDbContext<ApiContext>(options =>
     options.UseInMemoryDatabase("StoryDb"));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSingleton<ISceneRepository, SceneRepositoryInMemory>();
 builder.Services.AddSingleton<ISceneService, SceneService>();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

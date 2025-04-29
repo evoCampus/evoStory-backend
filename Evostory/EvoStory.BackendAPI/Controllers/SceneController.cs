@@ -1,5 +1,4 @@
 ﻿using EvoStory.BackendAPI.DTO;
-using Evostory.Story.Models;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -15,9 +14,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         /// <param name="scene"></param>
         /// <response code="204">The Scene was successfully created.</response>
+        /// <response code="400">The Scene was not created.</response>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
             try
