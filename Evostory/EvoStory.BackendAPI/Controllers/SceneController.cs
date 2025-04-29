@@ -13,23 +13,28 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates a Scene.
         /// </summary>
         /// <param name="scene"></param>
-        /// <response code="204">The Scene was successfully created.</response>
+        /// <response code="201">The Scene was successfully created.</response>
         /// <response code="400">The Scene was not created.</response>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
+            SceneDTO result;
             try
             {
-                sceneService.CreateScene(scene);
+                result = sceneService.CreateScene(scene);
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
                 return BadRequest();
             }
-            return Created();
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            return Created("Sikeres felvitel.", result);
         }
 
         /// <summary>
@@ -61,7 +66,15 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
         public ActionResult GetScenes()
         {
-            var result = sceneService.GetScenes();
+            IEnumerable<SceneDTO> result;
+            try
+            {
+                result = sceneService.GetScenes();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
@@ -81,7 +94,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 sceneService.DeleteScene(sceneId);
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
                 return NotFound();
             }

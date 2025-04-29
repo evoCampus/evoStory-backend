@@ -6,7 +6,7 @@ namespace EvoStory.BackendAPI.Services
 {
     public class SceneService(ISceneRepository sceneRepository) : ISceneService
     {
-        public void CreateScene(CreateSceneDTO scene)
+        public SceneDTO? CreateScene(CreateSceneDTO scene)
         {
             var newScene = new Scene
             {
@@ -25,6 +25,23 @@ namespace EvoStory.BackendAPI.Services
                 })
             };
             sceneRepository.CreateScene(newScene);
+            return new SceneDTO
+            {
+                Id = newScene.Id,
+                Content = new ContentDTO
+                {
+                    Id = newScene.Content.Id,
+                    Text = newScene.Content.Text,
+                    ImageId = newScene.Content.ImageId,
+                    SoundId = newScene.Content.SoundId
+                },
+                Choices = newScene.Choices.Select(choice => new ChoiceDTO
+                {
+                    ChoiceText = choice.ChoiceText,
+                    Id = choice.Id,
+                    NextSceneId = choice.NextSceneId
+                })
+            };
         }
 
         public void DeleteScene(Guid sceneId)
@@ -58,13 +75,9 @@ namespace EvoStory.BackendAPI.Services
             return sceneDTO;
         }
 
-        public IEnumerable<SceneDTO>? GetScenes()
+        public IEnumerable<SceneDTO> GetScenes()
         {
             var result = sceneRepository.GetScenes();
-            if (result == null)
-            {
-                return null;
-            }
             var scenesDTO = result.Select(scene => new SceneDTO
             {
                 Id = scene.Id,

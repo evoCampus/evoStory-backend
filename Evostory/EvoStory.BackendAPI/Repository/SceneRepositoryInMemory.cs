@@ -4,31 +4,28 @@ namespace EvoStory.BackendAPI.Repository
 {
     public class SceneRepositoryInMemory : ISceneRepository
     {
-        private List<Scene> scenes = new();
-        public void CreateScene(Scene scene)
+        private Dictionary<Guid, Scene> scenes = new();
+        public Scene CreateScene(Scene scene)
         {
-            scenes.Add(scene);
+            scenes.Add(scene.Id,scene);
+            return scene;
         }
 
         public void DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
-            if (result == null)
-            {
-                throw new KeyNotFoundException($"No scene with {sceneId} found.");
-            }
-            scenes.Remove(result);
+            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
+            scenes.Remove(result.Key);
         }
 
         public Scene? GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
-            return result;
+            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
+            return result.Value;
         }
 
         public IEnumerable<Scene>? GetScenes()
         {
-            return scenes;
+            return scenes.Values;
         }
     }
 }
