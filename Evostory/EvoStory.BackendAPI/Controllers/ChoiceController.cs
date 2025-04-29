@@ -19,8 +19,8 @@ namespace EvoStory.BackendAPI.Controllers
         /// <response code="400">Bad request.</response>
         [HttpPut(Name = nameof(CreateChoice))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
             try

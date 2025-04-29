@@ -46,20 +46,13 @@ namespace EvoStory.BackendAPI.Services
                 Id = choice.Id,
                 NextSceneId = choice.NextSceneId,
                 ChoiceText = choice.ChoiceText
-            }).ToList();
+            });
             return choices;
         }
 
         public void DeleteChoice(Guid choiceId)
         {
-            try
-            {
-                choiceRepository.DeleteChoice(choiceId);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Choice Not Found");
-            }
+            choiceRepository.DeleteChoice(choiceId);
         }
     }
 }
