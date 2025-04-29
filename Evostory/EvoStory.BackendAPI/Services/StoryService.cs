@@ -36,17 +36,10 @@ namespace EvoStory.BackendAPI.Services
 
         public void DeleteStory(Guid storyId)
         {
-            try
-            {
-                storyRepository.DeleteStory(storyId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Not Found", ex);
-            }
+            storyRepository.DeleteStory(storyId);
         }
 
-        public StoryDTO GetStory(Guid storyId)
+        public StoryDTO? GetStory(Guid storyId)
         {
             var result = storyRepository.GetStory(storyId);
             if (result == null)
@@ -79,7 +72,7 @@ namespace EvoStory.BackendAPI.Services
             return storyDTO;
         }
 
-        public IEnumerable<StoryDTO> GetStories()
+        public IEnumerable<StoryDTO>? GetStories()
         {
             var result = storyRepository.GetStories();
             if (result == null)

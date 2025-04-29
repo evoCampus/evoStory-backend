@@ -16,43 +16,20 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         /// <param name="story"></param>
         /// <response code="204">The Story was successfully created.</response>
-        [HttpPut]
+        /// <response code="400">Bad request.</response>
+        [HttpPut(Name = nameof(CreateStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
-            //var newStory = new Story
-            //{
-            //    Id = Guid.NewGuid(),
-            //    Scenes = story.Scenes.Select(sceneDTO => new Scene()
-            //    {
-            //        Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
-            //        {
-            //            ChoiceText = choiceDTO.ChoiceText,
-            //            Id = Guid.NewGuid(),
-            //            NextSceneId = choiceDTO.NextSceneId
-            //        }).ToList(),
-            //        Content = new Content
-            //        {
-            //            Id = Guid.NewGuid(),
-            //            Text = sceneDTO.Content.Text,
-            //            ImageId = sceneDTO.Content.ImageId,
-            //            SoundId = sceneDTO.Content.SoundId
-            //        },
-            //        Id = Guid.NewGuid()
-            //    }),
-            //    StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
-            //    Title = story.Title
-            //};
-            //stories.Add(newStory);
-            //return Created();
             try
             {
                 storyService.CreateStory(story);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest();
             }
             return Created();
         }
@@ -63,13 +40,12 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <response code="200">The Story was successfully retrieved.</response>
         /// <response code="404">Story not found.</response>
-        [HttpGet("{storyId}")]
+        [HttpGet("{storyId}", Name = nameof(GetStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetStory(Guid storyId)
         {
-            //var result = stories.FirstOrDefault(story => story.Id == storyId);
             var result = storyService.GetStory(storyId);
             if (result == null)
             {
@@ -82,12 +58,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// Get all Stories.
         /// </summary>
         /// <response code="200">The Stories were successfully retrieved..</response>
-        [HttpGet]
+        [HttpGet(Name = nameof(GetStories))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
-            //return Ok(stories);
             var result = storyService.GetStories();
             if (result == null)
             {
@@ -102,26 +77,19 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <response code="204">The Story was successfully deleted.</response>
         /// <response code="404">Story not found.</response>
-        [HttpDelete("{storyId}")]
+        [HttpDelete("{storyId}", Name = nameof(DeleteStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
-            //var result = stories.FirstOrDefault(story => story.Id == storyId);
-            //if (result == null)
-            //{
-            //    return NotFound();
-            //}
-            //stories.Remove(result);
-            //return NoContent();
             try
             {
                 storyService.DeleteStory(storyId);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return NotFound(ex.Message);
+                return NotFound();
             }
             return NoContent();
         }
@@ -132,29 +100,20 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <param name="story"></param>
         /// <response code="200">The Story was successfully edited.</response>
-        [HttpPut("{storyId}")]
+        /// <response code="404">Story not found.</response>
+        [HttpPut("{storyId}", Name = nameof(EditStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult EditStory(Guid storyId, EditStoryDTO story)
         {
-            //var existingStory = stories.FirstOrDefault(story => story.Id == storyId);
-            //var editedStory = new Story
-            //{
-            //    Scenes = existingStory.Scenes,
-            //    StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
-            //    Title = story.Title
-            //};
-            //existingStory.Title = editedStory.Title;
-            //existingStory.Scenes = editedStory.Scenes.ToList();
-            //existingStory.StartingSceneId = editedStory.StartingSceneId;
-            //return Ok(existingStory);            
             try
             {
                 storyService.EditStory(story);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return NotFound(ex.Message);
+                return NotFound();
             }
             return Ok(story);
         }

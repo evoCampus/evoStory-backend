@@ -15,22 +15,22 @@ namespace EvoStory.BackendAPI.Repository
             var result = stories.FirstOrDefault(story => story.Id == storyId);
             if (result == null)
             {
-                throw new Exception("Not Found");
+                throw new KeyNotFoundException($"No story with {storyId} found.");
             }
             stories.Remove(result);
         }
 
-        public Story GetStory(Guid storyId)
+        public Story? GetStory(Guid storyId)
         {
             var result = stories.FirstOrDefault(story => story.Id == storyId);
             if (result == null)
             {
-                throw new Exception("Not Found");
+                throw new KeyNotFoundException($"No story with {storyId} found.");
             }
             return result;
         }
 
-        public IEnumerable<Story> GetStories()
+        public IEnumerable<Story>? GetStories()
         {
             return stories;
         }
@@ -40,7 +40,7 @@ namespace EvoStory.BackendAPI.Repository
             var result = stories.FirstOrDefault(story => story.Id == story.Id);
             if (result == null)
             {
-                throw new Exception("Not Found");
+                throw new KeyNotFoundException($"No story with {story.Id} found.");
             }
             stories.Remove(result);
             stories.Add(story);
