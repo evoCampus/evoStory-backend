@@ -11,7 +11,7 @@ namespace EvoStory.BackendAPI.Repository
             choices.Add(choice);
         }
 
-        public Choice GetChoice(Guid choiceId)
+        public Choice? GetChoice(Guid choiceId)
         {
             var result = choices.FirstOrDefault(choice => choice.Id == choiceId);
             return result;
@@ -27,7 +27,7 @@ namespace EvoStory.BackendAPI.Repository
             var result = choices.FirstOrDefault(choice => choice.Id == choiceId);
             if (result == null)
             {
-                throw new Exception("Choice Not Found");
+                throw new KeyNotFoundException($"No choice with {choiceId} found.");
             }
             choices.Remove(result);
         }

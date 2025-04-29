@@ -34,7 +34,7 @@ namespace EvoStory.BackendAPI.Services
             return choice;
         }
 
-        public IEnumerable<ChoiceDTO> GetChoices()
+        public IEnumerable<ChoiceDTO>? GetChoices()
         {
             var result = choiceRepository.GetChoices();
             if (result == null)
