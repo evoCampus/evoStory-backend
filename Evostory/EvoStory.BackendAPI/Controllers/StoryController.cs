@@ -57,7 +57,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// <summary>
         /// Get all Stories.
         /// </summary>
-        /// <response code="200">The Stories were successfully retrieved..</response>
+        /// <response code="200">The Stories were successfully retrieved..</response>        
         [HttpGet(Name = nameof(GetStories))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
