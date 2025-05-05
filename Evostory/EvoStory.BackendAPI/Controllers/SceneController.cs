@@ -26,15 +26,11 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 result = sceneService.CreateScene(scene);
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
                 return BadRequest();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest();
-            }
-            return Created("Sikeres felvitel.", result);
+            return Created($"api/Scene{result.Id}", result);
         }
 
         /// <summary>

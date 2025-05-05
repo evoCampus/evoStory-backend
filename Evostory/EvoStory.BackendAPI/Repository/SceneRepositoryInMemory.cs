@@ -23,7 +23,7 @@ namespace EvoStory.BackendAPI.Repository
             return result.Value;
         }
 
-        public IEnumerable<Scene>? GetScenes()
+        public IEnumerable<Scene> GetScenes()
         {
             return scenes.Values;
         }
