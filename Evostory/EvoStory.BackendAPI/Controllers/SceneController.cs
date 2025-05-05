@@ -30,7 +30,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return BadRequest();
             }
-            return Created($"api/Scene{result.Id}", result);
+            return Created($"api/Scene/{result.Id}", result);
         }
 
         /// <summary>
