@@ -51,7 +51,14 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+
+            var choiceDTO = new ChoiceDTO
+            {
+                Id = result.Id,
+                NextSceneId = result.NextSceneId,
+                ChoiceText = result.ChoiceText
+            };
+            return Ok(choiceDTO);
         }
 
         /// <summary>

@@ -57,7 +57,24 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+
+            var sceneDTO = new SceneDTO
+            {
+                Id = result.Id,
+                Content = new ContentDTO
+                {
+                    Text = result.Content.Text,
+                    ImageId = result.Content.ImageId,
+                    SoundId = result.Content.SoundId
+                },
+                Choices = result.Choices.Select(choice => new ChoiceDTO
+                {
+                    ChoiceText = choice.ChoiceText,
+                    Id = choice.Id,
+                    NextSceneId = choice.NextSceneId
+                }).ToList()
+            };
+            return Ok(sceneDTO);
         }
 
         /// <summary>
@@ -69,7 +86,23 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
         public ActionResult GetScenes()
         {
-            return Ok(scenes);
+            var scenesDTO = scenes.Select(scene => new SceneDTO
+            {
+                Id = scene.Id,
+                Content = new ContentDTO
+                {
+                    Text = scene.Content.Text,
+                    ImageId = scene.Content.ImageId,
+                    SoundId = scene.Content.SoundId
+                },
+                Choices = scene.Choices.Select(choice => new ChoiceDTO
+                {
+                    ChoiceText = choice.ChoiceText,
+                    Id = choice.Id,
+                    NextSceneId = choice.NextSceneId
+                }).ToList()
+            });
+            return Ok(scenesDTO);
         }
 
         /// <summary>
