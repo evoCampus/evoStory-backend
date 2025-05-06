@@ -10,7 +10,6 @@ namespace EvoStory.BackendAPI.Controllers
     [ApiController]
     public class ChoiceController(IChoiceService choiceService) : ControllerBase
     {
-        public static List<Choice> choices = new();
         /// <summary>
         /// Creates choice.
         /// </summary>
@@ -31,6 +30,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return BadRequest();
             }
+
             return Created();
         }
 
@@ -47,7 +47,7 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetChoice(Guid choiceId)
         {
             var result = choiceService.GetChoice(choiceId);
-            if (result == null)
+            if (result is null)
             {
                 return NotFound();
             }
@@ -58,6 +58,7 @@ namespace EvoStory.BackendAPI.Controllers
                 NextSceneId = result.NextSceneId,
                 ChoiceText = result.ChoiceText
             };
+
             return Ok(choiceDTO);
         }
 
@@ -94,6 +95,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
+
             return NoContent();
         }
     }

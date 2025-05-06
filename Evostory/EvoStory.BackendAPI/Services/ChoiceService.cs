@@ -21,32 +21,36 @@ namespace EvoStory.BackendAPI.Services
         public ChoiceDTO? GetChoice(Guid choiceId)
         {
             var result = choiceRepository.GetChoice(choiceId);
-            if (result == null)
+            if (result is null)
             {
                 return null;
             }
+
             var choice = new ChoiceDTO
             {
                 Id = result.Id,
                 NextSceneId = result.NextSceneId,
                 ChoiceText = result.ChoiceText
             };
+
             return choice;
         }
 
         public IEnumerable<ChoiceDTO>? GetChoices()
         {
             var result = choiceRepository.GetChoices();
-            if (result == null)
+            if (result is null)
             {
                 return null;
             }
+
             var choices = result.Select(choice => new ChoiceDTO
             {
                 Id = choice.Id,
                 NextSceneId = choice.NextSceneId,
                 ChoiceText = choice.ChoiceText
             });
+
             return choices;
         }
 
