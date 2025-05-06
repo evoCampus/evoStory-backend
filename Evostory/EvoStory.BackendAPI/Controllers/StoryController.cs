@@ -1,5 +1,4 @@
-﻿using Evostory.Story.Models;
-using EvoStory.BackendAPI.DTO;
+﻿using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -10,7 +9,6 @@ namespace EvoStory.BackendAPI.Controllers
     [ApiController]
     public class StoryController(IStoryService storyService) : ControllerBase
     {
-        public static List<Story> stories = new();
         /// <summary>
         /// Creates a Story.
         /// </summary>
@@ -31,6 +29,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return BadRequest();
             }
+
             return Created();
         }
 
@@ -47,27 +46,29 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStory(Guid storyId)
         {
             var result = storyService.GetStory(storyId);
-            if (result == null)
+            if (result is null)
             {
                 return NotFound();
             }
+
             return Ok(result);
         }
 
         /// <summary>
         /// Get all Stories.
         /// </summary>
-        /// <response code="200">The Stories were successfully retrieved..</response>        
+        /// <response code="200">The Stories were successfully retrieved.</response>        
         [HttpGet(Name = nameof(GetStories))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
             var result = storyService.GetStories();
-            if (result == null)
+            if (result is null)
             {
                 return NotFound();
             }
+
             return Ok(result);
         }
 
@@ -91,6 +92,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
+
             return NoContent();
         }
 
@@ -115,6 +117,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return NotFound();
             }
+
             return Ok(story);
         }
     }

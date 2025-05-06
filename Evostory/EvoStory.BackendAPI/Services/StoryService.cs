@@ -39,7 +39,7 @@ namespace EvoStory.BackendAPI.Services
             storyRepository.DeleteStory(storyId);
         }
 
-        public StoryDTO? GetStory(Guid storyId)
+        public StoryDTO GetStory(Guid storyId)
         {
             var result = storyRepository.GetStory(storyId);
             if (result == null)
@@ -72,7 +72,7 @@ namespace EvoStory.BackendAPI.Services
             return storyDTO;
         }
 
-        public IEnumerable<StoryDTO>? GetStories()
+        public IEnumerable<StoryDTO> GetStories()
         {
             var result = storyRepository.GetStories();
             if (result == null)
