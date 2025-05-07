@@ -78,7 +78,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.DeleteStory(storyId);
             }
-            catch (ArgumentNullException)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -103,7 +103,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.EditStory(story);
             }
-            catch (ArgumentNullException)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
