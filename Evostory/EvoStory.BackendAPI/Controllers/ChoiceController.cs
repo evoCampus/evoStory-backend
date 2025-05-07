@@ -14,24 +14,25 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates choice.
         /// </summary>
         /// <param name="choice"></param>
-        /// <response code="204">The Choice was succesfully created.</response>
+        /// <response code="201">The Choice was succesfully created.</response>
         /// <response code="400">Bad request.</response>
         [HttpPut(Name = nameof(CreateChoice))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
+            ChoiceDTO result;
             try
             {
-                choiceService.CreateChoice(choice);
+                result = choiceService.CreateChoice(choice);
             }
-            catch (Exception)
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
                 return BadRequest();
             }
 
-            return Created();
+            return Created($"api/Choice/{result.Id}", result);
         }
 
         /// <summary>
@@ -52,14 +53,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return NotFound();
             }
 
-            var choiceDTO = new ChoiceDTO
-            {
-                Id = result.Id,
-                NextSceneId = result.NextSceneId,
-                ChoiceText = result.ChoiceText
-            };
-
-            return Ok(choiceDTO);
+            return Ok(result);
         }
 
         /// <summary>
@@ -71,7 +65,8 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<CreateChoiceDTO>), StatusCodes.Status200OK)]
         public ActionResult GetChoices()
         {
-            var result = choiceService.GetChoices();
+            IEnumerable<ChoiceDTO> result;
+            result = choiceService.GetChoices();
             return Ok(result);
         }
 
@@ -91,7 +86,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 choiceService.DeleteChoice(choiceId);
             }
-            catch (Exception)
+            catch (ArgumentNullException ex) //Remove try catch?
             {
                 return NotFound();
             }

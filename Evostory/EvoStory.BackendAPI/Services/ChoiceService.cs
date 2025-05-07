@@ -6,7 +6,7 @@ namespace EvoStory.BackendAPI.Services
 {
     public class ChoiceService(IChoiceRepository choiceRepository) : IChoiceService
     {
-        public void CreateChoice(CreateChoiceDTO choice)
+        public ChoiceDTO? CreateChoice(CreateChoiceDTO choice)
         {
             var newChoice = new Choice
             {
@@ -16,6 +16,13 @@ namespace EvoStory.BackendAPI.Services
             };
 
             choiceRepository.CreateChoice(newChoice);
+
+            return new ChoiceDTO
+            {
+                Id = newChoice.Id,
+                NextSceneId = newChoice.NextSceneId,
+                ChoiceText = newChoice.ChoiceText
+            };
         }
 
         public ChoiceDTO? GetChoice(Guid choiceId)
@@ -26,32 +33,27 @@ namespace EvoStory.BackendAPI.Services
                 return null;
             }
 
-            var choice = new ChoiceDTO
+            var choiceDTO = new ChoiceDTO
             {
                 Id = result.Id,
                 NextSceneId = result.NextSceneId,
                 ChoiceText = result.ChoiceText
             };
 
-            return choice;
+            return choiceDTO;
         }
 
-        public IEnumerable<ChoiceDTO>? GetChoices()
+        public IEnumerable<ChoiceDTO> GetChoices()
         {
             var result = choiceRepository.GetChoices();
-            if (result is null)
-            {
-                return null;
-            }
-
-            var choices = result.Select(choice => new ChoiceDTO
+            var choicesDTO = result.Select(choice => new ChoiceDTO
             {
                 Id = choice.Id,
                 NextSceneId = choice.NextSceneId,
                 ChoiceText = choice.ChoiceText
             });
 
-            return choices;
+            return choicesDTO;
         }
 
         public void DeleteChoice(Guid choiceId)

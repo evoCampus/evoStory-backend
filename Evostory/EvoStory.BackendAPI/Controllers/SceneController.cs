@@ -63,6 +63,7 @@ namespace EvoStory.BackendAPI.Controllers
                 Id = result.Id,
                 Content = new ContentDTO
                 {
+                    Id = result.Content.Id,
                     Text = result.Content.Text,
                     ImageId = result.Content.ImageId,
                     SoundId = result.Content.SoundId
@@ -91,6 +92,7 @@ namespace EvoStory.BackendAPI.Controllers
                 Id = scene.Id,
                 Content = new ContentDTO
                 {
+                    Id = scene.Content.Id,
                     Text = scene.Content.Text,
                     ImageId = scene.Content.ImageId,
                     SoundId = scene.Content.SoundId
