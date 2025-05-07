@@ -46,11 +46,7 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetScene(Guid sceneId)
         {
             var result = sceneService.GetScene(sceneId);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
