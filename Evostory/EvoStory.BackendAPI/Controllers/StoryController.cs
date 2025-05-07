@@ -25,7 +25,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.CreateStory(story);
             }
-            catch (Exception)
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
                 return BadRequest();
             }
@@ -46,12 +46,7 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStory(Guid storyId)
         {
             var result = storyService.GetStory(storyId);
-            if (result is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
@@ -64,12 +59,7 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStories()
         {
             var result = storyService.GetStories();
-            if (result is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
@@ -88,7 +78,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.DeleteStory(storyId);
             }
-            catch (Exception)
+            catch (ArgumentNullException)
             {
                 return NotFound();
             }
@@ -113,7 +103,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.EditStory(story);
             }
-            catch (Exception)
+            catch (ArgumentNullException)
             {
                 return NotFound();
             }
