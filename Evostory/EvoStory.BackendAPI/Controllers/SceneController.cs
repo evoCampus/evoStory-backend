@@ -1,5 +1,5 @@
 ﻿using EvoStory.BackendAPI.DTO;
-using Evostory.Story.Models;
+using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -7,37 +7,30 @@ namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SceneController : ControllerBase
+    public class SceneController(ISceneService sceneService) : ControllerBase
     {
-        public static List<Scene> scenes = new();
         /// <summary>
         /// Creates a Scene.
         /// </summary>
         /// <param name="scene"></param>
-        /// <response code="204">The Scene was successfully created.</response>
+        /// <response code="201">The Scene was successfully created.</response>
+        /// <response code="400">The Scene was not created.</response>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
-            var newScene = new Scene
+            SceneDTO result;
+            try
             {
-                Id = Guid.NewGuid(),
-                Content = new Content
-                {
-                    Text = scene.Content.Text,
-                    ImageId = scene.Content.ImageId,
-                    SoundId = scene.Content.SoundId
-                },
-                Choices = scene.Choices.Select(choiceDTO => new Choice()
-                {
-                    ChoiceText = choiceDTO.ChoiceText,
-                    Id = Guid.NewGuid(),
-                    NextSceneId = choiceDTO.NextSceneId
-                }).ToList()
-            };
-            scenes.Add(newScene);
-            return Created();
+                result = sceneService.CreateScene(scene);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            {
+                return BadRequest();
+            }
+            return Created($"api/Scene/{result.Id}", result);
         }
 
         /// <summary>
@@ -52,30 +45,8 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            var sceneDTO = new SceneDTO
-            {
-                Id = result.Id,
-                Content = new ContentDTO
-                {
-                    Id = result.Content.Id,
-                    Text = result.Content.Text,
-                    ImageId = result.Content.ImageId,
-                    SoundId = result.Content.SoundId
-                },
-                Choices = result.Choices.Select(choice => new ChoiceDTO
-                {
-                    ChoiceText = choice.ChoiceText,
-                    Id = choice.Id,
-                    NextSceneId = choice.NextSceneId
-                }).ToList()
-            };
-            return Ok(sceneDTO);
+            var result = sceneService.GetScene(sceneId);
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
@@ -87,24 +58,16 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
         public ActionResult GetScenes()
         {
-            var scenesDTO = scenes.Select(scene => new SceneDTO
+            IEnumerable<SceneDTO> result;
+            try
             {
-                Id = scene.Id,
-                Content = new ContentDTO
-                {
-                    Id = scene.Content.Id,
-                    Text = scene.Content.Text,
-                    ImageId = scene.Content.ImageId,
-                    SoundId = scene.Content.SoundId
-                },
-                Choices = scene.Choices.Select(choice => new ChoiceDTO
-                {
-                    ChoiceText = choice.ChoiceText,
-                    Id = choice.Id,
-                    NextSceneId = choice.NextSceneId
-                }).ToList()
-            });
-            return Ok(scenesDTO);
+                result = sceneService.GetScenes();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         /// <summary>
@@ -119,12 +82,14 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Id == sceneId);
-            if (result == null)
+            try
+            {
+                sceneService.DeleteScene(sceneId);
+            }
+            catch (ArgumentNullException ex)
             {
                 return NotFound();
             }
-            scenes.Remove(result);
             return NoContent();
         }
     }
