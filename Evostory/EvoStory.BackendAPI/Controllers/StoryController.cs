@@ -1,5 +1,5 @@
-﻿using Evostory.Story.Models;
-using EvoStory.BackendAPI.DTO;
+﻿using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -7,43 +7,29 @@ namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoryController : ControllerBase
+    public class StoryController(IStoryService storyService) : ControllerBase
     {
-        public static List<Story> stories = new();
         /// <summary>
         /// Creates a Story.
         /// </summary>
         /// <param name="story"></param>
         /// <response code="204">The Story was successfully created.</response>
-        [HttpPut]
+        /// <response code="400">Bad request.</response>
+        [HttpPut(Name = nameof(CreateStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
-            var newStory = new Story
+            try
             {
-                Id = Guid.NewGuid(),
-                Scenes = story.Scenes.Select(sceneDTO => new Scene()
-                {
-                    Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
-                    {
-                        ChoiceText = choiceDTO.ChoiceText,
-                        Id = Guid.NewGuid(),
-                        NextSceneId = choiceDTO.NextSceneId
-                    }).ToList(),
-                    Content = new Content
-                    {
-                        Id = Guid.NewGuid(),
-                        Text = sceneDTO.Content.Text,
-                        ImageId = sceneDTO.Content.ImageId,
-                        SoundId = sceneDTO.Content.SoundId
-                    },
-                    Id = Guid.NewGuid()
-                }),
-                StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
-                Title = story.Title
-            };
-            stories.Add(newStory);
+                storyService.CreateStory(story);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            {
+                return BadRequest();
+            }
+
             return Created();
         }
 
@@ -53,77 +39,27 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <response code="200">The Story was successfully retrieved.</response>
         /// <response code="404">Story not found.</response>
-        [HttpGet("{storyId}")]
+        [HttpGet("{storyId}", Name = nameof(GetStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetStory(Guid storyId)
         {
-            var result = stories.FirstOrDefault(story => story.Id == storyId);
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            var storyDTO = new StoryDTO
-            {
-                Id = result.Id,
-                Scenes = result.Scenes.Select(scene => new SceneDTO()
-                {
-                    Choices = scene.Choices.Select(choice => new ChoiceDTO()
-                    {
-                        ChoiceText = choice.ChoiceText,
-                        Id = choice.Id,
-                        NextSceneId = choice.NextSceneId
-                    }).ToList(),
-                    Content = new ContentDTO
-                    {
-                        Id = scene.Content.Id,
-                        Text = scene.Content.Text,
-                        ImageId = scene.Content.ImageId,
-                        SoundId = scene.Content.SoundId
-                    },
-                    Id = scene.Id
-                }),
-                StartingSceneId = result.StartingSceneId,
-                Title = result.Title
-            };
-            return Ok(storyDTO);
+            var result = storyService.GetStory(storyId);
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
         /// Get all Stories.
         /// </summary>
-        /// <response code="200">The Stories were successfully retrieved..</response>
-        [HttpGet]
+        /// <response code="200">The Stories were successfully retrieved.</response>        
+        [HttpGet(Name = nameof(GetStories))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
-            var storiesDTO = stories.Select(story => new StoryDTO
-            {
-                Id = story.Id,
-                Scenes = story.Scenes.Select(scene => new SceneDTO()
-                {
-                    Choices = scene.Choices.Select(choice => new ChoiceDTO()
-                    {
-                        ChoiceText = choice.ChoiceText,
-                        Id = choice.Id,
-                        NextSceneId = choice.NextSceneId
-                    }).ToList(),
-                    Content = new ContentDTO
-                    {
-                        Id = scene.Content.Id,
-                        Text = scene.Content.Text,
-                        ImageId = scene.Content.ImageId,
-                        SoundId = scene.Content.SoundId
-                    },
-                    Id = scene.Id
-                }),
-                StartingSceneId = story.StartingSceneId,
-                Title = story.Title
-            });
-            return Ok(storiesDTO);
+            var result = storyService.GetStories();
+            return result is null ? NotFound() : Ok(result);
         }
 
         /// <summary>
@@ -132,18 +68,21 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <response code="204">The Story was successfully deleted.</response>
         /// <response code="404">Story not found.</response>
-        [HttpDelete("{storyId}")]
+        [HttpDelete("{storyId}", Name = nameof(DeleteStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
-            var result = stories.FirstOrDefault(story => story.Id == storyId);
-            if (result == null)
+            try
+            {
+                storyService.DeleteStory(storyId);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-            stories.Remove(result);
+
             return NoContent();
         }
 
@@ -153,22 +92,23 @@ namespace EvoStory.BackendAPI.Controllers
         /// <param name="storyId"></param>
         /// <param name="story"></param>
         /// <response code="200">The Story was successfully edited.</response>
-        [HttpPut("{storyId}")]
+        /// <response code="404">Story not found.</response>
+        [HttpPut("{storyId}", Name = nameof(EditStory))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult EditStory(Guid storyId, EditStoryDTO story)
         {
-            var existingStory = stories.FirstOrDefault(story => story.Id == storyId);
-            var editedStory = new Story
+            try
             {
-                Scenes = existingStory.Scenes,
-                StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
-                Title = story.Title
-            };
-            existingStory.Title = editedStory.Title;
-            existingStory.Scenes = editedStory.Scenes.ToList();
-            existingStory.StartingSceneId = editedStory.StartingSceneId;
-            return Ok(existingStory);
+                storyService.EditStory(story);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+
+            return Ok(story);
         }
     }
 }
