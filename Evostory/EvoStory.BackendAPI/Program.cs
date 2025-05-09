@@ -17,8 +17,13 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<ISceneRepository, SceneRepositoryInMemory>();
 builder.Services.AddSingleton<ISceneService, SceneService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddSingleton<IChoiceRepository, ChoiceRepositoryInMemory>();
+builder.Services.AddSingleton<IChoiceService, ChoiceService>();
+
 builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
 builder.Services.AddSingleton<IStoryService, StoryService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
