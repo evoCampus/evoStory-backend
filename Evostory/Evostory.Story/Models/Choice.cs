@@ -4,6 +4,6 @@
     {
         public Guid Id { get; set; }
         public Guid NextSceneId { get; set; }
-        public string ChoiceText { get; set; }
+        public string? ChoiceText { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class SceneDTO
     {
-        public Guid Id { get; set; }
+        public required Guid Id { get; set; }
         public ContentDTO Content { get; set; }
         public IEnumerable<ChoiceDTO> Choices { get; set; }
     }
