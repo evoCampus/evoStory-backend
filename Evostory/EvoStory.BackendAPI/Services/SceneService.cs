@@ -4,7 +4,7 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class SceneService(ISceneRepository sceneRepository) : ISceneService
+    public class SceneService(ISceneRepository sceneRepository, IDTOConversionService dTOConversion) : ISceneService
     {
         public SceneDTO? CreateScene(CreateSceneDTO scene)
         {
@@ -26,23 +26,7 @@ namespace EvoStory.BackendAPI.Services
                 })
             };
             sceneRepository.CreateScene(newScene);
-            return new SceneDTO
-            {
-                Id = newScene.Id,
-                Content = new ContentDTO
-                {
-                    Id = newScene.Content.Id,
-                    Text = newScene.Content.Text,
-                    ImageId = newScene.Content.ImageId,
-                    SoundId = newScene.Content.SoundId
-                },
-                Choices = newScene.Choices.Select(choice => new ChoiceDTO
-                {
-                    ChoiceText = choice.ChoiceText,
-                    Id = choice.Id,
-                    NextSceneId = choice.NextSceneId
-                })
-            };
+            return dTOConversion.ConvertSceneToSceneDTO(newScene);
         }
 
         public void DeleteScene(Guid sceneId)
@@ -57,46 +41,14 @@ namespace EvoStory.BackendAPI.Services
             {
                 return null;
             }
-            var sceneDTO = new SceneDTO
-            {
-                Id = result.Id,
-                Content = new ContentDTO
-                {
-                    Id = result.Content.Id,
-                    Text = result.Content.Text,
-                    ImageId = result.Content.ImageId,
-                    SoundId = result.Content.SoundId
-                },
-                Choices = result.Choices.Select(choice => new ChoiceDTO
-                {
-                    ChoiceText = choice.ChoiceText,
-                    Id = choice.Id,
-                    NextSceneId = choice.NextSceneId
-                })
-            };
+            var sceneDTO = dTOConversion.ConvertSceneToSceneDTO(result);
             return sceneDTO;
         }
 
         public IEnumerable<SceneDTO> GetScenes()
         {
             var result = sceneRepository.GetScenes();
-            var scenesDTO = result.Select(scene => new SceneDTO
-            {
-                Id = scene.Id,
-                Content = new ContentDTO
-                {
-                    Id = scene.Content.Id,
-                    Text = scene.Content.Text,
-                    ImageId = scene.Content.ImageId,
-                    SoundId = scene.Content.SoundId
-                },
-                Choices = scene.Choices.Select(choice => new ChoiceDTO
-                {
-                    ChoiceText = choice.ChoiceText,
-                    Id = choice.Id,
-                    NextSceneId = choice.NextSceneId
-                })
-            });
+            var scenesDTO = result.Select(scene => dTOConversion.ConvertSceneToSceneDTO(scene));
             return scenesDTO;
         }
     }

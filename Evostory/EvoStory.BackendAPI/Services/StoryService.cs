@@ -4,7 +4,7 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class StoryService(IStoryRepository storyRepository) : IStoryService
+    public class StoryService(IStoryRepository storyRepository,IDTOConversionService dTOConversion) : IStoryService
     {
         public void CreateStory(CreateStoryDTO story)
         {
@@ -46,29 +46,7 @@ namespace EvoStory.BackendAPI.Services
             {
                 return null;
             }
-            var storyDTO = new StoryDTO
-            {
-                Id = result.Id,
-                Scenes = result.Scenes.Select(scene => new SceneDTO()
-                {
-                    Choices = scene.Choices.Select(choice => new ChoiceDTO()
-                    {
-                        ChoiceText = choice.ChoiceText,
-                        Id = choice.Id,
-                        NextSceneId = choice.NextSceneId
-                    }).ToList(),
-                    Content = new ContentDTO
-                    {
-                        Id = scene.Content.Id,
-                        Text = scene.Content.Text,
-                        ImageId = scene.Content.ImageId,
-                        SoundId = scene.Content.SoundId
-                    },
-                    Id = scene.Id
-                }),
-                StartingSceneId = result.StartingSceneId,
-                Title = result.Title
-            };
+            var storyDTO = dTOConversion.ConvertStoryToStoryDTO(result);
             return storyDTO;
         }
 
@@ -79,29 +57,7 @@ namespace EvoStory.BackendAPI.Services
             {
                 return null;
             }
-            var storiesDTO = result.Select(story => new StoryDTO
-            {
-                Id = story.Id,
-                Scenes = story.Scenes.Select(scene => new SceneDTO()
-                {
-                    Choices = scene.Choices.Select(choice => new ChoiceDTO()
-                    {
-                        ChoiceText = choice.ChoiceText,
-                        Id = choice.Id,
-                        NextSceneId = choice.NextSceneId
-                    }).ToList(),
-                    Content = new ContentDTO
-                    {
-                        Id = scene.Content.Id,
-                        Text = scene.Content.Text,
-                        ImageId = scene.Content.ImageId,
-                        SoundId = scene.Content.SoundId
-                    },
-                    Id = scene.Id
-                }),
-                StartingSceneId = story.StartingSceneId,
-                Title = story.Title
-            });
+            var storiesDTO = result.Select(story => dTOConversion.ConvertStoryToStoryDTO(story));
             return storiesDTO;
         }
 

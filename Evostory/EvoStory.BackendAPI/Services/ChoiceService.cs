@@ -4,7 +4,7 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class ChoiceService(IChoiceRepository choiceRepository) : IChoiceService
+    public class ChoiceService(IChoiceRepository choiceRepository, IDTOConversionService dTOConversion) : IChoiceService
     {
         public ChoiceDTO? CreateChoice(CreateChoiceDTO choice)
         {
@@ -17,12 +17,7 @@ namespace EvoStory.BackendAPI.Services
 
             choiceRepository.CreateChoice(newChoice);
 
-            return new ChoiceDTO
-            {
-                Id = newChoice.Id,
-                NextSceneId = newChoice.NextSceneId,
-                ChoiceText = newChoice.ChoiceText
-            };
+            return dTOConversion.ConvertChoiceToChoiceDTO(newChoice);
         }
 
         public ChoiceDTO? GetChoice(Guid choiceId)
@@ -33,12 +28,7 @@ namespace EvoStory.BackendAPI.Services
                 return null;
             }
 
-            var choiceDTO = new ChoiceDTO
-            {
-                Id = result.Id,
-                NextSceneId = result.NextSceneId,
-                ChoiceText = result.ChoiceText
-            };
+            var choiceDTO = dTOConversion.ConvertChoiceToChoiceDTO(result);
 
             return choiceDTO;
         }
@@ -46,12 +36,7 @@ namespace EvoStory.BackendAPI.Services
         public IEnumerable<ChoiceDTO> GetChoices()
         {
             var result = choiceRepository.GetChoices();
-            var choicesDTO = result.Select(choice => new ChoiceDTO
-            {
-                Id = choice.Id,
-                NextSceneId = choice.NextSceneId,
-                ChoiceText = choice.ChoiceText
-            });
+            var choicesDTO = result.Select(choice => dTOConversion.ConvertChoiceToChoiceDTO(choice));
 
             return choicesDTO;
         }
