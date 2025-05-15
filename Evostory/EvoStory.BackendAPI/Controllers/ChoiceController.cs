@@ -3,11 +3,13 @@ using EvoStory.BackendAPI.DTO;
 using Evostory.Story.Models;
 using System.Net.Mime;
 using EvoStory.BackendAPI.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("allowedOrigins")]
     public class ChoiceController(IChoiceService choiceService) : ControllerBase
     {
         /// <summary>
@@ -62,7 +64,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// <response code="200">The Choices were succesfully retrieved.</response>
         [HttpGet(Name = nameof(GetChoices))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(IEnumerable<CreateChoiceDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<ChoiceDTO>), StatusCodes.Status200OK)]
         public ActionResult GetChoices()
         {
             IEnumerable<ChoiceDTO> result;

@@ -1,5 +1,6 @@
 ﻿using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -7,6 +8,8 @@ namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    [EnableCors("allowedOrigins")]
     public class SceneController(ISceneService sceneService) : ControllerBase
     {
         /// <summary>

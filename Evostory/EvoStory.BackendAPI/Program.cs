@@ -26,7 +26,20 @@ builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var allowedSpecificOrigins = "allowedOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowedSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                      });
+});
+
 var app = builder.Build();
+app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
