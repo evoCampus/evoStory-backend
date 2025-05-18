@@ -4,10 +4,11 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class StoryService(IStoryRepository storyRepository,IDTOConversionService dTOConversion) : IStoryService
+    public class StoryService(IStoryRepository storyRepository, IDTOConversionService dTOConversion, ILogger<StoryService> logger) : IStoryService
     {
         public void CreateStory(CreateStoryDTO story)
         {
+            logger.LogInformation($"Create story service was called where Title: {story.Title};");
             var newStory = new Story
             {
                 Id = Guid.NewGuid(),
@@ -31,38 +32,48 @@ namespace EvoStory.BackendAPI.Services
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
+            logger.LogDebug($"Story was created successfully with Id: {newStory.Id}");
             storyRepository.CreateStory(newStory);
         }
 
         public void DeleteStory(Guid storyId)
         {
+            logger.LogInformation("Delete story service was called.");
             storyRepository.DeleteStory(storyId);
+            logger.LogDebug($"Story with Id: {storyId} was deleted.");
         }
 
         public StoryDTO GetStory(Guid storyId)
         {
+            logger.LogInformation($"Get story service was called with Id: {storyId};");
             var result = storyRepository.GetStory(storyId);
             if (result == null)
             {
+                logger.LogWarning($"Story with Id: {storyId} was not found.");
                 return null;
             }
+            logger.LogDebug($"Story with Id: {storyId} was found.");
             var storyDTO = dTOConversion.ConvertStoryToStoryDTO(result);
             return storyDTO;
         }
 
         public IEnumerable<StoryDTO> GetStories()
         {
+            logger.LogInformation("Get stories service was called.");
             var result = storyRepository.GetStories();
             if (result == null)
             {
+                logger.LogWarning("No stories were found.");
                 return null;
             }
+            logger.LogDebug("Stories were found.");
             var storiesDTO = result.Select(story => dTOConversion.ConvertStoryToStoryDTO(story));
             return storiesDTO;
         }
 
         public void EditStory(EditStoryDTO story)
         {
+            logger.LogInformation($"Edit story service was called where Id: {story.Id};");
             var newStory = new Story
             {
                 Id = story.Id,
@@ -86,6 +97,7 @@ namespace EvoStory.BackendAPI.Services
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
+            logger.LogDebug($"Story with Id: {newStory.Id} was edited successfully.");
             storyRepository.EditStory(newStory);
         }
     }
