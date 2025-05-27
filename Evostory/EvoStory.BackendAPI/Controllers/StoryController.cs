@@ -9,7 +9,7 @@ namespace EvoStory.BackendAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("allowedOrigins")]
-    public class StoryController(IStoryService storyService) : ControllerBase
+    public class StoryController(IStoryService storyService, ILogger<StoryController> logger) : ControllerBase
     {
         /// <summary>
         /// Creates a Story.
@@ -23,15 +23,18 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
+            logger.LogInformation($"Creating story with Title: {story.Title};");
             try
             {
                 storyService.CreateStory(story);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
+                logger.LogError(ex, "An error occurred when creating the story.");
                 return BadRequest();
             }
 
+            logger.LogInformation($"Story was created successfully with Title: {story.Title};");
             return Created();
         }
 
@@ -47,6 +50,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetStory(Guid storyId)
         {
+            logger.LogInformation($"Getting story with Id: {storyId}.");
             var result = storyService.GetStory(storyId);
             return result is null ? NotFound() : Ok(result);
         }
@@ -60,6 +64,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
+            logger.LogInformation("Getting all the stories.");
             var result = storyService.GetStories();
             return result is null ? NotFound() : Ok(result);
         }
@@ -76,15 +81,18 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
+            logger.LogInformation($"Deleting story with Id: {storyId}.");
             try
             {
                 storyService.DeleteStory(storyId);
             }
             catch (KeyNotFoundException)
             {
+                logger.LogError($"Story with Id: {storyId} not found.");
                 return NotFound();
             }
 
+            logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return NoContent();
         }
 
@@ -101,15 +109,18 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult EditStory(Guid storyId, EditStoryDTO story)
         {
+            logger.LogInformation($"Editing story with Id: {storyId}.");
             try
             {
                 storyService.EditStory(story);
             }
             catch (KeyNotFoundException)
             {
+                logger.LogError($"Story with Id: {storyId} not found.");
                 return NotFound();
             }
 
+            logger.LogInformation($"Story with Id: {storyId} was edited.");
             return Ok(story);
         }
     }
