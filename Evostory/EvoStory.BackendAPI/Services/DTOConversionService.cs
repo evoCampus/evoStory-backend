@@ -3,10 +3,11 @@ using EvoStory.BackendAPI.DTO;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class DTOConversionService: IDTOConversionService
+    public class DTOConversionService(ILogger<DTOConversionService> logger) : IDTOConversionService
     {
         public StoryDTO ConvertStoryToStoryDTO(Story story)
         {
+            logger.LogTrace($"Converting Story with Id: {story.Id} to StoryDTO.");
             return new StoryDTO
             {
                 Id = story.Id,
@@ -17,6 +18,7 @@ namespace EvoStory.BackendAPI.Services
         }
         public SceneDTO ConvertSceneToSceneDTO(Scene scene)
         {
+            logger.LogTrace($"Converting Scene with Id: {scene.Id} to SceneDTO.");
             return new SceneDTO
             {
                 Id = scene.Id,
@@ -32,6 +34,7 @@ namespace EvoStory.BackendAPI.Services
         }
         public ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice)
         {
+            logger.LogTrace($"Converting Choice with Id: {choice.Id} to ChoiceDTO.");
             return new ChoiceDTO
             {
                 Id = choice.Id,
