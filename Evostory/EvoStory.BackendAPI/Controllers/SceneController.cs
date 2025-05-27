@@ -35,7 +35,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "An error occurred when creating the scene.");
                 return BadRequest();
             }
-            logger.LogDebug($"Scene was created successfully with Id: {result.Id}");
+            logger.LogInformation($"Scene was created successfully with Id: {result.Id}");
             return Created($"api/Scene/{result.Id}", result);
         }
 
@@ -101,7 +101,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "The scene was not found.");
                 return NotFound();
             }
-            logger.LogDebug($"Scene with Id: {sceneId} was deleted.");
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
             return NoContent();
         }
     }

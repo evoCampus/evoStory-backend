@@ -7,14 +7,14 @@ namespace EvoStory.BackendAPI.Repository
         private List<Story> _stories = new();
         public Story CreateStory(Story story)
         {
-            logger.LogInformation("Create story repository was called.");
+            logger.LogTrace("Create story repository was called.");
             _stories.Add(story);
             return story;
         }
 
         public Story DeleteStory(Guid storyId)
         {
-            logger.LogInformation("Delete story repository was called.");
+            logger.LogTrace("Delete story repository was called.");
             var result = _stories.FirstOrDefault(story => story.Id == storyId);
             if (result is null)
             {
@@ -29,7 +29,7 @@ namespace EvoStory.BackendAPI.Repository
 
         public Story GetStory(Guid storyId)
         {
-            logger.LogInformation("Get story repository was called.");
+            logger.LogTrace("Get story repository was called.");
             var result = _stories.FirstOrDefault(story => story.Id == storyId);
             if (result is null)
             {
@@ -42,13 +42,13 @@ namespace EvoStory.BackendAPI.Repository
 
         public IEnumerable<Story> GetStories()
         {
-            logger.LogInformation("Get stories repository was called.");
+            logger.LogTrace("Get stories repository was called.");
             return _stories;
         }
 
         public Story EditStory(Story story)
         {
-            logger.LogInformation("Edit story repository was called.");
+            logger.LogTrace("Edit story repository was called.");
             var result = _stories.FirstOrDefault(s => s.Id == story.Id);
             if (result is null)
             {

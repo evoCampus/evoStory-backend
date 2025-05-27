@@ -34,7 +34,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return BadRequest();
             }
 
-            logger.LogDebug($"Story was created successfully with Title: {story.Title};");
+            logger.LogInformation($"Story was created successfully with Title: {story.Title};");
             return Created();
         }
 
@@ -92,7 +92,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return NotFound();
             }
 
-            logger.LogDebug($"Story with Id: {storyId} was deleted.");
+            logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return NoContent();
         }
 
@@ -120,7 +120,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return NotFound();
             }
 
-            logger.LogDebug($"Story with Id: {storyId} was edited.");
+            logger.LogInformation($"Story with Id: {storyId} was edited.");
             return Ok(story);
         }
     }

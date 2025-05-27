@@ -35,7 +35,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return BadRequest();
             }
 
-            logger.LogDebug($"Choice was created successfully with Id: {result.Id}");
+            logger.LogInformation($"Choice was created successfully with Id: {result.Id}");
             return Created($"api/Choice/{result.Id}", result);
         }
 
@@ -100,7 +100,7 @@ namespace EvoStory.BackendAPI.Controllers
                 return NotFound();
             }
 
-            logger.LogDebug($"Choice with Id: {choiceId} was deleted.");
+            logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
             return NoContent();
         }
     }

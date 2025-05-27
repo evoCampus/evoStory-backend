@@ -9,7 +9,7 @@ namespace EvoStory.BackendAPI.Services
     {
         public ChoiceDTO? CreateChoice(CreateChoiceDTO choice)
         {
-            logger.LogInformation("Create choice service was called.");
+            logger.LogDebug("Create choice service was called.");
             var newChoice = new Choice
             {
                 Id = Guid.NewGuid(),
@@ -18,14 +18,14 @@ namespace EvoStory.BackendAPI.Services
             };
 
             choiceRepository.CreateChoice(newChoice);
-            logger.LogDebug($"Choice was created successfully with Id: {newChoice.Id}");
+            logger.LogInformation($"Choice was created successfully with Id: {newChoice.Id}");
 
             return dTOConversion.ConvertChoiceToChoiceDTO(newChoice);
         }
 
         public ChoiceDTO? GetChoice(Guid choiceId)
         {
-            logger.LogInformation("Get choice service was called.");
+            logger.LogDebug("Get choice service was called.");
             var result = choiceRepository.GetChoice(choiceId);
             if (result is null)
             {
@@ -41,7 +41,7 @@ namespace EvoStory.BackendAPI.Services
 
         public IEnumerable<ChoiceDTO> GetChoices()
         {
-            logger.LogInformation("Get choices service was called.");
+            logger.LogDebug("Get choices service was called.");
             var result = choiceRepository.GetChoices();
             var choicesDTO = result.Select(choice => dTOConversion.ConvertChoiceToChoiceDTO(choice));
             logger.LogDebug("Choices were found.");
@@ -51,9 +51,9 @@ namespace EvoStory.BackendAPI.Services
 
         public void DeleteChoice(Guid choiceId)
         {
-            logger.LogInformation("Delete choice service was called.");
+            logger.LogDebug("Delete choice service was called.");
             choiceRepository.DeleteChoice(choiceId);
-            logger.LogDebug($"Choice with Id: {choiceId} was deleted.");
+            logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
         }
     }
 }

@@ -8,7 +8,7 @@ namespace EvoStory.BackendAPI.Services
     {
         public SceneDTO? CreateScene(CreateSceneDTO scene)
         {
-            logger.LogInformation("Create scene service was called.");
+            logger.LogDebug("Create scene service was called.");
             var newScene = new Scene
             {
                 Id = Guid.NewGuid(),
@@ -26,21 +26,21 @@ namespace EvoStory.BackendAPI.Services
                     NextSceneId = choiceDTO.NextSceneId
                 })
             };
-            logger.LogDebug($"Scene was created successfully with Id: {newScene.Id}");
+            logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
             sceneRepository.CreateScene(newScene);
             return dTOConversion.ConvertSceneToSceneDTO(newScene);
         }
 
         public void DeleteScene(Guid sceneId)
         {
-            logger.LogInformation("Delete scene service was called.");
+            logger.LogDebug("Delete scene service was called.");
             sceneRepository.DeleteScene(sceneId);
-            logger.LogDebug($"Scene with Id: {sceneId} was deleted.");
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
         }
 
         public SceneDTO? GetScene(Guid sceneId)
         {
-            logger.LogInformation("Get scene service was called.");
+            logger.LogDebug("Get scene service was called.");
             var result = sceneRepository.GetScene(sceneId);
             if (result == null)
             {
@@ -54,7 +54,7 @@ namespace EvoStory.BackendAPI.Services
 
         public IEnumerable<SceneDTO> GetScenes()
         {
-            logger.LogInformation("Get scenes service was called.");
+            logger.LogDebug("Get scenes service was called.");
             var result = sceneRepository.GetScenes();
             var scenesDTO = result.Select(scene => dTOConversion.ConvertSceneToSceneDTO(scene));
             logger.LogDebug("Scenes were found.");
