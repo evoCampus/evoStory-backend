@@ -8,6 +8,10 @@ namespace EvoStory.BackendAPI.Repository
         private Dictionary<Guid, Scene> _scenes = new();
         public Scene CreateScene(Scene scene)
         {
+            if (_scenes.ContainsKey(scene.Id))
+            {
+                throw new RepositoryException($"Existing scene with {scene.Id} found.");
+            }
             _scenes.Add(scene.Id, scene);
             return scene;
         }

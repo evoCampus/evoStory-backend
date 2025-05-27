@@ -8,6 +8,10 @@ namespace EvoStory.BackendAPI.Repository
         private Dictionary<Guid, Story> _stories = new();
         public Story CreateStory(Story story)
         {
+            if (_stories.ContainsKey(story.Id))
+            {
+                throw new RepositoryException($"Existing story with {story.Id} found.");
+            }
             _stories.Add(story.Id, story);
             return story;
         }

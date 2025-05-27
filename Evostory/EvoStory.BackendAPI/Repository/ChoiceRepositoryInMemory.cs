@@ -8,6 +8,10 @@ namespace EvoStory.BackendAPI.Repository
         private Dictionary<Guid, Choice> _choices = new();
         public Choice CreateChoice(Choice choice)
         {
+            if (_choices.ContainsKey(choice.Id))
+            {
+                throw new RepositoryException($"Existing choice with {choice.Id} found.");
+            }
             _choices.Add(choice.Id, choice);
             return choice;
         }
