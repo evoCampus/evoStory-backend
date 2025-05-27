@@ -3,7 +3,7 @@ using EvoStory.BackendAPI.DTO;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class DTOConversionService: IDTOConversionService
+    public class DTOConversionService : IDTOConversionService
     {
         public StoryDTO ConvertStoryToStoryDTO(Story story)
         {
@@ -12,7 +12,6 @@ namespace EvoStory.BackendAPI.Services
                 Id = story.Id,
                 Title = story.Title,
                 StartingSceneId = story.StartingSceneId,
-                Scenes = story.Scenes.Select(s => ConvertSceneToSceneDTO(s)),
             };
         }
         public SceneDTO ConvertSceneToSceneDTO(Scene scene)
