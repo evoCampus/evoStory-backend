@@ -1,8 +1,10 @@
 ﻿using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
+using EvoStory.BackendAPI.Exceptions;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using Evostory.Story.Models;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -15,24 +17,25 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates a Story.
         /// </summary>
         /// <param name="story"></param>
-        /// <response code="204">The Story was successfully created.</response>
+        /// <response code="201">The Story was successfully created.</response>
         /// <response code="400">Bad request.</response>
         [HttpPut(Name = nameof(CreateStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
+            StoryDTO result;
             try
             {
-                storyService.CreateStory(story);
+                result = storyService.CreateStory(story);
             }
-            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            catch (RepositoryException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
 
-            return Created();
+            return Created($"api/Story/{result.Id}", result);
         }
 
         /// <summary>
@@ -47,8 +50,17 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetStory(Guid storyId)
         {
-            var result = storyService.GetStory(storyId);
-            return result is null ? NotFound() : Ok(result);
+            StoryDTO result;
+            try
+            {
+                result = storyService.GetStory(storyId);
+            }
+            catch (RepositoryException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -60,32 +72,34 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
         public ActionResult GetStories()
         {
-            var result = storyService.GetStories();
-            return result is null ? NotFound() : Ok(result);
+            IEnumerable<StoryDTO> result;
+            result = storyService.GetStories();
+            return Ok(result);
         }
 
         /// <summary>
         /// Deletes a Story by Id.
         /// </summary>
         /// <param name="storyId"></param>
-        /// <response code="204">The Story was successfully deleted.</response>
+        /// <response code="200">The Story was successfully deleted.</response>
         /// <response code="404">Story not found.</response>
         [HttpDelete("{storyId}", Name = nameof(DeleteStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
+            StoryDTO result;
             try
             {
-                storyService.DeleteStory(storyId);
+                result = storyService.DeleteStory(storyId);
             }
-            catch (KeyNotFoundException)
+            catch (RepositoryException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>
@@ -105,9 +119,9 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.EditStory(story);
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             return Ok(story);

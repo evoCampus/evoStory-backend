@@ -1,31 +1,43 @@
 ﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
     public class SceneRepositoryInMemory : ISceneRepository
     {
-        private Dictionary<Guid, Scene> scenes = new();
+        private Dictionary<Guid, Scene> _scenes = new();
         public Scene CreateScene(Scene scene)
         {
-            scenes.Add(scene.Id,scene);
+            _scenes.Add(scene.Id, scene);
             return scene;
         }
 
-        public void DeleteScene(Guid sceneId)
+        public Scene DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
-            scenes.Remove(result.Key);
+            var result = _scenes.FirstOrDefault(scene => scene.Key == sceneId);
+            if (result.Value is null)
+            {
+                throw new RepositoryException($"No scene with {sceneId} found.");
+            }
+
+            _scenes.Remove(result.Key);
+            return result.Value;
         }
 
-        public Scene? GetScene(Guid sceneId)
+        public Scene GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
+            var result = _scenes.FirstOrDefault(scene => scene.Key == sceneId);
+            if (result.Value is null)
+            {
+                throw new RepositoryException($"No scene with {sceneId} found.");
+            }
+
             return result.Value;
         }
 
         public IEnumerable<Scene> GetScenes()
         {
-            return scenes.Values;
+            return _scenes.Values;
         }
     }
 }

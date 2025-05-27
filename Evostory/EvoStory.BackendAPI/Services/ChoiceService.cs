@@ -6,7 +6,7 @@ namespace EvoStory.BackendAPI.Services
 {
     public class ChoiceService(IChoiceRepository choiceRepository, IDTOConversionService dTOConversion) : IChoiceService
     {
-        public ChoiceDTO? CreateChoice(CreateChoiceDTO choice)
+        public ChoiceDTO CreateChoice(CreateChoiceDTO choice)
         {
             var newChoice = new Choice
             {
@@ -16,34 +16,26 @@ namespace EvoStory.BackendAPI.Services
             };
 
             choiceRepository.CreateChoice(newChoice);
-
             return dTOConversion.ConvertChoiceToChoiceDTO(newChoice);
         }
 
-        public ChoiceDTO? GetChoice(Guid choiceId)
+        public ChoiceDTO GetChoice(Guid choiceId)
         {
             var result = choiceRepository.GetChoice(choiceId);
-            if (result is null)
-            {
-                return null;
-            }
-
-            var choiceDTO = dTOConversion.ConvertChoiceToChoiceDTO(result);
-
-            return choiceDTO;
+            return dTOConversion.ConvertChoiceToChoiceDTO(result);
         }
 
         public IEnumerable<ChoiceDTO> GetChoices()
         {
             var result = choiceRepository.GetChoices();
             var choicesDTO = result.Select(choice => dTOConversion.ConvertChoiceToChoiceDTO(choice));
-
             return choicesDTO;
         }
 
-        public void DeleteChoice(Guid choiceId)
+        public ChoiceDTO DeleteChoice(Guid choiceId)
         {
-            choiceRepository.DeleteChoice(choiceId);
+            var result = choiceRepository.DeleteChoice(choiceId);
+            return dTOConversion.ConvertChoiceToChoiceDTO(result);
         }
     }
 }

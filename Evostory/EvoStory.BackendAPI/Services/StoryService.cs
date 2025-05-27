@@ -4,9 +4,9 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class StoryService(IStoryRepository storyRepository,IDTOConversionService dTOConversion) : IStoryService
+    public class StoryService(IStoryRepository storyRepository, IDTOConversionService dTOConversion) : IStoryService
     {
-        public void CreateStory(CreateStoryDTO story)
+        public StoryDTO CreateStory(CreateStoryDTO story)
         {
             var newStory = new Story
             {
@@ -32,36 +32,29 @@ namespace EvoStory.BackendAPI.Services
                 Title = story.Title
             };
             storyRepository.CreateStory(newStory);
+            return dTOConversion.ConvertStoryToStoryDTO(newStory);
         }
 
-        public void DeleteStory(Guid storyId)
+        public StoryDTO DeleteStory(Guid storyId)
         {
-            storyRepository.DeleteStory(storyId);
+            var result = storyRepository.DeleteStory(storyId);
+            return dTOConversion.ConvertStoryToStoryDTO(result);
         }
 
         public StoryDTO GetStory(Guid storyId)
         {
             var result = storyRepository.GetStory(storyId);
-            if (result == null)
-            {
-                return null;
-            }
-            var storyDTO = dTOConversion.ConvertStoryToStoryDTO(result);
-            return storyDTO;
+            return dTOConversion.ConvertStoryToStoryDTO(result);
         }
 
         public IEnumerable<StoryDTO> GetStories()
         {
             var result = storyRepository.GetStories();
-            if (result == null)
-            {
-                return null;
-            }
             var storiesDTO = result.Select(story => dTOConversion.ConvertStoryToStoryDTO(story));
             return storiesDTO;
         }
 
-        public void EditStory(EditStoryDTO story)
+        public StoryDTO EditStory(EditStoryDTO story)
         {
             var newStory = new Story
             {
@@ -87,6 +80,7 @@ namespace EvoStory.BackendAPI.Services
                 Title = story.Title
             };
             storyRepository.EditStory(newStory);
+            return dTOConversion.ConvertStoryToStoryDTO(newStory);
         }
     }
 }

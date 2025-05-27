@@ -6,7 +6,7 @@ namespace EvoStory.BackendAPI.Services
 {
     public class SceneService(ISceneRepository sceneRepository, IDTOConversionService dTOConversion) : ISceneService
     {
-        public SceneDTO? CreateScene(CreateSceneDTO scene)
+        public SceneDTO CreateScene(CreateSceneDTO scene)
         {
             var newScene = new Scene
             {
@@ -29,20 +29,16 @@ namespace EvoStory.BackendAPI.Services
             return dTOConversion.ConvertSceneToSceneDTO(newScene);
         }
 
-        public void DeleteScene(Guid sceneId)
+        public SceneDTO DeleteScene(Guid sceneId)
         {
-            sceneRepository.DeleteScene(sceneId);
+            var result = sceneRepository.DeleteScene(sceneId);
+            return dTOConversion.ConvertSceneToSceneDTO(result);
         }
 
-        public SceneDTO? GetScene(Guid sceneId)
+        public SceneDTO GetScene(Guid sceneId)
         {
             var result = sceneRepository.GetScene(sceneId);
-            if (result == null)
-            {
-                return null;
-            }
-            var sceneDTO = dTOConversion.ConvertSceneToSceneDTO(result);
-            return sceneDTO;
+            return dTOConversion.ConvertSceneToSceneDTO(result);
         }
 
         public IEnumerable<SceneDTO> GetScenes()
