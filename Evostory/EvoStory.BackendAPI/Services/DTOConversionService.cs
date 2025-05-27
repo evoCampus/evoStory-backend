@@ -13,7 +13,6 @@ namespace EvoStory.BackendAPI.Services
                 Id = story.Id,
                 Title = story.Title,
                 StartingSceneId = story.StartingSceneId,
-                Scenes = story.Scenes.Select(s => ConvertSceneToSceneDTO(s)),
             };
         }
         public SceneDTO ConvertSceneToSceneDTO(Scene scene)
