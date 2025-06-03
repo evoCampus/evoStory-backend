@@ -1,4 +1,4 @@
-﻿using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Exceptions;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
@@ -11,7 +11,7 @@ namespace EvoStory.BackendAPI.Controllers
     [ApiController]
 
     [EnableCors("allowedOrigins")]
-    public class SceneController(ISceneService sceneService) : ControllerBase
+    public class SceneController(ISceneService sceneService, ILogger<SceneController> logger) : ControllerBase
     {
         /// <summary>
         /// Creates a Scene.
@@ -25,6 +25,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateScene(CreateSceneDTO scene)
         {
+            logger.LogInformation("Create scene endpoint was called.");
             SceneDTO result;
             try
             {
@@ -32,9 +33,11 @@ namespace EvoStory.BackendAPI.Controllers
             }
             catch (RepositoryException ex)
             {
-                return BadRequest(ex);
+                logger.LogError(ex, "An error occurred when creating the scene.");
+                return BadRequest(ex.Message);
             }
-
+            
+            logger.LogInformation($"Scene was created successfully with Id: {result.Id}");
             return Created($"api/Scene/{result.Id}", result);
         }
 
@@ -50,6 +53,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetScene(Guid sceneId)
         {
+            logger.LogInformation($"Getting scene with Id: {sceneId}.");
             SceneDTO result;
             try
             {
@@ -57,6 +61,7 @@ namespace EvoStory.BackendAPI.Controllers
             }
             catch (RepositoryException ex)
             {
+                logger.LogError(ex, "No scene with Id: {sceneId} found.");
                 return NotFound(ex.Message);
             }
 
@@ -72,6 +77,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
         public ActionResult GetScenes()
         {
+            logger.LogInformation("Getting all scenes.");
             IEnumerable<SceneDTO> result;
             result = sceneService.GetScenes();
             return Ok(result);
@@ -89,6 +95,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteScene(Guid sceneId)
         {
+            logger.LogInformation($"Deleting scene with Id: {sceneId}.");
             SceneDTO result;
             try
             {
@@ -96,9 +103,11 @@ namespace EvoStory.BackendAPI.Controllers
             }
             catch (RepositoryException ex)
             {
+                logger.LogError(ex, "The scene was not found.");
                 return NotFound(ex.Message);
             }
-
+            
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
             return Ok(result);
         }
     }
