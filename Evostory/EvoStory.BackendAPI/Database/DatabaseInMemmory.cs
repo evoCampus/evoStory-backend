@@ -1,7 +1,7 @@
 ﻿using Evostory.Story.Models;
 namespace EvoStory.BackendAPI.Database
 {
-    public class DatabaseInMemmory : IDatabase
+    public class DatabaseInMemmory(ILogger<DatabaseInMemmory> logger) : IDatabase
     {
         public Dictionary<Guid, Story> Stories { get; } = new();
         public void AddStory(Story story)
@@ -13,9 +13,11 @@ namespace EvoStory.BackendAPI.Database
             var result = GetStory(storyId);
             if (result != null)
             {
+                logger.LogDebug($"Story with Id: {storyId} was deleted.");
                 Stories.Remove(storyId);
                 return result;
             }
+            logger.LogWarning($"Story with Id: {storyId} was not found.");
             throw new KeyNotFoundException($"No story with ID {storyId} found.");
         }
         public Story GetStory(Guid storyId)
@@ -25,6 +27,7 @@ namespace EvoStory.BackendAPI.Database
             {
                 return result;
             }
+            logger.LogWarning($"Story with Id: {storyId} was not found.");
             throw new KeyNotFoundException($"No story with ID {storyId} found.");
         }
         public IEnumerable<Story> GetAllStories()
@@ -38,8 +41,10 @@ namespace EvoStory.BackendAPI.Database
                 existingStory.Title = story.Title;
                 existingStory.Scenes = story.Scenes;
                 existingStory.StartingSceneId = story.StartingSceneId;
+                logger.LogDebug($"Story with Id: {story.Id} was edited.");
                 return existingStory;
             }
+            logger.LogWarning($"Story with Id: {story.Id} was not found.");
             throw new KeyNotFoundException($"No story with ID {story.Id} found.");
         }
         public void AddScene(Scene scene)

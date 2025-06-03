@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<ApiContext>(options =>
-    options.UseInMemoryDatabase("StoryDb"));
+options.UseInMemoryDatabase("StoryDb"));
+
+builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ISceneRepository, SceneRepositoryInMemory>();
