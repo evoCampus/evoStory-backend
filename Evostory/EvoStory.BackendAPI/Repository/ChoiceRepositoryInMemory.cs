@@ -1,28 +1,27 @@
 ﻿using Evostory.Story.Models;
 using EvoStory.BackendAPI.Database;
-using System.Runtime.CompilerServices;
 
 namespace EvoStory.BackendAPI.Repository
 {
     public class ChoiceRepositoryInMemory(ILogger<ChoiceRepositoryInMemory> logger) : IChoiceRepository
     {
         private readonly DatabaseInMemory dbContext = new DatabaseInMemory();
-        public Choice CreateChoice(Choice choice)
+        public Choice CreateChoice(Choice choice, Guid sceneId)
         {
             logger.LogTrace("Create choice repository was called.");
-            var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == choice.SceneId));
+            var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == sceneId));
             if (story != null)
             {
-                story.Scenes.FirstOrDefault(s => s.Id == choice.SceneId).Choices.Append(choice);
+                story.Scenes.FirstOrDefault(s => s.Id == sceneId).Choices.Append(choice);
                 dbContext.Stories.TryGetValue(story.Id, out var actualStory);
                 actualStory = story;
-                logger.LogInformation($"Choice with Id: {choice.Id} was created in scene with Id: {choice.SceneId} in story with Id: {story.Id}.");
+                logger.LogInformation($"Choice with Id: {choice.Id} was created in scene with Id: {sceneId} in story with Id: {story.Id}.");
                 return choice;
             }
             else
             {
-                logger.LogWarning($"Scene with Id: {choice.SceneId} was not found when trying to create choice with Id: {choice.Id}.");
-                throw new KeyNotFoundException($"No scene with ID {choice.SceneId} found.");
+                logger.LogWarning($"Scene with Id: {sceneId} was not found when trying to create choice with Id: {choice.Id}.");
+                throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
             }
         }
 

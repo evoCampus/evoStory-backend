@@ -14,11 +14,10 @@ namespace EvoStory.BackendAPI.Services
             {
                 Id = Guid.NewGuid(),
                 NextSceneId = choice.NextSceneId,
-                ChoiceText = choice.ChoiceText,
-                SceneId = choice.SceneId
+                ChoiceText = choice.ChoiceText
             };
 
-            choiceRepository.CreateChoice(newChoice);
+            choiceRepository.CreateChoice(newChoice, choice.SceneId);
             logger.LogInformation($"Choice was created successfully with Id: {newChoice.Id}");
 
             return dTOConversion.ConvertChoiceToChoiceDTO(newChoice);

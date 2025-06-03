@@ -9,19 +9,16 @@ namespace EvoStory.BackendAPI.Services
         public void CreateStory(CreateStoryDTO story)
         {
             logger.LogDebug($"Create story service was called where Title: {story.Title};");
-            var newStoryId = Guid.NewGuid();
-            var newSceneId = Guid.NewGuid();
             var newStory = new Story
             {
-                Id = newStoryId,
+                Id = Guid.NewGuid(),
                 Scenes = story.Scenes.Select(sceneDTO => new Scene()
                 {
                     Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
                     {
                         ChoiceText = choiceDTO.ChoiceText,
                         Id = Guid.NewGuid(),
-                        NextSceneId = choiceDTO.NextSceneId,
-                        SceneId = newSceneId
+                        NextSceneId = choiceDTO.NextSceneId
                     }),
                     Content = new Content
                     {
@@ -30,8 +27,7 @@ namespace EvoStory.BackendAPI.Services
                         ImageId = sceneDTO.Content.ImageId,
                         SoundId = sceneDTO.Content.SoundId
                     },
-                    Id = newSceneId,
-                    StoryId= newStoryId
+                    Id = Guid.NewGuid()
                 }),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title

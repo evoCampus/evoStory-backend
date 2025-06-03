@@ -6,19 +6,19 @@ namespace EvoStory.BackendAPI.Repository
     public class SceneRepositoryInMemory(ILogger<SceneRepositoryInMemory> logger) : ISceneRepository
     {
         private readonly DatabaseInMemory dbContext = new DatabaseInMemory();
-        public Scene CreateScene(Scene scene)
+        public Scene CreateScene(Scene scene, Guid storyId)
         {
             logger.LogTrace("Create scene repository was called.");
-            if (dbContext.Stories.TryGetValue(scene.StoryId, out var story))
+            if (dbContext.Stories.TryGetValue(storyId, out var story))
             {
                 story.Scenes.Append(scene);
-                logger.LogInformation($"Scene with Id: {scene.Id} was created in story with Id: {scene.StoryId}.");
+                logger.LogInformation($"Scene with Id: {scene.Id} was created in story with Id: {storyId}.");
                 return scene;
             }
             else
             {
-                logger.LogWarning($"Story with Id: {scene.StoryId} was not found when trying to create scene with Id: {scene.Id}.");
-                throw new KeyNotFoundException($"No story with ID {scene.StoryId} found.");
+                logger.LogWarning($"Story with Id: {storyId} was not found when trying to create scene with Id: {scene.Id}.");
+                throw new KeyNotFoundException($"No story with ID {storyId} found.");
             }
         }
 
