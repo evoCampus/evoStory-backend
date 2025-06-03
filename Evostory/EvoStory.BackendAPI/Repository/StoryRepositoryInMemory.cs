@@ -13,8 +13,9 @@ namespace EvoStory.BackendAPI.Repository
             {
                 throw new RepositoryException($"Existing story with {story.Id} found.");
             }
-            
+
             _stories.Add(story.Id, story);
+            logger.LogInformation("Story succesfully created in repository.");
             return story;
         }
 
@@ -27,7 +28,7 @@ namespace EvoStory.BackendAPI.Repository
                 logger.LogWarning($"Story with Id: {storyId} was not found.");
                 throw new RepositoryException($"No story with {storyId} found.");
             }
-            
+
             logger.LogDebug($"Story with Id: {storyId} was deleted.");
             _stories.Remove(result.Key);
             return result.Value;

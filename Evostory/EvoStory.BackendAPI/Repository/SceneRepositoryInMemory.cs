@@ -13,8 +13,9 @@ namespace EvoStory.BackendAPI.Repository
             {
                 throw new RepositoryException($"Existing scene with {scene.Id} found.");
             }
-            
+
             _scenes.Add(scene.Id, scene);
+            logger.LogInformation("Scene succesfully created in repository.");
             return scene;
         }
 
@@ -24,10 +25,12 @@ namespace EvoStory.BackendAPI.Repository
             var result = _scenes.FirstOrDefault(scene => scene.Key == sceneId);
             if (result.Value is null)
             {
+                logger.LogWarning($"Scene with Id: {sceneId} was not found.");
                 throw new RepositoryException($"No scene with {sceneId} found.");
             }
 
             _scenes.Remove(result.Key);
+            logger.LogDebug($"Scene with Id: {sceneId} was deleted.");
             return result.Value;
         }
 

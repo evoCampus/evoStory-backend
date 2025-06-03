@@ -15,6 +15,7 @@ namespace EvoStory.BackendAPI.Repository
             }
 
             _choices.Add(choice.Id, choice);
+            logger.LogInformation("Choice succesfully created in repository.");
             return choice;
         }
 
@@ -42,10 +43,12 @@ namespace EvoStory.BackendAPI.Repository
             var result = _choices.FirstOrDefault(choice => choice.Key == choiceId);
             if (result.Value is null)
             {
+                logger.LogWarning($"Choice with Id: {choiceId} was not found.");
                 throw new RepositoryException($"No choice with {choiceId} found.");
             }
 
             _choices.Remove(result.Key);
+            logger.LogDebug($"Choice with Id: {choiceId} was deleted.");
             return result.Value;
         }
     }
