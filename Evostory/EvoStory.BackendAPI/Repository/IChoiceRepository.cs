@@ -4,9 +4,9 @@ namespace EvoStory.BackendAPI.Repository
 {
     public interface IChoiceRepository
     {
-        Choice? CreateChoice(Choice choice);
-        Choice? GetChoice(Guid choiceId);
-        IEnumerable<Choice> GetChoices();
-        void DeleteChoice(Guid choiceId);
+        public Choice? CreateChoice(Choice choice);
+        public Choice? GetChoice(Guid choiceId);
+        public IEnumerable<Choice> GetChoices();
+        public Choice DeleteChoice(Guid choiceId);
     }
 }

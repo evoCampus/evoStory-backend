@@ -7,6 +7,6 @@ namespace EvoStory.BackendAPI.Repository
         public Scene? CreateScene(Scene scene);
         public Scene? GetScene(Guid sceneId);
         public IEnumerable<Scene> GetScenes();
-        public void DeleteScene(Guid sceneId);
+        public Scene DeleteScene(Guid sceneId);
     }
 }

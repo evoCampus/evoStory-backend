@@ -1,31 +1,31 @@
 ﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class ChoiceRepositoryInMemory : IChoiceRepository
+    public class ChoiceRepositoryInMemory(IDatabase dbContext) : IChoiceRepository
     {
-        private Dictionary<Guid, Choice> _choices = new();
         public Choice CreateChoice(Choice choice)
         {
-            _choices.Add(choice.Id, choice);
+            dbContext.AddChoice(choice);
             return choice;
         }
 
         public Choice? GetChoice(Guid choiceId)
         {
-            var result = _choices.FirstOrDefault(choice => choice.Key == choiceId);
-            return result.Value;
+            var result = dbContext.GetChoice(choiceId);
+            return result;
         }
 
         public IEnumerable<Choice> GetChoices()
         {
-            return _choices.Values;
+            return dbContext.GetAllChoices();
         }
 
-        public void DeleteChoice(Guid choiceId)
+        public Choice DeleteChoice(Guid choiceId)
         {
-            var result = _choices.FirstOrDefault(choice => choice.Key == choiceId);
-            _choices.Remove(result.Key);
+            var result = dbContext.RemoveChoice(choiceId);
+            return result;
         }
     }
 }

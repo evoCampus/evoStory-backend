@@ -1,31 +1,31 @@
 ﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class SceneRepositoryInMemory : ISceneRepository
+    public class SceneRepositoryInMemory(IDatabase dbContext) : ISceneRepository
     {
-        private Dictionary<Guid, Scene> scenes = new();
         public Scene CreateScene(Scene scene)
         {
-            scenes.Add(scene.Id,scene);
+            dbContext.AddScene(scene);
             return scene;
         }
 
-        public void DeleteScene(Guid sceneId)
+        public Scene DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
-            scenes.Remove(result.Key);
+            var result = dbContext.RemoveScene(sceneId);
+            return result;
         }
 
         public Scene? GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
-            return result.Value;
+            var result = dbContext.GetScene(sceneId);
+            return result;
         }
 
         public IEnumerable<Scene> GetScenes()
         {
-            return scenes.Values;
+            return dbContext.GetAllScenes();
         }
     }
 }

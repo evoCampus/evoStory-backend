@@ -1,57 +1,36 @@
 ﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class StoryRepositoryInMemory : IStoryRepository
+    public class StoryRepositoryInMemory(IDatabase dbContext) : IStoryRepository
     {
-        private List<Story> _stories = new();
         public Story CreateStory(Story story)
         {
-            _stories.Add(story);
+            dbContext.AddStory(story);
             return story;
         }
 
         public Story DeleteStory(Guid storyId)
         {
-            var result = _stories.FirstOrDefault(story => story.Id == storyId);
-            if (result is null)
-            {
-                throw new KeyNotFoundException($"No story with {storyId} found.");
-            }
-
-            _stories.Remove(result);
+            var result = dbContext.RemoveStory(storyId);
             return result;
         }
 
         public Story GetStory(Guid storyId)
         {
-            var result = _stories.FirstOrDefault(story => story.Id == storyId);
-            if (result is null)
-            {
-                throw new KeyNotFoundException($"No story with {storyId} found.");
-            }
-
+            var result = dbContext.GetStory(storyId);
             return result;
         }
 
         public IEnumerable<Story> GetStories()
         {
-            return _stories;
+            return dbContext.GetAllStories();
         }
 
         public Story EditStory(Story story)
         {
-            var result = _stories.FirstOrDefault(s => s.Id == story.Id);
-            if (result is null)
-            {
-                throw new KeyNotFoundException($"No story with ID {story.Id} found.");
-            }
-
-            result.Title = story.Title;
-            result.Scenes = story.Scenes;
-            result.StartingSceneId = story.StartingSceneId;
-            result.Id = story.Id;
-
+            var result = dbContext.UpdateStory(story);
             return result;
         }
     }

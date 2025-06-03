@@ -8,17 +8,20 @@ namespace EvoStory.BackendAPI.Services
     {
         public void CreateStory(CreateStoryDTO story)
         {
+            var newStoryId = Guid.NewGuid();
+            var newSceneId = Guid.NewGuid();
             var newStory = new Story
             {
-                Id = Guid.NewGuid(),
+                Id = newStoryId,
                 Scenes = story.Scenes.Select(sceneDTO => new Scene()
                 {
                     Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
                     {
                         ChoiceText = choiceDTO.ChoiceText,
                         Id = Guid.NewGuid(),
-                        NextSceneId = choiceDTO.NextSceneId
-                    }).ToList(),
+                        NextSceneId = choiceDTO.NextSceneId,
+                        SceneId = newSceneId
+                    }),
                     Content = new Content
                     {
                         Id = Guid.NewGuid(),
@@ -26,7 +29,8 @@ namespace EvoStory.BackendAPI.Services
                         ImageId = sceneDTO.Content.ImageId,
                         SoundId = sceneDTO.Content.SoundId
                     },
-                    Id = Guid.NewGuid()
+                    Id = newSceneId,
+                    StoryId= newStoryId
                 }),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title

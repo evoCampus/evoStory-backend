@@ -23,7 +23,8 @@ namespace EvoStory.BackendAPI.Services
                     ChoiceText = choiceDTO.ChoiceText,
                     Id = Guid.NewGuid(),
                     NextSceneId = choiceDTO.NextSceneId
-                })
+                }),
+                StoryId = scene.StoryId
             };
             sceneRepository.CreateScene(newScene);
             return dTOConversion.ConvertSceneToSceneDTO(newScene);

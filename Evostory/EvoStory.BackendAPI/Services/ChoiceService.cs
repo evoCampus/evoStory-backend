@@ -12,7 +12,8 @@ namespace EvoStory.BackendAPI.Services
             {
                 Id = Guid.NewGuid(),
                 NextSceneId = choice.NextSceneId,
-                ChoiceText = choice.ChoiceText
+                ChoiceText = choice.ChoiceText,
+                SceneId = choice.SceneId
             };
 
             choiceRepository.CreateChoice(newChoice);

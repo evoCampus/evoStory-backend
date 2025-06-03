@@ -1,6 +1,7 @@
 using EvoStory.BackendAPI.Data;
 using EvoStory.BackendAPI.Repository;
 using EvoStory.BackendAPI.Services;
+using EvoStory.BackendAPI.Database;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
 builder.Services.AddSingleton<IStoryService, StoryService>();
 
 builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
+
+builder.Services.AddSingleton<IDatabase, DatabaseInMemmory>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
