@@ -19,7 +19,7 @@ namespace EvoStory.BackendAPI.Services
                         ChoiceText = choiceDTO.ChoiceText,
                         Id = Guid.NewGuid(),
                         NextSceneId = choiceDTO.NextSceneId
-                    }),
+                    }).ToList(),
                     Content = new Content
                     {
                         Id = Guid.NewGuid(),

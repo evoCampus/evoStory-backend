@@ -17,14 +17,14 @@ namespace EvoStory.BackendAPI.Repository
         {
             logger.LogTrace("Delete story repository was called.");
             var result = dbContext.Stories.FirstOrDefault(s => s.Key == storyId).Value;
-            if (result != null)
+            if (result is null)
             {
-                dbContext.Stories.Remove(storyId);
-                logger.LogInformation($"Story with Id: {storyId} was deleted.");
-                return result;
+                logger.LogWarning($"Story with Id: {storyId} was not found.");
+                throw new KeyNotFoundException($"No story with ID {storyId} found.");
             }
-            logger.LogWarning($"Story with Id: {storyId} was not found.");
-            throw new KeyNotFoundException($"No story with ID {storyId} found.");
+            dbContext.Stories.Remove(storyId);
+            logger.LogInformation($"Story with Id: {storyId} was deleted.");
+            return result;
         }
 
         public Story GetStory(Guid storyId)

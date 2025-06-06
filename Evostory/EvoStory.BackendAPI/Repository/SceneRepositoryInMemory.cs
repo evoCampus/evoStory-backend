@@ -27,19 +27,16 @@ namespace EvoStory.BackendAPI.Repository
         {
             logger.LogTrace("Delete scene repository was called.");
             var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == sceneId));
-            if (story != null)
-            {
-                dbContext.Stories.TryGetValue(story.Id, out var actualStory);
-                var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
-                actualStory.Scenes = story.Scenes.Where(s => s.Id != sceneId);
-                logger.LogInformation($"Scene with Id: {sceneId} was deleted from story with Id: {story.Id}.");
-                return scene;
-            }
-            else
+            if (story is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
                 throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
             }
+            dbContext.Stories.TryGetValue(story.Id, out var actualStory);
+            var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
+            actualStory.Scenes = story.Scenes.Where(s => s.Id != sceneId);
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted from story with Id: {story.Id}.");
+            return scene;
         }
 
         public Scene? GetScene(Guid sceneId)
@@ -53,6 +50,7 @@ namespace EvoStory.BackendAPI.Repository
                     return scene;
                 }
             }
+            logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
             throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
         }
 

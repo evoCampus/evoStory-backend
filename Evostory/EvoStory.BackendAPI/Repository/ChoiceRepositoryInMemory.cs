@@ -9,23 +9,25 @@ namespace EvoStory.BackendAPI.Repository
         {
             logger.LogTrace("Create choice repository was called.");
             var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == sceneId));
-            if (story != null)
-            {
-                var scenes = story.Scenes.ToList();
-                var choices = scenes.FirstOrDefault(s => s.Id == sceneId).Choices.ToList();
-                choices.Add(choice);
-                scenes.FirstOrDefault(s => s.Id == sceneId).Choices = choices;
-                story.Scenes = scenes;
-                dbContext.Stories.TryGetValue(story.Id, out var actualStory);
-                actualStory = story;
-                logger.LogInformation($"Choice with Id: {choice.Id} was created in scene with Id: {sceneId} in story with Id: {story.Id}.");
-                return choice;
-            }
-            else
+            if (story is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found when trying to create choice with Id: {choice.Id}.");
                 throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
             }
+            var scenes = story.Scenes.ToList();
+            var scene = scenes.FirstOrDefault(s => s.Id == sceneId);
+            if (scene is null)
+            {
+                logger.LogWarning($"Scene with Id: {sceneId} was not found in story with Id: {story.Id}.");
+                throw new KeyNotFoundException($"No scene with ID {sceneId} found in story with ID {story.Id}.");
+            }
+            var choices = scene.Choices.ToList();
+            choices.Add(choice);
+            scene.Choices = choices;
+            scenes = scenes.Select(s => s.Id == sceneId ? scene : s).ToList();
+            story.Scenes = scenes;
+            logger.LogInformation($"Choice with Id: {choice.Id} was created in scene with Id: {sceneId} in story with Id: {story.Id}.");
+            return choice;
         }
 
         public Choice? GetChoice(Guid choiceId)
@@ -49,13 +51,13 @@ namespace EvoStory.BackendAPI.Repository
         public IEnumerable<Choice> GetChoices()
         {
             logger.LogTrace("Get choices repository was called.");
-            return dbContext.Stories.Values.SelectMany(story=>story.Scenes.SelectMany(scene=>scene.Choices));
+            return dbContext.Stories.Values.SelectMany(story => story.Scenes.SelectMany(scene => scene.Choices));
         }
 
         public Choice DeleteChoice(Guid choiceId)
         {
             logger.LogTrace("Delete choice repository was called.");
-            foreach(var story in dbContext.Stories.Values)
+            foreach (var story in dbContext.Stories.Values)
             {
                 var scene = story.Scenes.FirstOrDefault(s => s.Choices.Any(c => c.Id == choiceId));
                 if (scene != null)
@@ -64,7 +66,7 @@ namespace EvoStory.BackendAPI.Repository
                     if (choice != null)
                     {
                         scene.Choices = scene.Choices.Where(c => c.Id != choiceId);
-                        dbContext.Stories.TryGetValue(story.Id,out var actualStory);
+                        dbContext.Stories.TryGetValue(story.Id, out var actualStory);
                         actualStory.Scenes = actualStory.Scenes.Select(s => s.Id == scene.Id ? scene : s);
                         logger.LogInformation($"Choice with Id: {choiceId} was deleted from scene with Id: {scene.Id} in story with Id: {story.Id}.");
                         return choice;
