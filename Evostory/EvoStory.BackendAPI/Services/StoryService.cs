@@ -19,7 +19,7 @@ namespace EvoStory.BackendAPI.Services
                         ChoiceText = choiceDTO.ChoiceText,
                         Id = Guid.NewGuid(),
                         NextSceneId = choiceDTO.NextSceneId
-                    }).ToList(),
+                    }),
                     Content = new Content
                     {
                         Id = Guid.NewGuid(),
@@ -28,7 +28,7 @@ namespace EvoStory.BackendAPI.Services
                         SoundId = sceneDTO.Content.SoundId
                     },
                     Id = Guid.NewGuid()
-                }),
+                }).ToList(),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
