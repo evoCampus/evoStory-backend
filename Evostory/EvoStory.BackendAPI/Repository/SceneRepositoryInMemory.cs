@@ -11,7 +11,7 @@ namespace EvoStory.BackendAPI.Repository
             logger.LogTrace("Create scene repository was called.");
             if (_scenes.ContainsKey(scene.Id))
             {
-                throw new RepositoryException($"Existing scene with {scene.Id} found.");
+                throw new RepositoryException($"Existing scene with Id: {scene.Id} found.");
             }
 
             _scenes.Add(scene.Id, scene);
@@ -26,11 +26,11 @@ namespace EvoStory.BackendAPI.Repository
             if (result.Value is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found.");
-                throw new RepositoryException($"No scene with {sceneId} found.");
+                throw new RepositoryException($"No scene with Id: {sceneId} found.");
             }
 
             _scenes.Remove(result.Key);
-            logger.LogDebug($"Scene with Id: {sceneId} was deleted.");
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
             return result.Value;
         }
 
@@ -40,7 +40,8 @@ namespace EvoStory.BackendAPI.Repository
             var result = _scenes.FirstOrDefault(scene => scene.Key == sceneId);
             if (result.Value is null)
             {
-                throw new RepositoryException($"No scene with {sceneId} found.");
+                logger.LogWarning($"Scene with Id: {sceneId} was not found.");
+                throw new RepositoryException($"No scene with Id: {sceneId} found.");
             }
 
             return result.Value;

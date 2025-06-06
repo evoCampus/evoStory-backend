@@ -36,7 +36,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "An error occurred when creating the scene.");
                 return BadRequest(ex.Message);
             }
-            
+
             logger.LogInformation($"Scene was created successfully with Id: {result.Id}");
             return Created($"api/Scene/{result.Id}", result);
         }
@@ -54,18 +54,16 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetScene(Guid sceneId)
         {
             logger.LogInformation($"Getting scene with Id: {sceneId}.");
-            SceneDTO result;
             try
             {
-                result = sceneService.GetScene(sceneId);
+                var result = sceneService.GetScene(sceneId);
+                return Ok(result);
             }
             catch (RepositoryException ex)
             {
-                logger.LogError(ex, "No scene with Id: {sceneId} found.");
+                logger.LogError($"No scene with Id: {sceneId} found.");
                 return NotFound(ex.Message);
             }
-
-            return Ok(result);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "The scene was not found.");
                 return NotFound(ex.Message);
             }
-            
+
             logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
             return Ok(result);
         }

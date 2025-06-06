@@ -36,7 +36,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "An error occurred when creating the story.");
                 return BadRequest(ex.Message);
             }
-            
+
             logger.LogInformation($"Story was created successfully with Title: {story.Title};");
             return Created($"api/Story/{result.Id}", result);
         }
@@ -54,18 +54,16 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStory(Guid storyId)
         {
             logger.LogInformation($"Getting story with Id: {storyId}.");
-            StoryDTO result;
             try
             {
-                result = storyService.GetStory(storyId);
+                var result = storyService.GetStory(storyId);
+                return Ok(result);
             }
             catch (RepositoryException ex)
             {
                 logger.LogError($"Story with Id: {storyId} not found.");
                 return NotFound(ex.Message);
             }
-
-            return Ok(result);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError($"Story with Id: {storyId} not found.");
                 return NotFound(ex.Message);
             }
-            
+
             logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return Ok(result);
         }
@@ -129,7 +127,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.EditStory(story);
             }
-            catch (KeyNotFoundException ex)
+            catch (RepositoryException ex)
             {
                 logger.LogError($"Story with Id: {storyId} not found.");
                 return NotFound(ex.Message);

@@ -11,7 +11,7 @@ namespace EvoStory.BackendAPI.Repository
             logger.LogTrace("Create story repository was called.");
             if (_stories.ContainsKey(story.Id))
             {
-                throw new RepositoryException($"Existing story with {story.Id} found.");
+                throw new RepositoryException($"Existing story with Id: {story.Id} found.");
             }
 
             _stories.Add(story.Id, story);
@@ -26,11 +26,11 @@ namespace EvoStory.BackendAPI.Repository
             if (result.Value is null)
             {
                 logger.LogWarning($"Story with Id: {storyId} was not found.");
-                throw new RepositoryException($"No story with {storyId} found.");
+                throw new RepositoryException($"No story with Id: {storyId} found.");
             }
 
-            logger.LogDebug($"Story with Id: {storyId} was deleted.");
             _stories.Remove(result.Key);
+            logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return result.Value;
         }
 
@@ -41,7 +41,7 @@ namespace EvoStory.BackendAPI.Repository
             if (result.Value is null)
             {
                 logger.LogWarning($"Story with Id: {storyId} was not found.");
-                throw new RepositoryException($"No story with {storyId} found.");
+                throw new RepositoryException($"No story with Id: {storyId} found.");
             }
 
             return result.Value;
@@ -60,7 +60,7 @@ namespace EvoStory.BackendAPI.Repository
             if (result.Value is null)
             {
                 logger.LogWarning($"Story with Id: {story.Id} was not found.");
-                throw new RepositoryException($"No story with ID {story.Id} found.");
+                throw new RepositoryException($"No story with Id: {story.Id} found.");
             }
 
             _stories[result.Key].Title = story.Title;
@@ -68,7 +68,7 @@ namespace EvoStory.BackendAPI.Repository
             _stories[result.Key].StartingSceneId = story.StartingSceneId;
             _stories[result.Key].Id = story.Id;
 
-            logger.LogDebug($"Story with Id: {story.Id} was edited.");
+            logger.LogInformation($"Story with Id: {story.Id} was edited.");
             return result.Value;
         }
     }

@@ -53,18 +53,16 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetChoice(Guid choiceId)
         {
             logger.LogInformation($"Getting choice with Id: {choiceId}.");
-            ChoiceDTO result;
             try
             {
-                result = choiceService.GetChoice(choiceId);
+                var result = choiceService.GetChoice(choiceId);
+                return Ok(result);
             }
             catch (RepositoryException ex)
             {
                 logger.LogWarning($"Choice with Id: {choiceId} was not found.");
                 return NotFound(ex.Message);
             }
-
-            return Ok(result);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, $"Choice with Id: {choiceId} was not found.");
                 return NotFound(ex.Message);
             }
-            
+
             logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
             return Ok(result);
         }

@@ -11,7 +11,7 @@ namespace EvoStory.BackendAPI.Repository
             logger.LogTrace("Create choice repository was called.");
             if (_choices.ContainsKey(choice.Id))
             {
-                throw new RepositoryException($"Existing choice with {choice.Id} found.");
+                throw new RepositoryException($"Existing choice with Id: {choice.Id} found.");
             }
 
             _choices.Add(choice.Id, choice);
@@ -25,7 +25,8 @@ namespace EvoStory.BackendAPI.Repository
             var result = _choices.FirstOrDefault(choice => choice.Key == choiceId);
             if (result.Value is null)
             {
-                throw new RepositoryException($"No choice with {choiceId} found.");
+                logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                throw new RepositoryException($"No choice with Id: {choiceId} found.");
             }
 
             return result.Value;
@@ -44,11 +45,11 @@ namespace EvoStory.BackendAPI.Repository
             if (result.Value is null)
             {
                 logger.LogWarning($"Choice with Id: {choiceId} was not found.");
-                throw new RepositoryException($"No choice with {choiceId} found.");
+                throw new RepositoryException($"No choice with Id: {choiceId} found.");
             }
 
             _choices.Remove(result.Key);
-            logger.LogDebug($"Choice with Id: {choiceId} was deleted.");
+            logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
             return result.Value;
         }
     }
