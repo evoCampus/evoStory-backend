@@ -25,6 +25,8 @@ builder.Services.AddSingleton<IStoryService, StoryService>();
 
 builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 
+builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

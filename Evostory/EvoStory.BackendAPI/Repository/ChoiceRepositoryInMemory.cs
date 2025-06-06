@@ -3,16 +3,19 @@ using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class ChoiceRepositoryInMemory(ILogger<ChoiceRepositoryInMemory> logger) : IChoiceRepository
+    public class ChoiceRepositoryInMemory(ILogger<ChoiceRepositoryInMemory> logger, IDatabase dbContext) : IChoiceRepository
     {
-        private readonly DatabaseInMemory dbContext = new DatabaseInMemory();
         public Choice CreateChoice(Choice choice, Guid sceneId)
         {
             logger.LogTrace("Create choice repository was called.");
             var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == sceneId));
             if (story != null)
             {
-                story.Scenes.FirstOrDefault(s => s.Id == sceneId).Choices.Append(choice);
+                var scenes = story.Scenes.ToList();
+                var choices = scenes.FirstOrDefault(s => s.Id == sceneId).Choices.ToList();
+                choices.Add(choice);
+                scenes.FirstOrDefault(s => s.Id == sceneId).Choices = choices;
+                story.Scenes = scenes;
                 dbContext.Stories.TryGetValue(story.Id, out var actualStory);
                 actualStory = story;
                 logger.LogInformation($"Choice with Id: {choice.Id} was created in scene with Id: {sceneId} in story with Id: {story.Id}.");

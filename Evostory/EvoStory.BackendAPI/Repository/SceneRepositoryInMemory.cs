@@ -3,15 +3,16 @@ using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class SceneRepositoryInMemory(ILogger<SceneRepositoryInMemory> logger) : ISceneRepository
+    public class SceneRepositoryInMemory(ILogger<SceneRepositoryInMemory> logger, IDatabase dbContext) : ISceneRepository
     {
-        private readonly DatabaseInMemory dbContext = new DatabaseInMemory();
         public Scene CreateScene(Scene scene, Guid storyId)
         {
             logger.LogTrace("Create scene repository was called.");
             if (dbContext.Stories.TryGetValue(storyId, out var story))
             {
-                story.Scenes.Append(scene);
+                var scenes = story.Scenes.ToList();
+                scenes.Add(scene);
+                story.Scenes = scenes;
                 logger.LogInformation($"Scene with Id: {scene.Id} was created in story with Id: {storyId}.");
                 return scene;
             }

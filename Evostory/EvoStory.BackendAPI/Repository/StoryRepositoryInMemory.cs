@@ -3,9 +3,8 @@ using EvoStory.BackendAPI.Database;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class StoryRepositoryInMemory(ILogger<StoryRepositoryInMemory> logger) : IStoryRepository
+    public class StoryRepositoryInMemory(ILogger<StoryRepositoryInMemory> logger, IDatabase dbContext) : IStoryRepository
     {
-        private readonly DatabaseInMemory dbContext = new DatabaseInMemory();
         public Story CreateStory(Story story)
         {
             logger.LogTrace("Create story repository was called.");
