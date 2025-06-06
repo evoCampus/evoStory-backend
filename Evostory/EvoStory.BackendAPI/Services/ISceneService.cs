@@ -4,9 +4,9 @@ namespace EvoStory.BackendAPI.Services
 {
     public interface ISceneService
     {
-        public SceneDTO? CreateScene(CreateSceneDTO scene);
-        public SceneDTO? GetScene(Guid sceneId);
+        public SceneDTO CreateScene(CreateSceneDTO scene);
+        public SceneDTO GetScene(Guid sceneId);
         public IEnumerable<SceneDTO> GetScenes();
-        public void DeleteScene(Guid sceneId);
+        public SceneDTO DeleteScene(Guid sceneId);
     }
 }
