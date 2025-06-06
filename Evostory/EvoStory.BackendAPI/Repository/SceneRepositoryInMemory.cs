@@ -16,11 +16,8 @@ namespace EvoStory.BackendAPI.Repository
                 logger.LogInformation($"Scene with Id: {scene.Id} was created in story with Id: {storyId}.");
                 return scene;
             }
-            else
-            {
-                logger.LogWarning($"Story with Id: {storyId} was not found when trying to create scene with Id: {scene.Id}.");
-                throw new KeyNotFoundException($"No story with ID {storyId} found.");
-            }
+            logger.LogWarning($"Story with Id: {storyId} was not found when trying to create scene with Id: {scene.Id}.");
+            throw new KeyNotFoundException($"No story with ID {storyId} found.");
         }
 
         public Scene DeleteScene(Guid sceneId)
