@@ -22,6 +22,9 @@ builder.Services.AddSingleton<IChoiceService, ChoiceService>();
 builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
 builder.Services.AddSingleton<IStoryService, StoryService>();
 
+builder.Services.AddSingleton<IUserRepository, UserRepositoryInMemory>();
+builder.Services.AddSingleton<IUserService, UserService>();
+
 builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
