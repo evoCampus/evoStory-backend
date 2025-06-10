@@ -1,4 +1,4 @@
-﻿using Evostory.Story.Models;
+using Evostory.Story.Models;
 using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Repository;
 
@@ -26,6 +26,7 @@ namespace EvoStory.BackendAPI.Services
                     NextSceneId = choiceDTO.NextSceneId
                 })
             };
+            
             logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
             sceneRepository.CreateScene(newScene);
             return dTOConversion.ConvertSceneToSceneDTO(newScene);

@@ -1,4 +1,4 @@
-﻿using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Exceptions;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
@@ -31,11 +31,12 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 result = sceneService.CreateScene(scene);
             }
-            catch (Exception ex)
+            catch (RepositoryException ex)
             {
                 logger.LogError(ex, "An error occurred when creating the scene.");
                 return BadRequest(ex.Message);
             }
+
             logger.LogInformation($"Scene was created successfully with Id: {result.Id}");
             return Created($"api/Scene/{result.Id}", result);
         }
@@ -103,6 +104,7 @@ namespace EvoStory.BackendAPI.Controllers
                 logger.LogError(ex, "The scene was not found.");
                 return NotFound(ex.Message);
             }
+
             logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
             return Ok(result);
         }
