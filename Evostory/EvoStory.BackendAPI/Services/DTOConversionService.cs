@@ -41,5 +41,16 @@ namespace EvoStory.BackendAPI.Services
                 NextSceneId = choice.NextSceneId
             };
         }
+
+        public UserDTO ConvertUserToUserDTO(User user)
+        {
+            logger.LogTrace($"Converting User with Id: {user.Id} to UserDTO.");
+            return new UserDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace EvoStory.BackendAPI.Services
         public StoryDTO ConvertStoryToStoryDTO(Story story);
         public SceneDTO ConvertSceneToSceneDTO(Scene scene);
         public ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice);
+        public UserDTO ConvertUserToUserDTO(User user);
 
     }
 }
