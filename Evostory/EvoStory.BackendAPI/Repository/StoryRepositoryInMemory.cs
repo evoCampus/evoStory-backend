@@ -1,5 +1,6 @@
-﻿using Evostory.Story.Models;
+using Evostory.Story.Models;
 using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
@@ -8,6 +9,10 @@ namespace EvoStory.BackendAPI.Repository
         public Story CreateStory(Story story)
         {
             logger.LogTrace("Create story repository was called.");
+            if (dbContext.Stories.ContainsKey(story.Id))
+            {
+                throw new RepositoryException($"Existing story with Id: {story.Id} found.");
+            }
             dbContext.Stories.Add(story.Id, story);
             logger.LogInformation($"Story with Id: {story.Id} was created.");
             return story;
@@ -20,7 +25,7 @@ namespace EvoStory.BackendAPI.Repository
             if (result is null)
             {
                 logger.LogWarning($"Story with Id: {storyId} was not found.");
-                throw new KeyNotFoundException($"No story with ID {storyId} found.");
+                throw new RepositoryException($"No story with ID {storyId} found.");
             }
             dbContext.Stories.Remove(storyId);
             logger.LogInformation($"Story with Id: {storyId} was deleted.");
@@ -36,7 +41,7 @@ namespace EvoStory.BackendAPI.Repository
                 return result;
             }
             logger.LogWarning($"Story with Id: {storyId} was not found.");
-            throw new KeyNotFoundException($"No story with ID {storyId} found.");
+            throw new RepositoryException($"No story with ID {storyId} found.");
         }
 
         public IEnumerable<Story> GetStories()
@@ -57,7 +62,7 @@ namespace EvoStory.BackendAPI.Repository
                 return existingStory;
             }
             logger.LogWarning($"Story with Id: {story.Id} was not found.");
-            throw new KeyNotFoundException($"No story with ID {story.Id} found.");
+            throw new RepositoryException($"No story with ID {story.Id} found.");
         }
     }
 }

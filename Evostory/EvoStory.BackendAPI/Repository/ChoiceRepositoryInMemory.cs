@@ -1,5 +1,6 @@
 ﻿using Evostory.Story.Models;
 using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
@@ -12,14 +13,14 @@ namespace EvoStory.BackendAPI.Repository
             if (story is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found when trying to create choice with Id: {choice.Id}.");
-                throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
+                throw new RepositoryException($"No scene with ID {sceneId} found.");
             }
             var scenes = story.Scenes.ToList();
             var scene = scenes.FirstOrDefault(s => s.Id == sceneId);
             if (scene is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found in story with Id: {story.Id}.");
-                throw new KeyNotFoundException($"No scene with ID {sceneId} found in story with ID {story.Id}.");
+                throw new RepositoryException($"No scene with ID {sceneId} found in story with ID {story.Id}.");
             }
             var choices = scene.Choices.ToList();
             choices.Add(choice);
@@ -30,7 +31,7 @@ namespace EvoStory.BackendAPI.Repository
             return choice;
         }
 
-        public Choice? GetChoice(Guid choiceId)
+        public Choice GetChoice(Guid choiceId)
         {
             logger.LogTrace("Get choice repository was called.");
             foreach (var story in dbContext.Stories.Values)
@@ -45,7 +46,7 @@ namespace EvoStory.BackendAPI.Repository
                 }
             }
             logger.LogWarning($"Choice with Id: {choiceId} was not found in any scene.");
-            throw new KeyNotFoundException($"No choice with ID {choiceId} found.");
+            throw new RepositoryException($"No choice with ID {choiceId} found.");
         }
 
         public IEnumerable<Choice> GetChoices()
@@ -74,7 +75,7 @@ namespace EvoStory.BackendAPI.Repository
                 }
             }
             logger.LogWarning($"Choice with Id: {choiceId} was not found in any scene.");
-            throw new KeyNotFoundException($"No choice with ID {choiceId} found.");
+            throw new RepositoryException($"No choice with ID {choiceId} found.");
         }
     }
 }

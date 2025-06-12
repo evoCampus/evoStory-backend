@@ -1,8 +1,10 @@
-﻿using EvoStory.BackendAPI.DTO;
+using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
+using EvoStory.BackendAPI.Exceptions;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using Evostory.Story.Models;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -15,27 +17,28 @@ namespace EvoStory.BackendAPI.Controllers
         /// Creates a Story.
         /// </summary>
         /// <param name="story"></param>
-        /// <response code="204">The Story was successfully created.</response>
+        /// <response code="201">The Story was successfully created.</response>
         /// <response code="400">Bad request.</response>
         [HttpPut(Name = nameof(CreateStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateStory(CreateStoryDTO story)
         {
             logger.LogInformation($"Creating story with Title: {story.Title};");
+            StoryDTO result;
             try
             {
-                storyService.CreateStory(story);
+                result = storyService.CreateStory(story);
             }
-            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            catch (RepositoryException ex)
             {
                 logger.LogError(ex, "An error occurred when creating the story.");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
 
             logger.LogInformation($"Story was created successfully with Title: {story.Title};");
-            return Created();
+            return Created($"api/Story/{result.Id}", result);
         }
 
         /// <summary>
@@ -51,8 +54,16 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStory(Guid storyId)
         {
             logger.LogInformation($"Getting story with Id: {storyId}.");
-            var result = storyService.GetStory(storyId);
-            return result is null ? NotFound() : Ok(result);
+            try
+            {
+                var result = storyService.GetStory(storyId);
+                return Ok(result);
+            }
+            catch (RepositoryException ex)
+            {
+                logger.LogError($"Story with Id: {storyId} not found.");
+                return NotFound(ex.Message);
+            }
         }
 
         /// <summary>
@@ -65,35 +76,37 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult GetStories()
         {
             logger.LogInformation("Getting all the stories.");
-            var result = storyService.GetStories();
-            return result is null ? NotFound() : Ok(result);
+            IEnumerable<StoryDTO> result;
+            result = storyService.GetStories();
+            return Ok(result);
         }
 
         /// <summary>
         /// Deletes a Story by Id.
         /// </summary>
         /// <param name="storyId"></param>
-        /// <response code="204">The Story was successfully deleted.</response>
+        /// <response code="200">The Story was successfully deleted.</response>
         /// <response code="404">Story not found.</response>
         [HttpDelete("{storyId}", Name = nameof(DeleteStory))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteStory(Guid storyId)
         {
             logger.LogInformation($"Deleting story with Id: {storyId}.");
+            StoryDTO result;
             try
             {
-                storyService.DeleteStory(storyId);
+                result = storyService.DeleteStory(storyId);
             }
-            catch (KeyNotFoundException)
+            catch (RepositoryException ex)
             {
                 logger.LogError($"Story with Id: {storyId} not found.");
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             logger.LogInformation($"Story with Id: {storyId} was deleted.");
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>
@@ -114,10 +127,10 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 storyService.EditStory(story);
             }
-            catch (KeyNotFoundException)
+            catch (RepositoryException ex)
             {
                 logger.LogError($"Story with Id: {storyId} not found.");
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             logger.LogInformation($"Story with Id: {storyId} was edited.");

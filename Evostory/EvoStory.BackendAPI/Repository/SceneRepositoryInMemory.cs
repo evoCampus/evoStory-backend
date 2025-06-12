@@ -1,5 +1,6 @@
 ﻿using Evostory.Story.Models;
 using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
@@ -17,7 +18,7 @@ namespace EvoStory.BackendAPI.Repository
                 return scene;
             }
             logger.LogWarning($"Story with Id: {storyId} was not found when trying to create scene with Id: {scene.Id}.");
-            throw new KeyNotFoundException($"No story with ID {storyId} found.");
+            throw new RepositoryException($"No story with ID {storyId} found.");
         }
 
         public Scene DeleteScene(Guid sceneId)
@@ -27,7 +28,7 @@ namespace EvoStory.BackendAPI.Repository
             if (story is null)
             {
                 logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
-                throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
+                throw new RepositoryException($"No scene with ID {sceneId} found.");
             }
             dbContext.Stories.TryGetValue(story.Id, out var actualStory);
             var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
@@ -36,7 +37,7 @@ namespace EvoStory.BackendAPI.Repository
             return scene;
         }
 
-        public Scene? GetScene(Guid sceneId)
+        public Scene GetScene(Guid sceneId)
         {
             logger.LogTrace("Get scene repository was called.");
             foreach (var story in dbContext.Stories.Values)
@@ -48,7 +49,7 @@ namespace EvoStory.BackendAPI.Repository
                 }
             }
             logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
-            throw new KeyNotFoundException($"No scene with ID {sceneId} found.");
+            throw new RepositoryException($"No scene with ID {sceneId} found.");
         }
 
         public IEnumerable<Scene> GetScenes()
