@@ -30,11 +30,10 @@ namespace EvoStory.BackendAPI.Repository
                 logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
                 throw new RepositoryException($"No scene with ID {sceneId} found.");
             }
-            dbContext.Stories.TryGetValue(story.Id, out var actualStory);
             var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
-            actualStory.Scenes = story.Scenes.Where(s => s.Id != sceneId);
+            story.Scenes = story.Scenes.Where(s => s.Id != sceneId);
             logger.LogInformation($"Scene with Id: {sceneId} was deleted from story with Id: {story.Id}.");
-            return scene;
+            return scene!;
         }
 
         public Scene GetScene(Guid sceneId)

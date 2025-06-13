@@ -67,8 +67,6 @@ namespace EvoStory.BackendAPI.Repository
                     if (choice != null)
                     {
                         scene.Choices = scene.Choices.Where(c => c.Id != choiceId);
-                        dbContext.Stories.TryGetValue(story.Id, out var actualStory);
-                        actualStory.Scenes = actualStory.Scenes.Select(s => s.Id == scene.Id ? scene : s);
                         logger.LogInformation($"Choice with Id: {choiceId} was deleted from scene with Id: {scene.Id} in story with Id: {story.Id}.");
                         return choice;
                     }
