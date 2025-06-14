@@ -28,7 +28,7 @@ namespace EvoStory.BackendAPI.Services
                         SoundId = sceneDTO.Content.SoundId
                     },
                     Id = Guid.NewGuid()
-                }),
+                }).ToList(),
                 StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
                 Title = story.Title
             };
