@@ -28,7 +28,7 @@ namespace EvoStory.BackendAPI.Services
             };
             
             logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
-            sceneRepository.CreateScene(newScene);
+            sceneRepository.CreateScene(newScene, scene.StoryId);
             return dTOConversion.ConvertSceneToSceneDTO(newScene);
         }
 

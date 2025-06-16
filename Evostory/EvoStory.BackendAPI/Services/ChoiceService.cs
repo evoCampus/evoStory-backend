@@ -17,7 +17,7 @@ namespace EvoStory.BackendAPI.Services
                 ChoiceText = choice.ChoiceText
             };
 
-            choiceRepository.CreateChoice(newChoice);
+            choiceRepository.CreateChoice(newChoice, choice.SceneId);
             logger.LogInformation($"Choice was created successfully with Id: {newChoice.Id}");
             return dTOConversion.ConvertChoiceToChoiceDTO(newChoice);
         }

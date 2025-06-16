@@ -5,10 +5,11 @@ namespace EvoStory.BackendAPI.Services
 {
     public interface IDTOConversionService
     {
-        public StoryDTO ConvertStoryToStoryDTO(Story story);
-        public SceneDTO ConvertSceneToSceneDTO(Scene scene);
-        public ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice);
-        public UserDTO ConvertUserToUserDTO(User user);
+      
+        StoryDTO ConvertStoryToStoryDTO(Story story);
+        SceneDTO ConvertSceneToSceneDTO(Scene scene);
+        ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice);
+        UserDTO ConvertUserToUserDTO(User user);
 
     }
 }
