@@ -4,9 +4,9 @@ namespace EvoStory.BackendAPI.Services
 {
     public interface IUserService
     {
-        public UserDTO CreateUser(CreateUserDTO user);
-        public UserDTO GetUser(Guid userId);
-        public IEnumerable<UserDTO> GetUsers();
-        public UserDTO DeleteUser(Guid userId);
+        UserDTO CreateUser(CreateUserDTO user);
+        UserDTO GetUser(Guid userId);
+        IEnumerable<UserDTO> GetUsers();
+        UserDTO DeleteUser(Guid userId);
     }
 }

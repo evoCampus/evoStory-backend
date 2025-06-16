@@ -12,7 +12,7 @@ namespace EvoStory.BackendAPI.Repository
             if (_scenes.ContainsKey(scene.Id))
             {
                 throw new RepositoryException($"Existing scene with Id: {scene.Id} found.");
-            }            
+            }
 
             _scenes.Add(scene.Id, scene);
             logger.LogInformation("Scene succesfully created in repository.");

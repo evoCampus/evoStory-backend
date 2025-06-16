@@ -30,14 +30,14 @@ namespace EvoStory.BackendAPI.Controllers
             try
             {
                 result = userService.CreateUser(user);
+                logger.LogInformation($"User was created successfully with Id: {result.Id}");
+                return Created($"api/User/{result.Id}", result);
             }
-            catch (Exception ex)
+            catch (RepositoryException ex)
             {
                 logger.LogError(ex, "An error occurred when creating the scene.");
                 return BadRequest(ex.Message);
             }
-            logger.LogInformation($"User was created successfully with Id: {result.Id}");
-            return Created($"api/User/{result.Id}", result);
         }
 
         /// <summary>

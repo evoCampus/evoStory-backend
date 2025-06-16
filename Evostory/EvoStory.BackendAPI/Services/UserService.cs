@@ -15,8 +15,6 @@ namespace EvoStory.BackendAPI.Services
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(user.Password);
                 byte[] hashValue = mySHA256.ComputeHash(passwordBytes);
 
-                logger.LogInformation($"Lenght of hashvalue: {hashValue.Length}");
-                logger.LogInformation($"Hashvalue: {Convert.ToBase64String(hashValue)}");
                 var newUser = new User()
                 {
                     Id = Guid.NewGuid(),
@@ -24,7 +22,7 @@ namespace EvoStory.BackendAPI.Services
                     Email = user.Email,
                     Password = Convert.ToBase64String(hashValue)
                 };
-                logger.LogInformation($"User was created successfully with Id: {newUser.Id}");
+                logger.LogDebug($"User was created successfully with Id: {newUser.Id}");
                 userRepository.CreateUser(newUser);
                 return dTOConversion.ConvertUserToUserDTO(newUser);
             }
@@ -49,7 +47,7 @@ namespace EvoStory.BackendAPI.Services
         {
             logger.LogDebug("Delete User service was called.");
             var result = userRepository.DeleteUser(userId);
-            logger.LogInformation($"User with Id: {userId} was deleted.");
+            logger.LogDebug($"User with Id: {userId} was deleted.");
             return dTOConversion.ConvertUserToUserDTO(result);
         }
     }
