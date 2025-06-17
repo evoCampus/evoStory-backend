@@ -1,0 +1,151 @@
+{
+    "Title": "Halvány emlékek",
+    "Scenes": [
+        {
+            "SceneId": 1,
+            "Content": {
+                "Text": "A 19 éves Noa Carter Ravenswoodba utazik, hogy felkutassa eltűnt nővérét, Elizabeth Cartert. Elizabeth a helyi egyetem hallgatója volt, mielőtt három hónappal ezelőtt nyomtalanul eltűnt. A rendőrség lezárta az ügyet, de Noa egy különös naplóra bukkan nővére szobájában. A napló szerint Elizabeth egy titkos társasággal, a „Csillagfény Klubbal” kezdett foglalkozni. A bejegyzések utolsó mondata: „Ma este végre megláthatom, mi rejtőzik az árnyak között.” A nyomok egy elhagyatott kúriába vezetnek a város szélén. Noa elhatározza, hogy kideríti az igazságot. A kúria hosszú, sötét folyosóján két ajtó áll előtted. Melyiket választod?"
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "A bal oldali régi kopott faajtót, ami mögül halk zene szűrődik ki.",
+                    "NextSceneId": 2
+                },
+                {
+                    "ChoiceText": "A jobb oldali modern, fémajtót, ami mögött teljes csend honol.",
+                    "NextSceneId": 3
+                }
+            ]
+        },
+        {
+            "SceneId": 2,
+            "Content": {
+                "Text": "Belépsz egy poros bálterembe. A falakon régi fényképek lógnak – az egyik képen Elizabeth és más fiatalok állnak, akik mind a Csillagfény Klub tagjai lehettek. A terem végén egy rejtett ajtót találsz, amely egy alagsori lejáróhoz vezet."
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "Megérinted a fényképet",
+                    "NextSceneId": 4
+                },
+                {
+                    "ChoiceText": "Továbbmész a rejtett ajtón",
+                    "NextSceneId": 5
+                }
+            ]
+        },
+        {
+            "SceneId": 4,
+            "Content": {
+                "Text": "Mikor megérinted a képet hirtelen egy látomásod lesz: Elizabeth egy rituális kör közepén áll, miközben valami suttog a sötétből. Ekkor egy árny jelenik meg a terem sarkában, ami a látomás közben megöl!"
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 5,
+            "Content": {
+                "Text": "A rejtekajtón tovább menve egy alagsori folyosóra érsz, ahol egy láncra vert alakot látsz. Ez Elizabeth... vagy valami, ami rá hasonlít?"
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "Kiszabadítod Elizabeth-et.",
+                    "NextSceneId": 6
+                },
+                {
+                    "ChoiceText": "Elbújsz és figyelsz.",
+                    "NextSceneId": 7
+                }
+            ]
+        },
+        {
+            "SceneId": 6,
+            "Content": {
+                "Text": "Miután kiszabadítod Elizabeth megfordul, és a szeme telejesen fekete... Valami megszállta és megöl!"
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 7,
+            "Content": {
+                "Text": "A rejtekhelyedről látod, hogy a „lány” lassan megváltozik. Nem Elizabeth az, hanem valami, ami az ő testét használja..."
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 3,
+            "Content": {
+                "Text": "Egy laboratóriumszerű helyiségbe lépsz. Régi dokumentumok hevernek a földön, egyikben Elizabeth neve is szerepel. Egy monitor felvillan, és egy torz videófelvétel indul el."
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "Megnézed a felvételt",
+                    "NextSceneId": 8
+                },
+                {
+                    "ChoiceText": "Megpróbálsz kijutni",
+                    "NextSceneId": 9
+                }
+            ]
+        },
+        {
+            "SceneId": 8,
+            "Content": {
+                "Text": "A felvételen látod, ahogy Elizabeth egy rituálé során eltűnik, és valami más veszi át a helyét. A videó végén egy üzenet jelenik meg: „Ha ezt nézed, már figyel téged.”"
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 9,
+            "Content": {
+                "Text": "Egy titkos alagútba érsz, amely a kúria alatt húzódik. Az alagút egyre szűkebb lesz. Két lehetőséged van:"
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "Folytatod az alagútban",
+                    "NextSceneId": 10
+                },
+                {
+                    "ChoiceText": "Visszamész az épületbe",
+                    "NextSceneId": 11
+                }
+            ]
+        },
+        {
+            "SceneId": 11,
+            "Content": {
+                "Text": "Az épületbe visszaérve egy árnyalak vár rád, ami megöl!"
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 10,
+            "Content": {
+                "Text": "Az alagútban tovább menve találsz egy naplót, amely szerint a Csillagfén Klub valójában egy dimenziókaput nyitott meg - és Elizabeth már nem él, csak egy másolat létezik belőle. Az alagút végén egy csapóajtó van... Mostanra rájöttél, hogy Elizabeth vagy már halott, vagy valami megszállta."
+            },
+            "Choices": [
+                {
+                    "ChoiceText": "Megpróbálod megmenteni Elizabeth testét, még ha nem is ő van benne",
+                    "NextSceneId": 12
+                },
+                {
+                    "ChoiceText": "Végleg elpusztítod azt, ami Elizabeth-ből maradt",
+                    "NextSceneId": 13
+                }
+            ]
+        },
+        {
+            "SceneId": 12,
+            "Content": {
+                "Text": "Kiszabadítod a lényt, ami megszökik és meghódítja a világot"
+            },
+            "Choices": null
+        },
+        {
+            "SceneId": 13,
+            "Content": {
+                "Text": "Elhagyod a kúriát, de örökre megváltozol"
+            },
+            "Choices": null
+        }
+    ],
+    "StartingSceneId": 1
+}
