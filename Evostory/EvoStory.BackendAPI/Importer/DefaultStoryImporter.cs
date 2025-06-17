@@ -15,10 +15,11 @@ namespace EvoStory.BackendAPI.Importer
                 throw new FileNotFoundException("The story file is empty or not found.");
             }
             var story = JsonSerializer.Deserialize<ImportStoryDTO>(storyFile);
-            Guid[] sceneIds = new Guid[story.Scenes.Count() + 1];
-            for (int i = 1; i < story.Scenes.Count(); i++)
+            List<Guid> sceneIds = new List<Guid>();
+            sceneIds.Add(Guid.Empty);
+            for (int i = 1; i <= story.Scenes.Count(); i++)
             {
-                sceneIds[i] = new Guid();
+                sceneIds.Add(Guid.NewGuid());
             }
             var storyModel = new Story
             {
@@ -36,7 +37,7 @@ namespace EvoStory.BackendAPI.Importer
                     },
                     Choices = s.Choices == null ? new List<Choice>() : s.Choices.Select(c => new Choice
                     {
-                        Id = new Guid(),
+                        Id = Guid.NewGuid(),
                         ChoiceText = c.ChoiceText,
                         NextSceneId = sceneIds[c.NextSceneId]
                     }).ToList()
