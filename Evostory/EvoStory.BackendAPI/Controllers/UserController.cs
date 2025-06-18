@@ -28,8 +28,7 @@ namespace EvoStory.BackendAPI.Controllers
             logger.LogInformation("Create user endpoint was called.");
             try
             {
-                UserDTO result;
-                result = userService.CreateUser(user);
+                var result = userService.CreateUser(user);
                 logger.LogInformation($"User was created successfully with Id: {result.Id}");
                 return Created($"api/User/{result.Id}", result);
             }
@@ -94,8 +93,7 @@ namespace EvoStory.BackendAPI.Controllers
             logger.LogInformation($"Deleting user with Id: {userId}.");
             try
             {
-                UserDTO result;
-                result = userService.DeleteUser(userId);
+                var result = userService.DeleteUser(userId);
                 logger.LogInformation($"Scene with Id: {userId} was deleted.");
                 return Ok(result);
             }
