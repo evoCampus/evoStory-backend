@@ -28,7 +28,8 @@ namespace EvoStory.BackendAPI.Controllers
             logger.LogInformation("Create user endpoint was called.");
             try
             {
-                UserDTO result = userService.CreateUser(user);
+                UserDTO result;
+                result = userService.CreateUser(user);
                 logger.LogInformation($"User was created successfully with Id: {result.Id}");
                 return Created($"api/User/{result.Id}", result);
             }
