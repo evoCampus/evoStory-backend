@@ -26,10 +26,9 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult CreateUser(CreateUserDTO user)
         {
             logger.LogInformation("Create user endpoint was called.");
-            UserDTO result;
             try
             {
-                result = userService.CreateUser(user);
+                UserDTO result = userService.CreateUser(user);
                 logger.LogInformation($"User was created successfully with Id: {result.Id}");
                 return Created($"api/User/{result.Id}", result);
             }
@@ -92,18 +91,18 @@ namespace EvoStory.BackendAPI.Controllers
         public ActionResult DeleteUser(Guid userId)
         {
             logger.LogInformation($"Deleting user with Id: {userId}.");
-            UserDTO result;
             try
             {
+                UserDTO result;
                 result = userService.DeleteUser(userId);
+                logger.LogInformation($"Scene with Id: {userId} was deleted.");
+                return Ok(result);
             }
             catch (RepositoryException ex)
             {
                 logger.LogError(ex, "The user was not found.");
                 return NotFound(ex.Message);
             }
-            logger.LogInformation($"Scene with Id: {userId} was deleted.");
-            return Ok(result);
         }
     }
 }
