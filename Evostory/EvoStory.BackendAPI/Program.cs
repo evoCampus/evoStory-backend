@@ -30,9 +30,6 @@ builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
 
 builder.Services.AddSingleton<IDefaultStoryImporter, DefaultStoryImporter>();
 
-IDefaultStoryImporter defaultStoryImporter = builder.Services.BuildServiceProvider().GetRequiredService<IDefaultStoryImporter>();
-defaultStoryImporter.ImportStory();
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -50,6 +47,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+IDefaultStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IDefaultStoryImporter>();
+defaultStoryImporter.ImportStory();
 app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.
