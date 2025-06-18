@@ -28,7 +28,7 @@ builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 
 builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
 
-builder.Services.AddSingleton<IDefaultStoryImporter, DefaultStoryImporter>();
+builder.Services.AddSingleton<IStoryImporter, DefaultStoryImporter>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-IDefaultStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IDefaultStoryImporter>();
+IStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IStoryImporter>();
 defaultStoryImporter.ImportStory();
 app.UseCors(allowedSpecificOrigins);
 

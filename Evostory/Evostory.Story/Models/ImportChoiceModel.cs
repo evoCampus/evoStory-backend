@@ -1,6 +1,6 @@
-﻿namespace EvoStory.BackendAPI.DTO
+﻿namespace Evostory.Story.Models
 {
-    public class ImportChoiceDTO
+    public class ImportChoiceModel
     {
         public int NextSceneId { get; set; }
         public string ChoiceText { get; set; }

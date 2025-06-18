@@ -1,6 +1,6 @@
 ﻿namespace EvoStory.BackendAPI.Importer
 {
-    interface IDefaultStoryImporter
+    interface IStoryImporter
     {
         void ImportStory();
     }

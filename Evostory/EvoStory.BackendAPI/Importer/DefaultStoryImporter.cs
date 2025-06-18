@@ -1,11 +1,10 @@
-﻿using EvoStory.BackendAPI.DTO;
-using EvoStory.BackendAPI.Repository;
+﻿using EvoStory.BackendAPI.Repository;
 using Evostory.Story.Models;
 using System.Text.Json;
 
 namespace EvoStory.BackendAPI.Importer
 {
-    public class DefaultStoryImporter(IStoryRepository storyRepository) : IDefaultStoryImporter
+    public class DefaultStoryImporter(IStoryRepository storyRepository) : IStoryImporter
     {
         public void ImportStory()
         {
@@ -14,7 +13,7 @@ namespace EvoStory.BackendAPI.Importer
             {
                 throw new FileNotFoundException("The story file is empty or not found.");
             }
-            var story = JsonSerializer.Deserialize<ImportStoryDTO>(storyFile);
+            var story = JsonSerializer.Deserialize<ImportStoryModel>(storyFile);
             List<Guid> sceneIds = new List<Guid>();
             sceneIds.Add(Guid.Empty);
             for (int i = 1; i <= story.Scenes.Count(); i++)
