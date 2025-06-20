@@ -1,5 +1,3 @@
-using Evostory.Story.Models;
-
 namespace EvoStory.BackendAPI.DTO
 {
     public class EditStoryDTO

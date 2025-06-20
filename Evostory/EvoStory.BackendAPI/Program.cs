@@ -2,6 +2,7 @@ using EvoStory.BackendAPI.Data;
 using EvoStory.BackendAPI.Repository;
 using EvoStory.BackendAPI.Services;
 using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Importer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,8 @@ builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 
 builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
 
+builder.Services.AddSingleton<IStoryImporter, DefaultStoryImporter>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -47,6 +50,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+IStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IStoryImporter>();
+defaultStoryImporter.ImportStory();
 app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.
