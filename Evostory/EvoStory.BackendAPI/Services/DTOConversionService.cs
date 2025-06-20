@@ -41,5 +41,15 @@ namespace EvoStory.BackendAPI.Services
                 NextSceneId = choice.NextSceneId
             };
         }
+
+        public ImageDTO ConvertImageToImageDTO(Image image)
+        {
+            logger.LogTrace($"Converting Image with Id: {image.Id} to ImageDTO.");
+            return new ImageDTO
+            {
+                Id = image.Id,
+                Path = image.Path,
+            };
+        }
     }
 }

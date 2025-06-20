@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Evostory.Story\Evostory.Story.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

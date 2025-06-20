@@ -8,6 +8,6 @@ namespace EvoStory.BackendAPI.Services
         StoryDTO ConvertStoryToStoryDTO(Story story);
         SceneDTO ConvertSceneToSceneDTO(Scene scene);
         ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice);
-
+        ImageDTO ConvertImageToImageDTO(Image image);
     }
 }

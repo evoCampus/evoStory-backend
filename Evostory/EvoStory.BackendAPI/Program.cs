@@ -23,6 +23,9 @@ builder.Services.AddSingleton<IChoiceService, ChoiceService>();
 builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
 builder.Services.AddSingleton<IStoryService, StoryService>();
 
+builder.Services.AddSingleton<IImageRepository, ImageRepositoryFileSystem>();
+builder.Services.AddSingleton<IImageService, ImageService>();
+
 builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
 
 builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
