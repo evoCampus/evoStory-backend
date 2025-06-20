@@ -4,21 +4,22 @@ using System.Text.Json;
 
 namespace EvoStory.BackendAPI.Importer
 {
-    public class DefaultStoryImporter(IStoryRepository storyRepository) : IStoryImporter
+    public class DefaultStoryImporter(IStoryRepository storyRepository, ILogger<DefaultStoryImporter> logger) : IStoryImporter
     {
         public void ImportStory()
         {
+            logger.LogInformation("Importing default story from FadingMemories.json file.");
             string storyFile = File.ReadAllText(@"Resource\FadingMemories.json");
             if (string.IsNullOrWhiteSpace(storyFile))
             {
+                logger.LogError("The story file is empty or not found.");
                 throw new FileNotFoundException("The story file is empty or not found.");
             }
             var story = JsonSerializer.Deserialize<ImportStoryModel>(storyFile);
-            List<Guid> sceneIds = new List<Guid>();
-            sceneIds.Add(Guid.Empty);
-            for (int i = 1; i <= story.Scenes.Count(); i++)
+            var sceneIds = new Dictionary<int, Guid>(story.Scenes.Count());
+            foreach(var scene in story.Scenes)
             {
-                sceneIds.Add(Guid.NewGuid());
+                sceneIds.Add(scene.SceneId, Guid.NewGuid());
             }
             var storyModel = new Story
             {
@@ -44,6 +45,7 @@ namespace EvoStory.BackendAPI.Importer
                 StartingSceneId = sceneIds[story.StartingSceneId]
             };
             storyRepository.CreateStory(storyModel);
+            logger.LogInformation($"Default story '{story.Title}' imported successfully with ID: {storyModel.Id}.");
         }
     }
 }
