@@ -1,6 +1,4 @@
-﻿using Evostory.Story.Models;
-
-namespace EvoStory.BackendAPI.DTO
+﻿namespace EvoStory.BackendAPI.DTO
 {
     public class CreateSceneDTO
     {
