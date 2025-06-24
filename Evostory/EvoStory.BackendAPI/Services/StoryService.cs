@@ -29,7 +29,7 @@ namespace EvoStory.BackendAPI.Services
                     },
                     Id = Guid.NewGuid()
                 }).ToList(),
-                StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
+                StartingSceneId = story.StartingSceneId ?? Guid.Empty,
                 Title = story.Title
             };
             
@@ -84,7 +84,7 @@ namespace EvoStory.BackendAPI.Services
                     },
                     Id = sceneDTO.Id
                 }),
-                StartingSceneId = story.StartingSceneId ?? Guid.NewGuid(),
+                StartingSceneId = story.StartingSceneId ?? Guid.Empty,
                 Title = story.Title
             };
             
