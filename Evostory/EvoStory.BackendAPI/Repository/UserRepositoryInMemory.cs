@@ -51,5 +51,18 @@ namespace EvoStory.BackendAPI.Repository
             logger.LogInformation($"User with Id: {userId} was deleted.");
             return result.Value;
         }
+
+        public User Login(string username, string hashedPassword)
+        {
+            logger.LogTrace("Login repository was called.");
+            var user = _users.Values.FirstOrDefault(u => u.UserName == username && u.Password == hashedPassword);
+            if (user == null)
+            {
+                logger.LogTrace("Invalid username or password provided.");
+                throw new RepositoryException("Invalid username or password.");
+            }
+
+            return user;
+        }
     }
 }

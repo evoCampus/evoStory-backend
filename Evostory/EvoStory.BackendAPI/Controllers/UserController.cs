@@ -103,5 +103,30 @@ namespace EvoStory.BackendAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Logs in a user.
+        /// </summary>
+        /// <param name="loginDto">The username and password pair.</param>
+        /// <response code="200">The user was successfully authenticated.</response>
+        /// <response code="401">Invalid username or password.</response>
+        [HttpPost("login", Name = nameof(Login))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult Login(LoginDTO loginDto)
+        {
+            logger.LogInformation($"Login attempt for user: {loginDto.UserName}");
+            try
+            {
+                var user = userService.Login(loginDto.UserName, loginDto.Password);
+                return Ok(user);
+            }
+            catch (RepositoryException ex)
+            {
+                logger.LogError($"Login failed for user: {loginDto.UserName}. Reason: {ex.Message}");
+                return Unauthorized(ex.Message);
+            }
+        }
     }
 }

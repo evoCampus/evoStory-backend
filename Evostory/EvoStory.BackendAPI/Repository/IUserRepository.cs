@@ -8,5 +8,6 @@ namespace EvoStory.BackendAPI.Repository
         User GetUser(Guid userId);
         IEnumerable<User> GetUsers();
         User DeleteUser(Guid sceneId);
+        User Login(string username, string hashedPassword);
     }
 }
