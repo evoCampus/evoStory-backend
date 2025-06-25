@@ -9,7 +9,8 @@ namespace EvoStory.BackendAPI.Importer
         public void ImportStory()
         {
             logger.LogInformation("Importing default story from FadingMemories.json file.");
-            string storyFile = File.ReadAllText(@"Resource\FadingMemories.json");
+            var path = Path.Combine("Resource", "FadingMemories.json");
+            string storyFile = File.ReadAllText(path);
             if (string.IsNullOrWhiteSpace(storyFile))
             {
                 logger.LogError("The story file is empty or not found.");
