@@ -8,5 +8,6 @@ namespace EvoStory.BackendAPI.Services
         UserDTO GetUser(Guid userId);
         IEnumerable<UserDTO> GetUsers();
         UserDTO DeleteUser(Guid userId);
+        UserDTO Login(string username, string password);
     }
 }

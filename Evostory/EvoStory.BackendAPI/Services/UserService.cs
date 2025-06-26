@@ -50,5 +50,20 @@ namespace EvoStory.BackendAPI.Services
             logger.LogDebug($"User with Id: {userId} was deleted.");
             return dTOConversion.ConvertUserToUserDTO(result);
         }
+
+        public UserDTO Login(string username, string password)
+        {
+            logger.LogDebug($"Login service was called for user: {username}");
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+                byte[] hash = sha256.ComputeHash(passwordBytes);
+                string hashedPassword = Convert.ToBase64String(hash);
+
+                var user = userRepository.Login(username, hashedPassword);
+
+                return dTOConversion.ConvertUserToUserDTO(user);
+            }
+        }
     }
 }
