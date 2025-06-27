@@ -5,7 +5,7 @@ using EvoStory.BackendAPI.Repository;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class ChoiceService(IChoiceRepository choiceRepository, IDTOConversionService dTOConversion, ILogger<ChoiceController> logger) : IChoiceService
+    public class ChoiceService(IChoiceRepository choiceRepository, IDTOConversionService dTOConversion, ILogger<ChoiceService> logger) : IChoiceService
     {
         public ChoiceDTO CreateChoice(CreateChoiceDTO choice)
         {
