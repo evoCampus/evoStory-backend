@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using EvoStory.BackendAPI.DTO;
-using Evostory.Story.Models;
-using System.Net.Mime;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
+using EvoStory.BackendAPI.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("allowedOrigins")]
-    public class ChoiceController(IChoiceService choiceService) : ControllerBase
+    public class ChoiceController(IChoiceService choiceService, ILogger<ChoiceController> logger) : ControllerBase
     {
         /// <summary>
         /// Creates choice.
@@ -24,16 +24,19 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult CreateChoice(CreateChoiceDTO choice)
         {
+            logger.LogInformation("Create choice endpoint was called.");
             ChoiceDTO result;
             try
             {
                 result = choiceService.CreateChoice(choice);
             }
-            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            catch (RepositoryException ex)
             {
-                return BadRequest();
+                logger.LogError(ex, "An error occurred when creating the choice.");
+                return BadRequest(ex.Message);
             }
 
+            logger.LogInformation($"Choice was created successfully with Id: {result.Id}");
             return Created($"api/Choice/{result.Id}", result);
         }
 
@@ -49,13 +52,17 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetChoice(Guid choiceId)
         {
-            var result = choiceService.GetChoice(choiceId);
-            if (result is null)
+            logger.LogInformation($"Getting choice with Id: {choiceId}.");
+            try
             {
-                return NotFound();
+                var result = choiceService.GetChoice(choiceId);
+                return Ok(result);
             }
-
-            return Ok(result);
+            catch (RepositoryException ex)
+            {
+                logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                return NotFound(ex.Message);
+            }
         }
 
         /// <summary>
@@ -67,6 +74,7 @@ namespace EvoStory.BackendAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ChoiceDTO>), StatusCodes.Status200OK)]
         public ActionResult GetChoices()
         {
+            logger.LogInformation("Getting all the choices.");
             IEnumerable<ChoiceDTO> result;
             result = choiceService.GetChoices();
             return Ok(result);
@@ -76,24 +84,29 @@ namespace EvoStory.BackendAPI.Controllers
         /// Deletes a Choice by Id.
         /// </summary>
         /// <param name="choiceId"></param>
-        /// <response code="204">The Choice was succesfully deleted.</response>
+        /// <response code="200">The Choice was succesfully deleted.</response>
         /// <response code="404">Choice not found.</response>
         [HttpDelete("{choiceId}", Name = nameof(DeleteChoice))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteChoice(Guid choiceId)
         {
+            ChoiceDTO result;
+            logger.LogInformation($"Deleting choice with Id: {choiceId}.");
+
             try
             {
-                choiceService.DeleteChoice(choiceId);
+                result = choiceService.DeleteChoice(choiceId);
             }
-            catch (ArgumentNullException ex) //Remove try catch?
+            catch (RepositoryException ex)
             {
-                return NotFound();
+                logger.LogError(ex, $"Choice with Id: {choiceId} was not found.");
+                return NotFound(ex.Message);
             }
 
-            return NoContent();
+            logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
+            return Ok(result);
         }
     }
 }

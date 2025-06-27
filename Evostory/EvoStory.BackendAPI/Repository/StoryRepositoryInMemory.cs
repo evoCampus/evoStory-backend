@@ -1,58 +1,68 @@
-﻿using Evostory.Story.Models;
+using Evostory.Story.Models;
+using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class StoryRepositoryInMemory : IStoryRepository
+    public class StoryRepositoryInMemory(ILogger<StoryRepositoryInMemory> logger, IDatabase dbContext) : IStoryRepository
     {
-        private List<Story> _stories = new();
         public Story CreateStory(Story story)
         {
-            _stories.Add(story);
+            logger.LogTrace("Create story repository was called.");
+            if (dbContext.Stories.ContainsKey(story.Id))
+            {
+                throw new RepositoryException($"Existing story with Id: {story.Id} found.");
+            }
+            dbContext.Stories.Add(story.Id, story);
+            logger.LogInformation($"Story with Id: {story.Id} was created.");
             return story;
         }
 
         public Story DeleteStory(Guid storyId)
         {
-            var result = _stories.FirstOrDefault(story => story.Id == storyId);
+            logger.LogTrace("Delete story repository was called.");
+            var result = dbContext.Stories.FirstOrDefault(s => s.Key == storyId).Value;
             if (result is null)
             {
-                throw new KeyNotFoundException($"No story with {storyId} found.");
+                logger.LogWarning($"Story with Id: {storyId} was not found.");
+                throw new RepositoryException($"No story with ID {storyId} found.");
             }
-
-            _stories.Remove(result);
+            dbContext.Stories.Remove(storyId);
+            logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return result;
         }
 
         public Story GetStory(Guid storyId)
         {
-            var result = _stories.FirstOrDefault(story => story.Id == storyId);
-            if (result is null)
+            logger.LogTrace("Get story repository was called.");
+            var result = dbContext.Stories.FirstOrDefault(s => s.Key == storyId).Value;
+            if (result != null)
             {
-                throw new KeyNotFoundException($"No story with {storyId} found.");
+                return result;
             }
-
-            return result;
+            logger.LogWarning($"Story with Id: {storyId} was not found.");
+            throw new RepositoryException($"No story with ID {storyId} found.");
         }
 
         public IEnumerable<Story> GetStories()
         {
-            return _stories;
+            logger.LogTrace("Get stories repository was called.");
+            return dbContext.Stories.Values;
         }
 
         public Story EditStory(Story story)
         {
-            var result = _stories.FirstOrDefault(s => s.Id == story.Id);
-            if (result is null)
+            logger.LogTrace("Edit story repository was called.");
+            if (dbContext.Stories.TryGetValue(story.Id, out var existingStory))
             {
-                throw new KeyNotFoundException($"No story with ID {story.Id} found.");
+                existingStory.Title = story.Title;
+                existingStory.Scenes = story.Scenes;
+                existingStory.StartingSceneId = story.StartingSceneId;
+                logger.LogDebug($"Story with Id: {story.Id} was edited.");
+                return existingStory;
             }
-
-            result.Title = story.Title;
-            result.Scenes = story.Scenes;
-            result.StartingSceneId = story.StartingSceneId;
-            result.Id = story.Id;
-
-            return result;
+            logger.LogWarning($"Story with Id: {story.Id} was not found.");
+            throw new RepositoryException($"No story with ID {story.Id} found.");
         }
     }
 }

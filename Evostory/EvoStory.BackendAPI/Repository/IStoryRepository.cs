@@ -4,10 +4,10 @@ namespace EvoStory.BackendAPI.Repository
 {
     public interface IStoryRepository
     {
-        public Story CreateStory(Story story);
-        public Story GetStory(Guid storyId);
-        public IEnumerable<Story> GetStories();
-        public Story EditStory(Story story);
-        public Story DeleteStory(Guid storyId);
+        Story CreateStory(Story story);
+        Story GetStory(Guid storyId);
+        IEnumerable<Story> GetStories();
+        Story EditStory(Story story);
+        Story DeleteStory(Guid storyId);
     }
 }

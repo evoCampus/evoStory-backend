@@ -4,9 +4,9 @@ namespace EvoStory.BackendAPI.Services
 {
     public interface IChoiceService
     {
-        ChoiceDTO? CreateChoice(CreateChoiceDTO choice);
-        ChoiceDTO? GetChoice(Guid choiceId);
+        ChoiceDTO CreateChoice(CreateChoiceDTO choice);
+        ChoiceDTO GetChoice(Guid choiceId);
         IEnumerable<ChoiceDTO> GetChoices();
-        void DeleteChoice(Guid choiceId);
+        ChoiceDTO DeleteChoice(Guid choiceId);
     }
 }

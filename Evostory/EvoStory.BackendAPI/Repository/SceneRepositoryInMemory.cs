@@ -1,31 +1,60 @@
 ﻿using Evostory.Story.Models;
+using EvoStory.BackendAPI.Database;
+using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {
-    public class SceneRepositoryInMemory : ISceneRepository
+    public class SceneRepositoryInMemory(ILogger<SceneRepositoryInMemory> logger, IDatabase dbContext) : ISceneRepository
     {
-        private Dictionary<Guid, Scene> scenes = new();
-        public Scene CreateScene(Scene scene)
+        public Scene CreateScene(Scene scene, Guid storyId)
         {
-            scenes.Add(scene.Id,scene);
-            return scene;
+            logger.LogTrace("Create scene repository was called.");
+            if (dbContext.Stories.TryGetValue(storyId, out var story))
+            {
+                var scenes = story.Scenes.ToList();
+                scenes.Add(scene);
+                story.Scenes = scenes;
+                logger.LogInformation($"Scene with Id: {scene.Id} was created in story with Id: {storyId}.");
+                return scene;
+            }
+            logger.LogWarning($"Story with Id: {storyId} was not found when trying to create scene with Id: {scene.Id}.");
+            throw new RepositoryException($"No story with ID {storyId} found.");
         }
 
-        public void DeleteScene(Guid sceneId)
+        public Scene DeleteScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
-            scenes.Remove(result.Key);
+            logger.LogTrace("Delete scene repository was called.");
+            var story = dbContext.Stories.Values.FirstOrDefault(s => s.Scenes.Any(sc => sc.Id == sceneId));
+            if (story is null)
+            {
+                logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
+                throw new RepositoryException($"No scene with ID {sceneId} found.");
+            }
+            var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
+            story.Scenes = story.Scenes.Where(s => s.Id != sceneId);
+            logger.LogInformation($"Scene with Id: {sceneId} was deleted from story with Id: {story.Id}.");
+            return scene!;
         }
 
-        public Scene? GetScene(Guid sceneId)
+        public Scene GetScene(Guid sceneId)
         {
-            var result = scenes.FirstOrDefault(scene => scene.Key == sceneId);
-            return result.Value;
+            logger.LogTrace("Get scene repository was called.");
+            foreach (var story in dbContext.Stories.Values)
+            {
+                var scene = story.Scenes.FirstOrDefault(s => s.Id == sceneId);
+                if (scene != null)
+                {
+                    return scene;
+                }
+            }
+            logger.LogWarning($"Scene with Id: {sceneId} was not found in any story.");
+            throw new RepositoryException($"No scene with ID {sceneId} found.");
         }
 
         public IEnumerable<Scene> GetScenes()
         {
-            return scenes.Values;
+            logger.LogTrace("Get scenes repository was called.");
+            return dbContext.Stories.Values.SelectMany(story => story.Scenes);
         }
     }
 }
