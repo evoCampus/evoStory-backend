@@ -1,5 +1,7 @@
 ﻿using Evostory.Story.Models;
 using EvoStory.BackendAPI.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ namespace EvoStory.BackendAPI.uTest.Services
         public void ConvertChoiceToChoiceDTO_CompleteChoice_ChoiceDTOCreatedWithEqualValues()
         {
             // Arrange = Given
+            var mockLogger = new Mock<ILogger<DTOConversionService>>();
             Guid id = Guid.NewGuid();
             const string choiceText = "Some choice text.";
             Guid nextSceneId = Guid.NewGuid();
@@ -23,7 +26,7 @@ namespace EvoStory.BackendAPI.uTest.Services
                 ChoiceText = choiceText,
                 NextSceneId = nextSceneId
             };
-            var sut = new DTOConversionService();
+            var sut = new DTOConversionService(mockLogger.Object);
 
             // Act = When
             var choiceDTO = sut.ConvertChoiceToChoiceDTO(choice);
