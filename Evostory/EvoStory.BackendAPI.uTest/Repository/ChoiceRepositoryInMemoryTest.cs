@@ -254,7 +254,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
         }
 
         [Test]
-        public void GetChoices_NoChoiceExists_EmptyListReturn()
+        public void GetChoices_NoChoiceExists_EmptyListReturned()
         {
             //Arrange
             var storyId = Guid.NewGuid();
@@ -287,7 +287,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
         }
 
         [Test]
-        public void GetChoices_ExistentChoicesFromOneStory_ListReturn()
+        public void GetChoices_ExistentChoicesFromOneStory_ListReturned()
         {
             //Arrange
             var storyId = Guid.NewGuid();
@@ -326,7 +326,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
         }
 
         [Test]
-        public void GetChoices_ExistingChoicesFromTwoStory_ListReturn()
+        public void GetChoices_ExistingChoicesFromTwoStory_ListReturned()
         {
             //Arrange
             var storyId1 = Guid.NewGuid();
