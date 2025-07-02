@@ -10,30 +10,44 @@ namespace EvoStory.BackendAPI.uTest.Controller
 {
     class ChoiceControllerTest
     {
+        private Guid choiceId;
+        private Guid nextsceneId;
+        private Guid sceneId;
+        private ChoiceDTO choiceDTO;
+        private CreateChoiceDTO createChoiceDTO;
+        private Mock<ILogger<ChoiceController>> mockLogger;
+        private Mock<IChoiceService> mockChoiceService;
+        private ChoiceController sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            choiceId = Guid.NewGuid();
+            nextsceneId = Guid.NewGuid();
+            sceneId = Guid.NewGuid();
+            choiceDTO = new ChoiceDTO()
+            {
+                Id = choiceId,
+                ChoiceText = "Some choice text",
+                NextSceneId = nextsceneId
+            };
+            createChoiceDTO = new CreateChoiceDTO()
+            {
+                SceneId = sceneId,
+                ChoiceText = "Some choice text",
+                NextSceneId = nextsceneId
+            };
+            mockLogger = new Mock<ILogger<ChoiceController>>();
+            mockChoiceService = new Mock<IChoiceService>();
+            sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
+        }
+
         [Test]
         public void CreateChoice_ValidChoice_CreatedReturned()
         {
             //Arrange
-            var choiceId = Guid.NewGuid();
-            const string choiceText = "Some choice text";
-            var nextSceneId = Guid.NewGuid();
-            var choiceDTO = new ChoiceDTO()
-            {
-                Id = choiceId,
-                ChoiceText = choiceText,
-                NextSceneId = nextSceneId
-            };
-            var createChoiceDTO = new CreateChoiceDTO()
-            {
-                SceneId = Guid.NewGuid(),
-                ChoiceText = choiceText,
-                NextSceneId = nextSceneId
-            };
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.CreateChoice(It.IsAny<CreateChoiceDTO>()))
                 .Returns(choiceDTO);
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.CreateChoice(createChoiceDTO);
             //Assert
@@ -44,18 +58,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void CreateChoice_NonExistentScene_BadRequestReturned()
         {
             //Arrange
-            var sceneId = Guid.NewGuid();
-            var createChoiceDTO = new CreateChoiceDTO()
-            {
-                SceneId = sceneId,
-                ChoiceText = "Some choice text",
-                NextSceneId = Guid.NewGuid()
-            };
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.CreateChoice(It.IsAny<CreateChoiceDTO>()))
                 .Throws(new RepositoryException($"There is no scene with id: {sceneId}"));
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.CreateChoice(createChoiceDTO);
             //Assert
@@ -66,18 +70,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void GetChoice_ValidChoiceId_OkReturned()
         {
             //Arrange
-            var choiceId = Guid.NewGuid();
-            var choiceDTO = new ChoiceDTO()
-            {
-                Id = choiceId,
-                ChoiceText = "Some choice text",
-                NextSceneId = Guid.NewGuid()
-            };
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.GetChoice(It.IsAny<Guid>()))
                 .Returns(choiceDTO);
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.GetChoice(choiceId);
             //Assert
@@ -88,12 +82,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void GetChoice_NonExistentChoiceId_NotFoundReturned()
         {
             //Arrange
-            var choiceId = Guid.NewGuid();
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.GetChoice(It.IsAny<Guid>()))
                 .Throws(new RepositoryException($"There is no choice with id: {choiceId}"));
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.GetChoice(choiceId);
             //Assert
@@ -104,18 +94,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void DeleteChoice_ValidChoiceId_OkReturned()
         {
             //Arrange
-            var choiceId = Guid.NewGuid();
-            var choiceDTO = new ChoiceDTO()
-            {
-                Id = choiceId,
-                ChoiceText = "Some choice text",
-                NextSceneId = Guid.NewGuid()
-            };
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
                 .Returns(choiceDTO);
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.DeleteChoice(choiceId);
             //Assert
@@ -126,12 +106,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void DeleteChoice_NonExistentChoiceId_NotFoundReturned()
         {
             //Arrange
-            var choiceId = Guid.NewGuid();
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
                 .Throws(new RepositoryException($"There is no choice with id: {choiceId}"));
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.DeleteChoice(choiceId);
             //Assert
@@ -151,11 +127,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
                     NextSceneId = Guid.NewGuid()
                 }
             };
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.GetChoices())
                 .Returns(choiceDTOs);
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.GetChoices();
             //Assert
@@ -166,11 +139,8 @@ namespace EvoStory.BackendAPI.uTest.Controller
         public void GetChoices_NoChoiceExists_OkReturned()
         {
             //Arrange
-            var mockLogger = new Mock<ILogger<ChoiceController>>();
-            var mockChoiceService = new Mock<IChoiceService>();
             mockChoiceService.Setup(m => m.GetChoices())
                 .Returns(new List<ChoiceDTO>());
-            var sut = new ChoiceController(mockChoiceService.Object, mockLogger.Object);
             //Act
             var result = sut.GetChoices();
             //Assert
