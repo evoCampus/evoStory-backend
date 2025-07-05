@@ -10,129 +10,137 @@ namespace EvoStory.BackendAPI.uTest.Services
 {
     class ChoiceServiceTest
     {
-        private Guid sceneId;
-        private Guid nextSceneId;
-        private const string choiceText = "Some choice text.";
-        private Guid choiceId;
-        private Choice choice;
-        private ChoiceDTO expectedChoiceDTO;
-        private Mock<ILogger<ChoiceService>> mockLogger;
-        private Mock<IChoiceRepository> mockChoiceRepository;
-        private Mock<IDTOConversionService> mockDTOConversionService;
-        private ChoiceService sut;
+        private Guid _sceneId;
+        private Guid _nextSceneId;
+        private const string _choiceText = "Some choice text.";
+        private Guid _choiceId;
+        private Choice _choice;
+        private ChoiceDTO _expectedChoiceDTO;
+        private Mock<ILogger<ChoiceService>> _mockLogger;
+        private Mock<IChoiceRepository> _mockChoiceRepository;
+        private Mock<IDTOConversionService> _mockDTOConversionService;
+        private ChoiceService _sut;
 
         [SetUp]
         public void Setup()
         {
-            sceneId = Guid.NewGuid();
-            nextSceneId = Guid.NewGuid();
-            choiceId = Guid.NewGuid();
-            choice = new Choice()
+            _sceneId = Guid.NewGuid();
+            _nextSceneId = Guid.NewGuid();
+            _choiceId = Guid.NewGuid();
+            _choice = new Choice()
             {
-                Id = choiceId,
-                ChoiceText = choiceText,
-                NextSceneId = nextSceneId
+                Id = _choiceId,
+                ChoiceText = _choiceText,
+                NextSceneId = _nextSceneId
             };
-            expectedChoiceDTO = new ChoiceDTO()
+            _expectedChoiceDTO = new ChoiceDTO()
             {
-                Id = choiceId,
-                ChoiceText = choiceText,
-                NextSceneId = nextSceneId
+                Id = _choiceId,
+                ChoiceText = _choiceText,
+                NextSceneId = _nextSceneId
             };
-            mockLogger = new Mock<ILogger<ChoiceService>>();
-            mockChoiceRepository = new Mock<IChoiceRepository>();
-            mockDTOConversionService = new Mock<IDTOConversionService>();
-            sut = new ChoiceService(mockChoiceRepository.Object, mockDTOConversionService.Object, mockLogger.Object);
+            _mockLogger = new Mock<ILogger<ChoiceService>>();
+            _mockChoiceRepository = new Mock<IChoiceRepository>();
+            _mockDTOConversionService = new Mock<IDTOConversionService>();
+            _sut = new ChoiceService(_mockChoiceRepository.Object, _mockDTOConversionService.Object, _mockLogger.Object);
         }
         [Test]
-        public void CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddToRepository()
+        public void CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddedToRepository()
         {
             // Arrange
             var createChoiceDTO = new CreateChoiceDTO()
             {
-                SceneId = sceneId,
-                ChoiceText = choiceText,
-                NextSceneId = nextSceneId
+                SceneId = _sceneId,
+                ChoiceText = _choiceText,
+                NextSceneId = _nextSceneId
             };
-            mockChoiceRepository.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
-                .Returns(choice);
-            mockDTOConversionService.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
-                .Returns(expectedChoiceDTO);
+            _mockChoiceRepository.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
+                .Returns(_choice);
+            _mockDTOConversionService.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
+                .Returns(_expectedChoiceDTO);
+
             // Act
-            var actualChoiceDTO = sut.CreateChoice(createChoiceDTO);
+            var actualChoiceDTO = _sut.CreateChoice(createChoiceDTO);
 
             // Assert
-            Assert.That(actualChoiceDTO.Id, Is.EqualTo(expectedChoiceDTO.Id));
-            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(expectedChoiceDTO.ChoiceText));
-            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(expectedChoiceDTO.NextSceneId));
+            Assert.That(actualChoiceDTO.Id, Is.EqualTo(_expectedChoiceDTO.Id));
+            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(_expectedChoiceDTO.ChoiceText));
+            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(_expectedChoiceDTO.NextSceneId));
         }
 
         [Test]
-        public void CreateChoice_NonExistingScene_ExeptionThrown()
+        public void CreateChoice_NonExistingScene_ExceptionThrown()
         {
             //Arrange
             var createChoiceDTO = new CreateChoiceDTO()
             {
-                SceneId = sceneId,
-                NextSceneId = nextSceneId,
-                ChoiceText = choiceText
+                SceneId = _sceneId,
+                NextSceneId = _nextSceneId,
+                ChoiceText = _choiceText
             };
-            mockChoiceRepository.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
-                .Throws(new RepositoryException($"There is no existent scene with id: {sceneId}"));
+            _mockChoiceRepository.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
+                .Throws(new RepositoryException($"There is no existent scene with id: {_sceneId}"));
+
             //Act & Assert
-            Assert.That(()=> sut.CreateChoice(createChoiceDTO), Throws.InstanceOf<RepositoryException>());
+            Assert.That(()=> _sut.CreateChoice(createChoiceDTO), Throws.InstanceOf<RepositoryException>());
         }
 
         [Test]
         public void GetChoice_ValidChoice_ChoiceDTOReturned()
         {
             //Arrange
-            mockChoiceRepository.Setup(m => m.GetChoice(It.IsAny<Guid>()))
-                .Returns(choice);
-            mockDTOConversionService.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
-                .Returns(expectedChoiceDTO);
+            _mockChoiceRepository.Setup(m => m.GetChoice(It.IsAny<Guid>()))
+                .Returns(_choice);
+            _mockDTOConversionService.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
+                .Returns(_expectedChoiceDTO);
+
             //Act
-            var actualChoiceDTO = sut.GetChoice(choiceId);
+            var actualChoiceDTO = _sut.GetChoice(_choiceId);
+
             //Assert
-            Assert.That(actualChoiceDTO.Id, Is.EqualTo(expectedChoiceDTO.Id));
-            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(expectedChoiceDTO.ChoiceText));
-            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(expectedChoiceDTO.NextSceneId));
+            Assert.That(actualChoiceDTO.Id, Is.EqualTo(_expectedChoiceDTO.Id));
+            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(_expectedChoiceDTO.ChoiceText));
+            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(_expectedChoiceDTO.NextSceneId));
         }
 
         [Test]
-        public void GetChoice_NonExistentChoice_ExeptionThrown()
+        public void GetChoice_NonExistentChoice_ExceptionThrown()
         {
             //Arrange
-            mockChoiceRepository.Setup(m => m.GetChoice(It.IsAny<Guid>()))
-                .Throws(new RepositoryException($"There is no choice with id: {choiceId}"));
+            _mockChoiceRepository.Setup(m => m.GetChoice(It.IsAny<Guid>()))
+                .Throws(new RepositoryException($"There is no choice with id: {_choiceId}"));
+
             //Act & Assert
-            Assert.That(()=>sut.GetChoice(choiceId),Throws.InstanceOf<RepositoryException>());
+            Assert.That(()=>_sut.GetChoice(_choiceId),Throws.InstanceOf<RepositoryException>());
         }
 
         [Test]
         public void DeleteChoice_ExistingChoice_ChoiceDeletedFromRepository()
         {
             //Arragne
-            mockChoiceRepository.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
-                .Returns(choice);
-            mockDTOConversionService.Setup(m=>m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
-                .Returns(expectedChoiceDTO);
+            _mockChoiceRepository.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
+                .Returns(_choice);
+            _mockDTOConversionService.Setup(m=>m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
+                .Returns(_expectedChoiceDTO);
+
             //Act
-            var actualChoiceDTO = sut.DeleteChoice(choiceId);
+            var actualChoiceDTO = _sut.DeleteChoice(_choiceId);
+
             //Assert
-            Assert.That(actualChoiceDTO.Id, Is.EqualTo(expectedChoiceDTO.Id));
-            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(expectedChoiceDTO.ChoiceText));
-            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(expectedChoiceDTO.NextSceneId));
+            Assert.That(actualChoiceDTO.Id, Is.EqualTo(_expectedChoiceDTO.Id));
+            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(_expectedChoiceDTO.ChoiceText));
+            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(_expectedChoiceDTO.NextSceneId));
         }
 
         [Test]
-        public void Delete_NonExistentChoice_ExeptionThrown()
+        public void Delete_NonExistentChoice_ExceptionThrown()
         {
             //Arrange
-            mockChoiceRepository.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
-                .Throws(new RepositoryException($"There is no choice with id: {choiceId}"));
+            _mockChoiceRepository.Setup(m => m.DeleteChoice(It.IsAny<Guid>()))
+                .Throws(new RepositoryException($"There is no choice with id: {_choiceId}"));
+
             //Act & Assert
-            Assert.That(()=> sut.DeleteChoice(choiceId),Throws.InstanceOf<RepositoryException>());
+            Assert.That(()=> _sut.DeleteChoice(_choiceId),Throws.InstanceOf<RepositoryException>());
         }
 
         [Test]
@@ -140,18 +148,20 @@ namespace EvoStory.BackendAPI.uTest.Services
         {
             //Arrange
             var choices = new List<Choice>();
-            mockChoiceRepository.Setup(m=>m.GetChoices())
+            _mockChoiceRepository.Setup(m=>m.GetChoices())
                 .Returns(choices);
+
             //Act
-            var numberOfChoices = sut.GetChoices().Count();
+            var resultChoices = _sut.GetChoices();
+
             //Assert
-            Assert.That(numberOfChoices, Is.EqualTo(0));
+            Assert.That(resultChoices.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void GetChoices_ChoiceExists_ListReturned()
         {
-            //Arramge
+            //Arrange
             var choices = new List<Choice>()
             {
                 new Choice()
@@ -163,12 +173,14 @@ namespace EvoStory.BackendAPI.uTest.Services
                     Id = Guid.NewGuid(),
                 }
             };
-            mockChoiceRepository.Setup(m=>m.GetChoices())
+            _mockChoiceRepository.Setup(m=>m.GetChoices())
                 .Returns(choices);
+
             //Act
-            var numberOfChoice = sut.GetChoices().Count();
+            var resultChoices = _sut.GetChoices();
+
             //Assert
-            Assert.That(numberOfChoice, Is.EqualTo(2));
+            Assert.That(resultChoices.Count(), Is.EqualTo(2));
         }
     }
 }
