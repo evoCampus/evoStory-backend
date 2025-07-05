@@ -2,15 +2,10 @@
 using EvoStory.BackendAPI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.uTest.Services
 {
-    internal class DTOConversionServiceTest
+    class DTOConversionServiceTest
     {
         [Test]
         public void ConvertChoiceToChoiceDTO_CompleteChoice_ChoiceDTOCreatedWithEqualValues()
