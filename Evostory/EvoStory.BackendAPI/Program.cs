@@ -4,6 +4,7 @@ using EvoStory.BackendAPI.Services;
 using EvoStory.BackendAPI.Database;
 using EvoStory.BackendAPI.Importer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApiContext>(options =>
 options.UseInMemoryDatabase("StoryDb"));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "auth.cookie";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+        options.SlidingExpiration = true;
+        options.LoginPath = "/api/User/login";
+        options.AccessDeniedPath = "/api/User/access-denied";
+    });
 
 builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
@@ -62,6 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
