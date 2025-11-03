@@ -161,6 +161,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// <summary>
         /// Logs out the user and clears the session cookie.
         /// </summary>
+        /// <response code="200">The user was sucessfully logged out.</response>
         [HttpPost("logout", Name = nameof(Logout))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Logout()
@@ -174,6 +175,8 @@ namespace EvoStory.BackendAPI.Controllers
         /// <summary>
         /// Gets the current authenticated user from session.
         /// </summary>
+        /// <response code="200">The current User was successfully retrieved.</response>
+        /// <response code="401">There is no user logged in.</response>
         [HttpGet("current", Name = nameof(GetCurrentUser))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
