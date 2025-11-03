@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Evostory.Story\Evostory.Story.csproj" />
+    <ProjectReference Include="..\Evostory.Story\Evostory.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>
