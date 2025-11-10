@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EvoStory.BackendAPI.Migrations
+namespace EvoStory.Database.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -26,6 +26,19 @@ namespace EvoStory.BackendAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Stories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartingSceneId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -44,7 +57,8 @@ namespace EvoStory.BackendAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ContentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ContentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,10 +69,15 @@ namespace EvoStory.BackendAPI.Migrations
                         principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Scenes_Stories_StoryId",
+                        column: x => x.StoryId,
+                        principalTable: "Stories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Choice",
+                name: "Choises",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -68,30 +87,35 @@ namespace EvoStory.BackendAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Choice", x => x.Id);
+                    table.PrimaryKey("PK_Choises", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Choice_Scenes_SceneId",
+                        name: "FK_Choises_Scenes_SceneId",
                         column: x => x.SceneId,
                         principalTable: "Scenes",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Choice_SceneId",
-                table: "Choice",
+                name: "IX_Choises_SceneId",
+                table: "Choises",
                 column: "SceneId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Scenes_ContentId",
                 table: "Scenes",
                 column: "ContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Scenes_StoryId",
+                table: "Scenes",
+                column: "StoryId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Choice");
+                name: "Choises");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -101,6 +125,9 @@ namespace EvoStory.BackendAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contents");
+
+            migrationBuilder.DropTable(
+                name: "Stories");
         }
     }
 }

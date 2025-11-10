@@ -1,5 +1,5 @@
 ﻿using EvoStory.BackendAPI.Repository;
-using Evostory.Story.Models;
+using EvoStory.Database.Models;
 using System.Text.Json;
 
 namespace EvoStory.BackendAPI.Importer

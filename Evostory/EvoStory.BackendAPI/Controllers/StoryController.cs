@@ -4,7 +4,7 @@ using EvoStory.BackendAPI.Exceptions;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
-using Evostory.Story.Models;
+using EvoStory.Database.Models;
 
 namespace EvoStory.BackendAPI.Controllers
 {

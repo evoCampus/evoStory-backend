@@ -1,4 +1,4 @@
-﻿using Evostory.Story.Models;
+﻿using EvoStory.Database.Models;
 
 namespace EvoStory.BackendAPI.Database
 {

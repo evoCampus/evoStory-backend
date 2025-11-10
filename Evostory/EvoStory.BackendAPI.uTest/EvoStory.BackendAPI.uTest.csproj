@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EvoStory.BackendAPI\EvoStory.BackendAPI.csproj" />
-    <ProjectReference Include="..\Evostory.Story\Evostory.Database.csproj" />
+    <ProjectReference Include="..\Evostory.Story\EvoStory.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>

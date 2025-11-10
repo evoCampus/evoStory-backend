@@ -1,7 +1,7 @@
-using Evostory.Story.Models;
+using EvoStory.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EvoStory.BackendAPI.Data
+namespace EvoStory.Database.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Evostory.Story\Evostory.Database.csproj" />
+    <ProjectReference Include="..\Evostory.Story\EvoStory.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>

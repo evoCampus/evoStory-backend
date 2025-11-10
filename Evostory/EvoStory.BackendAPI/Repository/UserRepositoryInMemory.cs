@@ -1,4 +1,4 @@
-﻿using Evostory.Story.Models;
+﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
