@@ -4,6 +4,9 @@
     {
         public required Guid Id { get; set; }
         public Content Content { get; set; }
-        public IEnumerable<Choice> Choices { get; set; }
+        public virtual ICollection<Choice> Choices { get; set; }
+        public Scene() { 
+        Choices = new List<Choice>();
+        }
     }
 }

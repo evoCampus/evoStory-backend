@@ -1,6 +1,6 @@
 using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Database;
-using EvoStory.BackendAPI.Exceptions;
+using EvoStory.Database.Exceptions;
 
 namespace EvoStory.BackendAPI.Repository
 {

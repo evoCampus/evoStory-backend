@@ -1,6 +1,6 @@
 ﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Database;
-using EvoStory.BackendAPI.Exceptions;
+using EvoStory.Database.Exceptions;
 using EvoStory.BackendAPI.Repository;
 using Microsoft.Extensions.Logging;
 using Moq;

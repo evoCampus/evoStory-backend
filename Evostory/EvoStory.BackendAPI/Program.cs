@@ -1,4 +1,4 @@
-using EvoStory.Database.Data;
+using EvoStory.Database;
 using EvoStory.BackendAPI.Repository;
 using EvoStory.BackendAPI.Services;
 using EvoStory.BackendAPI.Database;
@@ -10,27 +10,26 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDatabaseServices(connectionString);
+
+//Iservice
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//  options.UseSqlServer(connectionString));
+
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ApiContext>(options =>
-options.UseInMemoryDatabase("StoryDb"));
 
 builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ISceneRepository, SceneRepositoryInMemory>();
 builder.Services.AddSingleton<ISceneService, SceneService>();
 
-builder.Services.AddSingleton<IChoiceRepository, ChoiceRepositoryInMemory>();
 builder.Services.AddSingleton<IChoiceService, ChoiceService>();
 
-builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
 builder.Services.AddSingleton<IStoryService, StoryService>();
 
-builder.Services.AddSingleton<IUserRepository, UserRepositoryInMemory>();
 builder.Services.AddSingleton<IUserService, UserService>();
 
 builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();

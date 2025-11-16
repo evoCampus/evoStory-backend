@@ -1,7 +1,7 @@
 using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
-using EvoStory.BackendAPI.Exceptions;
+using EvoStory.Database.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 

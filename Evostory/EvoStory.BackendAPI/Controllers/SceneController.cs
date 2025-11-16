@@ -1,5 +1,5 @@
 using EvoStory.BackendAPI.DTO;
-using EvoStory.BackendAPI.Exceptions;
+using EvoStory.Database.Exceptions;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
