@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using EvoStory.Database.Models;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -23,13 +24,13 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult CreateStory(CreateStoryDTO story)
+        public async Task<ActionResult> CreateStory(CreateStoryDTO story)
         {
             logger.LogInformation($"Creating story with Title: {story.Title};");
             StoryDTO result;
             try
             {
-                result = storyService.CreateStory(story);
+                result = await storyService.CreateStory(story);
             }
             catch (RepositoryException ex)
             {
@@ -73,11 +74,11 @@ namespace EvoStory.BackendAPI.Controllers
         [HttpGet(Name = nameof(GetStories))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<StoryDTO>), StatusCodes.Status200OK)]
-        public ActionResult GetStories()
+        public async Task<ActionResult> GetStories()
         {
             logger.LogInformation("Getting all the stories.");
             IEnumerable<StoryDTO> result;
-            result = storyService.GetStories();
+            result = await storyService.GetStories();
             return Ok(result);
         }
 
@@ -91,13 +92,13 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(StoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeleteStory(Guid storyId)
+        public async Task<ActionResult> DeleteStory(Guid storyId)
         {
             logger.LogInformation($"Deleting story with Id: {storyId}.");
             StoryDTO result;
             try
             {
-                result = storyService.DeleteStory(storyId);
+                result = await storyService.DeleteStory(storyId);
             }
             catch (RepositoryException ex)
             {

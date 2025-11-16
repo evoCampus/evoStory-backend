@@ -1,9 +1,11 @@
 ﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Database;
-using EvoStory.Database.Exceptions;
 using EvoStory.BackendAPI.Repository;
+using EvoStory.Database.Exceptions;
+using EvoStory.Database.Repository;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
         }
 
         [Test]
-        public void GetChoice_ExistingChoice_ChoiceReturned()
+        public async Task GetChoice_ExistingChoice_ChoiceReturned()
         {
             // Arrange
             var storyId = Guid.NewGuid();
@@ -55,14 +57,14 @@ namespace EvoStory.BackendAPI.uTest.Repository
             var sut = new ChoiceRepositoryInMemory(mockLogger.Object, mockDbContext.Object);
 
             // Act
-            var choice = sut.GetChoice(choiceId);
+            var choice = await sut.GetChoice(choiceId);
 
             // Assert
             Assert.That(choice.Id, Is.EqualTo(choiceId));
         }
 
         [Test]
-        public void GetChoice_NonExistentChoice_ExceptionThrown()
+        public async Task GetChoice_NonExistentChoice_ExceptionThrown()
         {
             // Arrange
             var storyId = Guid.NewGuid();
@@ -96,7 +98,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
             var sut = new ChoiceRepositoryInMemory(mockLogger.Object, mockDbContext.Object);
 
             // Act & Assert
-            Assert.That(() => sut.GetChoice(choiceId), Throws.InstanceOf<RepositoryException>());
+            Assert.ThrowsAsync<RepositoryException>(async () => await sut.GetChoice(choiceId));
         }
     }
 }

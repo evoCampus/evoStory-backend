@@ -1,12 +1,13 @@
 using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
-using EvoStory.BackendAPI.Repository;
+using EvoStory.Database.Repository;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Services
 {
     public class StoryService(IStoryRepository storyRepository, IDTOConversionService dTOConversion, ILogger<StoryService> logger) : IStoryService
     {
-        public StoryDTO CreateStory(CreateStoryDTO story)
+        public async Task<StoryDTO> CreateStory(CreateStoryDTO story)
         {
             logger.LogDebug($"Create story service was called where Title: {story.Title};");
             var newStory = new Story
@@ -34,34 +35,34 @@ namespace EvoStory.BackendAPI.Services
             };
             
             logger.LogInformation($"Story was created successfully with Id: {newStory.Id}");
-            storyRepository.CreateStory(newStory);
-            return dTOConversion.ConvertStoryToStoryDTO(newStory);
+            var createdStory = await storyRepository.CreateStory(newStory);
+            return dTOConversion.ConvertStoryToStoryDTO(createdStory);
         }
 
-        public StoryDTO DeleteStory(Guid storyId)
+        public async Task<StoryDTO> DeleteStory(Guid storyId)
         {
             logger.LogDebug("Delete story service was called.");
-            var result = storyRepository.DeleteStory(storyId);
+            var result = await storyRepository.DeleteStory(storyId);
             logger.LogInformation($"Story with Id: {storyId} was deleted.");
             return dTOConversion.ConvertStoryToStoryDTO(result);
         }
 
-        public StoryDTO GetStory(Guid storyId)
+        public async Task<StoryDTO> GetStory(Guid storyId)
         {
             logger.LogDebug($"Get story service was called with Id: {storyId};");
-            var result = storyRepository.GetStory(storyId);
+            var result = await storyRepository.GetStory(storyId);
             return dTOConversion.ConvertStoryToStoryDTO(result);
         }
 
-        public IEnumerable<StoryDTO> GetStories()
+        public async Task<IEnumerable<StoryDTO>> GetStories()
         {
             logger.LogDebug("Get stories service was called.");
-            var result = storyRepository.GetStories();
+            var result = await storyRepository.GetStories();
             var storiesDTO = result.Select(story => dTOConversion.ConvertStoryToStoryDTO(story));
             return storiesDTO;
         }
 
-        public StoryDTO EditStory(EditStoryDTO story)
+        public async Task<StoryDTO> EditStory(EditStoryDTO story)
         {
             logger.LogDebug($"Edit story service was called where Id: {story.Id};");
             var newStory = new Story
@@ -83,14 +84,14 @@ namespace EvoStory.BackendAPI.Services
                         SoundId = sceneDTO.Content.SoundId
                     },
                     Id = sceneDTO.Id
-                }),
+                }).ToList(),
                 StartingSceneId = story.StartingSceneId ?? Guid.Empty,
                 Title = story.Title
             };
             
             logger.LogInformation($"Story with Id: {newStory.Id} was edited successfully.");
-            storyRepository.EditStory(newStory);
-            return dTOConversion.ConvertStoryToStoryDTO(newStory);
+            var editedStory = await storyRepository.EditStory(newStory);
+            return dTOConversion.ConvertStoryToStoryDTO(editedStory);
         }
     }
 }

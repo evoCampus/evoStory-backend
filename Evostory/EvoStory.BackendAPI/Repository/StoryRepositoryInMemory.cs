@@ -1,12 +1,13 @@
 using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Database;
 using EvoStory.Database.Exceptions;
+using EvoStory.Database.Repository;
 
 namespace EvoStory.BackendAPI.Repository
 {
     public class StoryRepositoryInMemory(ILogger<StoryRepositoryInMemory> logger, IDatabase dbContext) : IStoryRepository
     {
-        public Story CreateStory(Story story)
+        public Task<Story> CreateStory(Story story)
         {
             logger.LogTrace("Create story repository was called.");
             if (dbContext.Stories.ContainsKey(story.Id))
@@ -15,10 +16,10 @@ namespace EvoStory.BackendAPI.Repository
             }
             dbContext.Stories.Add(story.Id, story);
             logger.LogInformation($"Story with Id: {story.Id} was created.");
-            return story;
+            return Task.FromResult(story);
         }
 
-        public Story DeleteStory(Guid storyId)
+        public Task<Story> DeleteStory(Guid storyId)
         {
             logger.LogTrace("Delete story repository was called.");
             var result = dbContext.Stories.FirstOrDefault(s => s.Key == storyId).Value;
@@ -29,28 +30,28 @@ namespace EvoStory.BackendAPI.Repository
             }
             dbContext.Stories.Remove(storyId);
             logger.LogInformation($"Story with Id: {storyId} was deleted.");
-            return result;
+            return Task.FromResult(result);
         }
 
-        public Story GetStory(Guid storyId)
+        public Task<Story> GetStory(Guid storyId)
         {
             logger.LogTrace("Get story repository was called.");
             var result = dbContext.Stories.FirstOrDefault(s => s.Key == storyId).Value;
             if (result != null)
             {
-                return result;
+                return Task.FromResult(result);
             }
             logger.LogWarning($"Story with Id: {storyId} was not found.");
             throw new RepositoryException($"No story with ID {storyId} found.");
         }
 
-        public IEnumerable<Story> GetStories()
+        public Task<IEnumerable<Story>> GetStories()
         {
             logger.LogTrace("Get stories repository was called.");
-            return dbContext.Stories.Values;
+            return Task.FromResult(dbContext.Stories.Values as IEnumerable<Story>);
         }
 
-        public Story EditStory(Story story)
+        public Task<Story> EditStory(Story story)
         {
             logger.LogTrace("Edit story repository was called.");
             if (dbContext.Stories.TryGetValue(story.Id, out var existingStory))
@@ -59,7 +60,7 @@ namespace EvoStory.BackendAPI.Repository
                 existingStory.Scenes = story.Scenes;
                 existingStory.StartingSceneId = story.StartingSceneId;
                 logger.LogDebug($"Story with Id: {story.Id} was edited.");
-                return existingStory;
+                return Task.FromResult(existingStory);
             }
             logger.LogWarning($"Story with Id: {story.Id} was not found.");
             throw new RepositoryException($"No story with ID {story.Id} found.");

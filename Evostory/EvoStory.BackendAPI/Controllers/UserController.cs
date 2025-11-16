@@ -4,6 +4,7 @@ using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -70,11 +71,11 @@ namespace EvoStory.BackendAPI.Controllers
         [HttpGet(Name = nameof(GetUsers))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<UserDTO>), StatusCodes.Status200OK)]
-        public ActionResult GetUsers()
+        public async Task<ActionResult> GetUsers()
         {
             logger.LogInformation("Getting all users.");
             IEnumerable<UserDTO> result;
-            result = userService.GetUsers();
+            result = await userService.GetUsers();
             return Ok(result);
         }
 

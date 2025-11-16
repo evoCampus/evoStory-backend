@@ -1,5 +1,5 @@
 using EvoStory.Database;
-using EvoStory.BackendAPI.Repository;
+using EvoStory.Database.Repository;
 using EvoStory.BackendAPI.Services;
 using EvoStory.BackendAPI.Database;
 using EvoStory.BackendAPI.Importer;
@@ -24,19 +24,19 @@ builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ISceneService, SceneService>();
+builder.Services.AddScoped<ISceneService, SceneService>();
 
-builder.Services.AddSingleton<IChoiceService, ChoiceService>();
+builder.Services.AddScoped<IChoiceService, ChoiceService>();
 
-builder.Services.AddSingleton<IStoryService, StoryService>();
+builder.Services.AddScoped<IStoryService, StoryService>();
 
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
+builder.Services.AddScoped<IDTOConversionService, DTOConversionService>();
 
-builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
+builder.Services.AddScoped<IDatabase, DatabaseInMemory>();
 
-builder.Services.AddSingleton<IStoryImporter, DefaultStoryImporter>();
+builder.Services.AddScoped<IStoryImporter, DefaultStoryImporter>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,8 +55,12 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-IStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IStoryImporter>();
-defaultStoryImporter.ImportStory();
+using (var scope = app.Services.CreateScope())
+{
+	var scopedServices = scope.ServiceProvider;
+	var defaultStoryImporter = scopedServices.GetRequiredService<IStoryImporter>();
+	defaultStoryImporter.ImportStory();
+}
 app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 ﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
-using EvoStory.BackendAPI.Repository;
+using EvoStory.Database.Repository;
 using EvoStory.BackendAPI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -15,7 +15,7 @@ namespace EvoStory.BackendAPI.uTest.Services
     class ChoiceServiceTest
     {
         [Test]
-        public void CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddToRepository()
+        public async Task CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddToRepository()
         {
             // Arrange
             var sceneId = Guid.NewGuid();
@@ -40,10 +40,10 @@ namespace EvoStory.BackendAPI.uTest.Services
                 ChoiceText = choiceText,
                 NextSceneId = nextSceneId
             };
-            var loggerMock = new Mock<ILogger<ChoiceService>>();
-            var choiceRepositoryMock = new Mock<IChoiceRepository>();
+            var loggerMock =  new Mock<ILogger<ChoiceService>>();
+            var choiceRepositoryMock =  new Mock<IChoiceRepository>();
             choiceRepositoryMock.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
-                .Returns(choice);
+                .ReturnsAsync(choice);
             var dtoConversionServiceMock = new Mock<IDTOConversionService>();
             dtoConversionServiceMock.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
                 .Returns(expectedChoiceDTO);
@@ -51,7 +51,7 @@ namespace EvoStory.BackendAPI.uTest.Services
             var sut = new ChoiceService(choiceRepositoryMock.Object, dtoConversionServiceMock.Object, loggerMock.Object);
 
             // Act
-            var actualChoiceDTO = sut.CreateChoice(createChoiceDTO);
+            var actualChoiceDTO = await sut.CreateChoice(createChoiceDTO);
 
             // Assert
             Assert.That(actualChoiceDTO.Id, Is.EqualTo(expectedChoiceDTO.Id));

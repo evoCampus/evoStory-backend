@@ -1,12 +1,14 @@
-﻿using EvoStory.Database.Models;
-using EvoStory.Database.Exceptions;
+﻿using EvoStory.Database.Exceptions;
+using EvoStory.Database.Models;
+using EvoStory.Database.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvoStory.BackendAPI.Repository
 {
     public class UserRepositoryInMemory(ILogger<UserRepositoryInMemory> logger) : IUserRepository
     {
         private Dictionary<Guid, User> _users = new();
-        public User CreateUser(User user)
+        public Task<User> CreateUser(User user)
         {
             logger.LogTrace("Create user repository was called.");
             if (_users.ContainsKey(user.Id))
@@ -16,10 +18,10 @@ namespace EvoStory.BackendAPI.Repository
 
             _users.Add(user.Id, user);
             logger.LogInformation("User succesfully created in repository.");
-            return user;
+            return Task.FromResult(user);
         }
 
-        public User GetUser(Guid userId)
+        public Task<User> GetUser(Guid userId)
         {
             logger.LogTrace("Get user repository was called.");
             var result = _users.FirstOrDefault(user => user.Key == userId);
@@ -29,16 +31,16 @@ namespace EvoStory.BackendAPI.Repository
                 throw new RepositoryException($"No user with Id: {userId} found.");
             }
 
-            return result.Value;
+            return Task.FromResult(result.Value);
         }
 
-        public IEnumerable<User> GetUsers()
+        public Task<IEnumerable<User>> GetUsers()
         {
             logger.LogTrace("Get users repository was called.");
-            return _users.Values;
+            return Task.FromResult(_users.Values as IEnumerable<User>);
         }
 
-        public User DeleteUser(Guid userId)
+        public Task<User> DeleteUser(Guid userId)
         {
             logger.LogTrace("Delete user repository was called.");
             var result = _users.FirstOrDefault(user => user.Key == userId);
@@ -49,10 +51,10 @@ namespace EvoStory.BackendAPI.Repository
             }
             _users.Remove(result.Key);
             logger.LogInformation($"User with Id: {userId} was deleted.");
-            return result.Value;
+            return Task.FromResult(result.Value);
         }
 
-        public User Login(string username, string hashedPassword)
+        public Task<User> Login(string username, string hashedPassword)
         {
             logger.LogTrace("Login repository was called.");
             var user = _users.Values.FirstOrDefault(u => u.UserName == username && u.Password == hashedPassword);
@@ -62,7 +64,7 @@ namespace EvoStory.BackendAPI.Repository
                 throw new RepositoryException("Invalid username or password.");
             }
 
-            return user;
+            return Task.FromResult(user);
         }
     }
 }

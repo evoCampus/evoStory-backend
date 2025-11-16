@@ -4,6 +4,7 @@ using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -23,13 +24,13 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult CreateScene(CreateSceneDTO scene)
+        public async Task<ActionResult> CreateScene(CreateSceneDTO scene)
         {
             logger.LogInformation("Create scene endpoint was called.");
             SceneDTO result;
             try
             {
-                result = sceneService.CreateScene(scene);
+                result = await sceneService.CreateScene(scene);
             }
             catch (RepositoryException ex)
             {
@@ -73,11 +74,11 @@ namespace EvoStory.BackendAPI.Controllers
         [HttpGet(Name = nameof(GetScenes))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<SceneDTO>), StatusCodes.Status200OK)]
-        public ActionResult GetScenes()
+        public async Task<ActionResult> GetScenes()
         {
             logger.LogInformation("Getting all scenes.");
             IEnumerable<SceneDTO> result;
-            result = sceneService.GetScenes();
+            result = await sceneService.GetScenes();
             return Ok(result);
         }
 
@@ -91,13 +92,13 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeleteScene(Guid sceneId)
+        public async Task<ActionResult> DeleteScene(Guid sceneId)
         {
             logger.LogInformation($"Deleting scene with Id: {sceneId}.");
             SceneDTO result;
             try
             {
-                result = sceneService.DeleteScene(sceneId);
+                result = await sceneService.DeleteScene(sceneId);
             }
             catch (RepositoryException ex)
             {

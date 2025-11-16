@@ -1,13 +1,14 @@
 ﻿using EvoStory.BackendAPI.DTO;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Services
 {
     public interface IStoryService
     {
-        StoryDTO CreateStory(CreateStoryDTO story);
-        StoryDTO GetStory(Guid storyId);
-        IEnumerable<StoryDTO> GetStories();
-        StoryDTO EditStory(EditStoryDTO story);
-        StoryDTO DeleteStory(Guid storyId);
+        Task<StoryDTO> CreateStory(CreateStoryDTO story);
+        Task<StoryDTO> GetStory(Guid storyId);
+        Task<IEnumerable<StoryDTO>> GetStories();
+        Task<StoryDTO> EditStory(EditStoryDTO story);
+        Task<StoryDTO> DeleteStory(Guid storyId);
     }
 }

@@ -4,10 +4,10 @@ namespace EvoStory.BackendAPI.Services
 {
     public interface IUserService
     {
-        UserDTO CreateUser(CreateUserDTO user);
-        UserDTO GetUser(Guid userId);
-        IEnumerable<UserDTO> GetUsers();
-        UserDTO DeleteUser(Guid userId);
-        UserDTO Login(string username, string password);
+        Task<UserDTO> CreateUser(CreateUserDTO user);
+        Task<UserDTO> GetUser(Guid userId);
+        Task<IEnumerable<UserDTO>> GetUsers();
+        Task<UserDTO> DeleteUser(Guid userId);
+        Task<UserDTO> Login(string username, string password);
     }
 }
