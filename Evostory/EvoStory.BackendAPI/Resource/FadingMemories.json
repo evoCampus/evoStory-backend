@@ -59,7 +59,7 @@
         {
             "SceneId": 6,
             "Content": {
-                "Text": "Miután kiszabadítod Elizabeth megfordul, és a szeme telejesen fekete... Valami megszállta és megöl!"
+                "Text": "Miután kiszabadítod Elizabeth megfordul, és a szeme teljesen fekete... Valami megszállta és megöl!"
             },
             "Choices": null
         },
@@ -119,7 +119,7 @@
         {
             "SceneId": 10,
             "Content": {
-                "Text": "Az alagútban tovább menve találsz egy naplót, amely szerint a Csillagfén Klub valójában egy dimenziókaput nyitott meg - és Elizabeth már nem él, csak egy másolat létezik belőle. Az alagút végén egy csapóajtó van... Mostanra rájöttél, hogy Elizabeth vagy már halott, vagy valami megszállta."
+                "Text": "Az alagútban tovább menve találsz egy naplót, amely szerint a Csillagfény Klub valójában egy dimenziókaput nyitott meg - és Elizabeth már nem él, csak egy másolat létezik belőle. Az alagút végén egy csapóajtó van... Mostanra rájöttél, hogy Elizabeth vagy már halott, vagy valami megszállta."
             },
             "Choices": [
                 {

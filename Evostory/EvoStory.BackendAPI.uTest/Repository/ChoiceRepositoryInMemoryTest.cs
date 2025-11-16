@@ -16,22 +16,39 @@ namespace EvoStory.BackendAPI.uTest.Repository
 {
     class ChoiceRepositoryInMemoryTest
     {
-        [SetUp]
-        public void SetUp()
-        {
+        private Guid _storyId;
+        private Guid _sceneId;
+        private Guid _choiceId;
+        private Choice _expectedChoice;
+        private Mock<ILogger<ChoiceRepositoryInMemory>> _mockLogger;
+        private Mock<IDatabase> _mockDbContext;
+        private ChoiceRepositoryInMemory _sut;
 
+        [SetUp]
+        public void Setup()
+        {
+            _storyId = Guid.NewGuid();
+            _sceneId = Guid.NewGuid();
+            _choiceId = Guid.NewGuid();
+            _expectedChoice = new Choice()
+            {
+                Id = _choiceId,
+                ChoiceText = "Some choice text",
+                NextSceneId = Guid.NewGuid()
+            };
+            _mockLogger = new Mock<ILogger<ChoiceRepositoryInMemory>>();
+            _mockDbContext = new Mock<IDatabase>();
+            _sut = new ChoiceRepositoryInMemory(_mockLogger.Object, _mockDbContext.Object);
         }
 
         [Test]
         public async Task GetChoice_ExistingChoice_ChoiceReturned()
         {
             // Arrange
-            var storyId = Guid.NewGuid();
-            var choiceId = Guid.NewGuid();
             var stories = new Dictionary<Guid, Story>()
             {
-                {storyId, new Story(){
-                    Id = storyId,
+                {_storyId, new Story(){
+                    Id = _storyId,
                     Title = "Some title",
                     Scenes = new List<Scene>()
                     {
@@ -42,37 +59,31 @@ namespace EvoStory.BackendAPI.uTest.Repository
                             {
                                 new Choice()
                                 {
-                                    Id = choiceId
+                                    Id = _choiceId
                                 }
                             }
                         }
                     }
                 }}
             };
-            var mockLogger = new Mock<ILogger<ChoiceRepositoryInMemory>>();
-            var mockDbContext = new Mock<IDatabase>();
-            mockDbContext.SetupGet(m => m.Stories)
+            _mockDbContext.SetupGet(m => m.Stories)
                 .Returns(stories);
-
-            var sut = new ChoiceRepositoryInMemory(mockLogger.Object, mockDbContext.Object);
 
             // Act
             var choice = await sut.GetChoice(choiceId);
 
             // Assert
-            Assert.That(choice.Id, Is.EqualTo(choiceId));
+            Assert.That(choice.Id, Is.EqualTo(_choiceId));
         }
 
         [Test]
         public async Task GetChoice_NonExistentChoice_ExceptionThrown()
         {
             // Arrange
-            var storyId = Guid.NewGuid();
-            var choiceId = Guid.NewGuid();
             var stories = new Dictionary<Guid, Story>()
             {
-                {storyId, new Story(){
-                    Id = storyId,
+                {_storyId, new Story(){
+                    Id = _storyId,
                     Title = "Some title",
                     Scenes = new List<Scene>()
                     {
@@ -90,9 +101,7 @@ namespace EvoStory.BackendAPI.uTest.Repository
                     }
                 }}
             };
-            var mockLogger = new Mock<ILogger<ChoiceRepositoryInMemory>>();
-            var mockDbContext = new Mock<IDatabase>();
-            mockDbContext.SetupGet(m => m.Stories)
+            _mockDbContext.SetupGet(m => m.Stories)
                 .Returns(stories);
 
             var sut = new ChoiceRepositoryInMemory(mockLogger.Object, mockDbContext.Object);
