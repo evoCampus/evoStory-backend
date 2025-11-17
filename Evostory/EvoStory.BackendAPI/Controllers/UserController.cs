@@ -7,7 +7,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -17,6 +17,8 @@ namespace EvoStory.BackendAPI.Controllers
     [EnableCors("allowedOrigins")]
     public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
     {
+        private const string USER_ID_CLAIM_NAME = "UserId";
+
         /// <summary>
         /// Creates user.
         /// </summary>
@@ -129,7 +131,7 @@ namespace EvoStory.BackendAPI.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim("UserId", user.Id.ToString())
+                    new Claim(USER_ID_CLAIM_NAME , user.Id.ToString())
                 };
 
                 var claimIdentity = new ClaimsIdentity(
@@ -180,14 +182,10 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize]
         public ActionResult GetCurrentUser()
         {
-            if (User.Identity?.IsAuthenticated != true)
-            {
-                return Unauthorized("No active session");
-            }
-
-            var userIdClaim = User.FindFirst("UserId");
+            var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
             if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return Unauthorized("Invalid session");
