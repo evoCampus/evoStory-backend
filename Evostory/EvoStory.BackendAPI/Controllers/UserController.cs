@@ -138,7 +138,6 @@ namespace EvoStory.BackendAPI.Controllers
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(10),
                     IssuedUtc = DateTimeOffset.UtcNow,
                     AllowRefresh = true
                 };

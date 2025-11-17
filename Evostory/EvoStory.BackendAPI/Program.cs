@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
         options.LoginPath = "/api/User/login";
         options.AccessDeniedPath = "/api/User/access-denied";
