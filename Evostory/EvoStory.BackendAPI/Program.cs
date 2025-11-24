@@ -22,8 +22,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
-        options.LoginPath = "/api/User/login";
-        options.AccessDeniedPath = "/api/User/access-denied";
 
         options.Events = new CookieAuthenticationEvents
         {
