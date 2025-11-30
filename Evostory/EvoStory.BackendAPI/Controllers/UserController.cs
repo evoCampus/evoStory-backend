@@ -4,6 +4,10 @@ using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -13,6 +17,8 @@ namespace EvoStory.BackendAPI.Controllers
     [EnableCors("allowedOrigins")]
     public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
     {
+        private const string USER_ID_CLAIM_NAME = "UserId";
+
         /// <summary>
         /// Creates user.
         /// </summary>
@@ -114,17 +120,84 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult Login(LoginDTO loginDto)
+        public async Task<ActionResult> Login(LoginDTO loginDto)
         {
             logger.LogInformation($"Login attempt for user: {loginDto.UserName}");
             try
             {
                 var user = userService.Login(loginDto.UserName, loginDto.Password);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(USER_ID_CLAIM_NAME , user.Id.ToString())
+                };
+
+                var claimIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    IssuedUtc = DateTimeOffset.UtcNow,
+                    AllowRefresh = true
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimIdentity),
+                    authProperties);
+
+                logger.LogInformation($"User {user.UserName} logged in successfully");
                 return Ok(user);
             }
             catch (RepositoryException ex)
             {
                 logger.LogError($"Login failed for user: {loginDto.UserName}. Reason: {ex.Message}");
+                return Unauthorized(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Logs out the user and clears the session cookie.
+        /// </summary>
+        /// <response code="200">The user was sucessfully logged out.</response>
+        [HttpPost("logout", Name = nameof(Logout))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> Logout()
+        {
+            logger.LogInformation("Logout endpoint called");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            logger.LogInformation("Logged out successfully");
+            return Ok();
+        }
+
+        /// <summary>
+        /// Gets the current authenticated user from session.
+        /// </summary>
+        /// <response code="200">The current User was successfully retrieved.</response>
+        /// <response code="401">There is no user logged in.</response>
+        [HttpGet("current", Name = nameof(GetCurrentUser))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize]
+        public ActionResult GetCurrentUser()
+        {
+            var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                return Unauthorized("Invalid session");
+            }
+
+            try
+            {
+                var user = userService.GetUser(userId);
+                return Ok(user);
+            }
+            catch (RepositoryException ex)
+            {
                 return Unauthorized(ex.Message);
             }
         }
