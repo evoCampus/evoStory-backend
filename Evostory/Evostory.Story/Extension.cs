@@ -20,15 +20,8 @@ namespace EvoStory.Database
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                 })
             );
-            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //  options.UseSqlServer(connectionString));
 
-            services.AddDbContext<ApiContext>(options =>
-                options.UseSqlServer(connectionString, sqlOptions =>
-                {
-                    sqlOptions.MigrationsAssembly(typeof(ApiContext).Assembly.FullName);
-                })
-            );
+
 
             
             services.AddScoped<IStoryRepository, StoryRepository>();

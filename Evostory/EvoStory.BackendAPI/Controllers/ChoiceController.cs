@@ -51,17 +51,26 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult GetChoice(Guid choiceId)
+        public async Task<ActionResult> GetChoice(Guid choiceId)
         {
             logger.LogInformation($"Getting choice with Id: {choiceId}.");
             try
             {
-                var result = choiceService.GetChoice(choiceId);
+                var result = await choiceService.GetChoice(choiceId);
+
+                if (result == null)
+                {
+                    logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                    return NotFound();
+                }
+
                 return Ok(result);
+
             }
+
             catch (RepositoryException ex)
             {
-                logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                logger.LogWarning($"Choice with Id: {choiceId} was not found. Exception: {ex.Message}");
                 return NotFound(ex.Message);
             }
         }

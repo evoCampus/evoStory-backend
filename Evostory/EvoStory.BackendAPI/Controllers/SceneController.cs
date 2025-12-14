@@ -52,12 +52,12 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult GetScene(Guid sceneId)
+        public async Task<ActionResult<SceneDTO>> GetScene(Guid sceneId)
         {
             logger.LogInformation($"Getting scene with Id: {sceneId}.");
             try
             {
-                var result = sceneService.GetScene(sceneId);
+                var result = await sceneService.GetScene(sceneId);
                 return Ok(result);
             }
             catch (RepositoryException ex)

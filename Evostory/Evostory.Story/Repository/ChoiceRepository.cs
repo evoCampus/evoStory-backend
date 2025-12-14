@@ -23,20 +23,25 @@ namespace EvoStory.Database.Repository
 
         public async Task<Choice> CreateChoice(Choice choice, Guid sceneId)
         {
-            var scene = await _context.Scenes.Include(s => s.Choices).FirstOrDefaultAsync(s => s.Id == sceneId);
-            if (scene == null)
+            var sceneExists = await _context.Scenes.AnyAsync(s => s.Id == sceneId);
+            if (!sceneExists)
             {
-                throw new RepositoryException("Scene not found"); 
+                throw new RepositoryException("Scene not found");
             }
 
-            scene.Choices.Add(choice);
+
+            choice.SceneId = sceneId;
+
+            await _context.Choises.AddAsync(choice);
+
             await _context.SaveChangesAsync();
+
             return choice;
         }
 
         public async Task<Choice> GetChoice(Guid choiceId)
         {
-            return await _context.Choises.FindAsync(choiceId);
+            return await _context.Choises.AsNoTracking().FirstOrDefaultAsync(c => c.Id == choiceId);
         }
 
         public async Task<IEnumerable<Choice>> GetChoices()

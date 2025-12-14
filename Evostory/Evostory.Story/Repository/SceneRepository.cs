@@ -18,30 +18,38 @@ namespace EvoStory.Database.Repository
         {
             _context = context;
         }
-
         public async Task<Scene> CreateScene(Scene scene, Guid storyId)
         {
-            var story = await _context.Stories.Include(s => s.Scenes).FirstOrDefaultAsync(s => s.Id == storyId);
-            if (story == null)
+
+            scene.StoryId = storyId;
+            var storyExists = await _context.Stories.AnyAsync(s => s.Id == storyId);
+            if (!storyExists)
             {
                 throw new RepositoryException("Story not found");
             }
 
-            story.Scenes.Add(scene);
+            scene.StoryId = storyId;
+
+            _context.Scenes.Add(scene);
+
             await _context.SaveChangesAsync();
+
             return scene;
         }
 
-        public async Task<Scene> GetScene(Guid sceneId)
-        {
-            return await _context.Scenes
-                                 .Include(s => s.Choices)
-                                 .FirstOrDefaultAsync(s => s.Id == sceneId);
-        }
+        public async Task<Scene> GetScene(Guid sceneId) => await _context.Scenes
+                    .Include(s => s.Content)
+                    .Include(s => s.Choices)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == sceneId);
 
         public async Task<IEnumerable<Scene>> GetScenes()
         {
-            return await _context.Scenes.ToListAsync();
+            return await _context.Scenes
+              .Include(s => s.Content)
+              .Include(s => s.Choices)  
+              .AsNoTracking()           
+              .ToListAsync();
         }
 
         public async Task<Scene> DeleteScene(Guid sceneId)

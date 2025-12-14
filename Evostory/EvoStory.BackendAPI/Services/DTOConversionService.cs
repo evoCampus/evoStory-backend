@@ -21,13 +21,13 @@ namespace EvoStory.BackendAPI.Services
             return new SceneDTO
             {
                 Id = scene.Id,
-                Content = new ContentDTO
+                Content = scene.Content != null ? new ContentDTO
                 {
                     Id = scene.Content.Id,
                     Text = scene.Content.Text,
                     ImageId = scene.Content.ImageId,
                     SoundId = scene.Content.SoundId
-                },
+                } : null,
                 Choices = scene.Choices.Select(c => ConvertChoiceToChoiceDTO(c))
             };
         }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evostory.Story", "Evostory.Story\EvoStory.Database.csproj", "{010A7220-9709-4F4A-90DB-ACF296F374D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvoStory.Database", "Evostory.Story\EvoStory.Database.csproj", "{010A7220-9709-4F4A-90DB-ACF296F374D6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvoStory.BackendAPI", "EvoStory.BackendAPI\EvoStory.BackendAPI.csproj", "{356C2198-B279-4297-83F3-10C45CE2FFDE}"
 EndProject
