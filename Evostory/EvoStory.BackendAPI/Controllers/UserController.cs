@@ -24,12 +24,12 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult CreateUser(CreateUserDTO user)
+        public async Task<ActionResult<UserDTO>> CreateUser(CreateUserDTO user)
         {
             logger.LogInformation("Create user endpoint was called.");
             try
             {
-                var result = userService.CreateUser(user);
+                var result = await userService.CreateUser(user);
                 logger.LogInformation($"User was created successfully with Id: {result.Id}");
                 return Created($"api/User/{result.Id}", result);
             }
@@ -49,12 +49,12 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult GetUser(Guid userId)
+        public async Task<ActionResult> GetUser(Guid userId)
         {
             logger.LogInformation($"Getting user with Id: {userId}.");
             try
             {
-                var result = userService.GetUser(userId);
+                var result = await userService.GetUser(userId);
                 return Ok(result);
             }
             catch (RepositoryException ex)
@@ -89,12 +89,12 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(SceneDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeleteUser(Guid userId)
+        public async Task<ActionResult> DeleteUser(Guid userId)
         {
             logger.LogInformation($"Deleting user with Id: {userId}.");
             try
             {
-                var result = userService.DeleteUser(userId);
+                var result = await userService.DeleteUser(userId);
                 logger.LogInformation($"Scene with Id: {userId} was deleted.");
                 return Ok(result);
             }
@@ -115,12 +115,12 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult Login(LoginDTO loginDto)
+        public async Task<ActionResult> Login(LoginDTO loginDto)
         {
             logger.LogInformation($"Login attempt for user: {loginDto.UserName}");
             try
             {
-                var user = userService.Login(loginDto.UserName, loginDto.Password);
+                var user = await userService.Login(loginDto.UserName, loginDto.Password);
                 return Ok(user);
             }
             catch (RepositoryException ex)
