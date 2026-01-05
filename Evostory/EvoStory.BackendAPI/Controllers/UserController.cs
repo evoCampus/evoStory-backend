@@ -14,6 +14,8 @@ namespace EvoStory.BackendAPI.Controllers
     [EnableCors("allowedOrigins")]
     public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
     {
+        private const string USER_ID_CLAIM_NAME = "UserId";
+
         /// <summary>
         /// Creates user.
         /// </summary>
@@ -126,6 +128,49 @@ namespace EvoStory.BackendAPI.Controllers
             catch (RepositoryException ex)
             {
                 logger.LogError($"Login failed for user: {loginDto.UserName}. Reason: {ex.Message}");
+                return Unauthorized(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Logs out the user and clears the session cookie.
+        /// </summary>
+        /// <response code="200">The user was sucessfully logged out.</response>
+        [HttpPost("logout", Name = nameof(Logout))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> Logout()
+        {
+            logger.LogInformation("Logout endpoint called");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            logger.LogInformation("Logged out successfully");
+            return Ok();
+        }
+
+        /// <summary>
+        /// Gets the current authenticated user from session.
+        /// </summary>
+        /// <response code="200">The current User was successfully retrieved.</response>
+        /// <response code="401">There is no user logged in.</response>
+        [HttpGet("current", Name = nameof(GetCurrentUser))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize]
+        public ActionResult GetCurrentUser()
+        {
+            var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                return Unauthorized("Invalid session");
+            }
+
+            try
+            {
+                var user = userService.GetUser(userId);
+                return Ok(user);
+            }
+            catch (RepositoryException ex)
+            {
                 return Unauthorized(ex.Message);
             }
         }
