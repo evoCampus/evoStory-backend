@@ -10,13 +10,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDatabaseServices(connectionString!);
 
-//Iservice
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//  options.UseSqlServer(connectionString));
-
-// Add services to the container.
-
 
 builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
@@ -31,8 +24,6 @@ builder.Services.AddScoped<IStoryService, StoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IDTOConversionService, DTOConversionService>();
-
-//builder.Services.AddScoped<IDatabase, DatabaseInMemory>();
 
 builder.Services.AddScoped<IStoryImporter, DefaultStoryImporter>();
 

@@ -58,7 +58,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 var result = await choiceService.GetChoice(choiceId);
 
-                if (result == null)
+                if (result is null)
                 {
                     logger.LogWarning($"Choice with Id: {choiceId} was not found.");
                     return NotFound();

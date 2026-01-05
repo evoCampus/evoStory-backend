@@ -6,11 +6,20 @@ using System.Linq;
 
 namespace EvoStory.BackendAPI.Services
 {
-    public class SceneService(ISceneRepository sceneRepository, IDTOConversionService dTOConversion, ILogger<SceneService> logger) : ISceneService
+    public class SceneService : ISceneService
     {
+        private readonly ISceneRepository _sceneRepository;
+        private readonly IDTOConversionService _dTOConversion;
+        private readonly ILogger<SceneService> _logger;
+        public SceneService(ISceneRepository sceneRepository, IDTOConversionService dtoConversion, ILogger<SceneService> logger)
+        {
+            _sceneRepository = sceneRepository;
+            _dTOConversion = dtoConversion;
+            _logger = logger;
+        }
         public async Task<SceneDTO> CreateScene(CreateSceneDTO scene)
         {
-            logger.LogDebug("Create scene service was called.");
+            _logger.LogDebug("Create scene service was called.");
             var newScene = new Scene
             {
                 Id = Guid.NewGuid(),
@@ -28,31 +37,31 @@ namespace EvoStory.BackendAPI.Services
                     NextSceneId = choiceDTO.NextSceneId
               }).ToList()
             };
-            var createdScene = await sceneRepository.CreateScene(newScene, scene.StoryId);
-            logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
-            return dTOConversion.ConvertSceneToSceneDTO(createdScene);
+            var createdScene = await _sceneRepository.CreateScene(newScene, scene.StoryId);
+            _logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
+            return _dTOConversion.ConvertSceneToSceneDTO(createdScene);
         }
 
         public async Task<SceneDTO> DeleteScene(Guid sceneId)
         {
-            logger.LogDebug("Delete scene service was called.");
-            var result = await sceneRepository.DeleteScene(sceneId);
-            logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
-            return dTOConversion.ConvertSceneToSceneDTO(result);
+            _logger.LogDebug("Delete scene service was called.");
+            var result = await _sceneRepository.DeleteScene(sceneId);
+            _logger.LogInformation($"Scene with Id: {sceneId} was deleted.");
+            return _dTOConversion.ConvertSceneToSceneDTO(result);
         }
 
         public async Task<SceneDTO> GetScene(Guid sceneId)
         {
-            logger.LogDebug("Get scene service was called.");
-            var result = await sceneRepository.GetScene(sceneId);
-            return dTOConversion.ConvertSceneToSceneDTO(result);
+            _logger.LogDebug("Get scene service was called.");
+            var result = await _sceneRepository.GetScene(sceneId);
+            return _dTOConversion.ConvertSceneToSceneDTO(result);
         }
 
         public async Task<IEnumerable<SceneDTO>> GetScenes()
         {
-            logger.LogDebug("Get scenes service was called.");
-            var result = await sceneRepository.GetScenes();
-            var scenesDTO = result.Select(scene => dTOConversion.ConvertSceneToSceneDTO(scene));
+            _logger.LogDebug("Get scenes service was called.");
+            var result = await _sceneRepository.GetScenes();
+            var scenesDTO = result.Select(scene => _dTOConversion.ConvertSceneToSceneDTO(scene));
             return scenesDTO;
         }
     }

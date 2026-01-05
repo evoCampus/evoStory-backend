@@ -18,19 +18,31 @@ namespace EvoStory.BackendAPI.Services
         public SceneDTO ConvertSceneToSceneDTO(Scene scene)
         {
             logger.LogTrace($"Converting Scene with Id: {scene.Id} to SceneDTO.");
+
             return new SceneDTO
             {
                 Id = scene.Id,
-                Content = scene.Content != null ? new ContentDTO
-                {
-                    Id = scene.Content.Id,
-                    Text = scene.Content.Text,
-                    ImageId = scene.Content.ImageId,
-                    SoundId = scene.Content.SoundId
-                } : null,
+                Content = ConvertContentToContentDTO(scene.Content),
                 Choices = scene.Choices.Select(c => ConvertChoiceToChoiceDTO(c))
             };
         }
+
+        private ContentDTO? ConvertContentToContentDTO(Content? content)
+        {
+            if (content is null)
+            {
+                return null;
+            }
+
+            return new ContentDTO
+            {
+                Id = content.Id,
+                Text = content.Text,
+                ImageId = content.ImageId,
+                SoundId = content.SoundId
+            };
+        }
+
         public ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice)
         {
             logger.LogTrace($"Converting Choice with Id: {choice.Id} to ChoiceDTO.");

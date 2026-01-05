@@ -21,9 +21,6 @@ namespace EvoStory.Database
                 })
             );
 
-
-
-            
             services.AddScoped<IStoryRepository, StoryRepository>();
             services.AddScoped<IChoiceRepository, ChoiceRepository>();
             services.AddScoped<ISceneRepository, SceneRepository>();
