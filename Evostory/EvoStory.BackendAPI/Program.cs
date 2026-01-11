@@ -1,6 +1,7 @@
-using EvoStory.Database;
-using EvoStory.BackendAPI.Services;
 using EvoStory.BackendAPI.Importer;
+using EvoStory.BackendAPI.Services;
+using EvoStory.Database;
+using EvoStory.Database.Repository;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,6 +27,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDTOConversionService, DTOConversionService>();
 
 builder.Services.AddScoped<IStoryImporter, DefaultStoryImporter>();
+
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
