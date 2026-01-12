@@ -1,11 +1,14 @@
 using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace EvoStory.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _service;
@@ -13,6 +16,15 @@ namespace EvoStory.BackendAPI.Controllers
         public InventoryController(IInventoryService service)
         {
             _service = service;
+        }
+        private Guid GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst("UserId"); // A "UserId" kulcsot keressük
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("Nem található érvényes felhasználói ID.");
         }
 
         [HttpPost]
@@ -32,13 +44,17 @@ namespace EvoStory.BackendAPI.Controllers
         [HttpPost("pickup")]
         public async Task<IActionResult> AddItemToInventory([FromBody] AddToInventoryDTO dto)
         {
+            dto.SessionId = GetCurrentUserId();
+
             await _service.AddItemToInventoryAsync(dto);
             return Ok(new { message = "Sikeresen felvetted a tárgyat!" });
         }
 
-        [HttpGet("session/{sessionId}")]
+        [HttpGet("session")]
         public async Task<ActionResult<List<InventoryItemDTO>>> GetInventory(Guid sessionId)
         {
+            var currentUserId = GetCurrentUserId();
+
             var inventory = await _service.GetInventoryBySessionIdAsync(sessionId);
             return Ok(inventory);
         }
