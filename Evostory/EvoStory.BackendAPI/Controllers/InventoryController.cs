@@ -19,7 +19,7 @@ namespace EvoStory.BackendAPI.Controllers
         }
         private Guid GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst("UserId"); // A "UserId" kulcsot keressük
+            var userIdClaim = User.FindFirst("UserId");
             if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return userId;
@@ -27,21 +27,33 @@ namespace EvoStory.BackendAPI.Controllers
             throw new UnauthorizedAccessException("Nem található érvényes felhasználói ID.");
         }
 
-        [HttpPost]
+
+        /// <summary>
+        /// Can create a new Item.(name, description, ?Stackable, storyId)
+        /// </summary>
+        [HttpPost("createItem")]
         public async Task<ActionResult<ItemDTO>> CreateItem([FromBody] CreateItemDTO dto)
         {
             var createdItem = await _service.CreateItemAsync(dto);
             return Ok(createdItem);
         }
 
-        [HttpGet("story/{storyId}")]
+
+        /// <summary>
+        /// Gives all the items by storyId.
+        /// </summary>
+        [HttpGet("story/{storyId}/allItems")]
         public async Task<ActionResult<List<ItemDTO>>> GetItemsByStory(Guid storyId)
         {
             var items = await _service.GetItemsByStoryIdAsync(storyId);
             return Ok(items);
         }
 
-        [HttpPost("pickup")]
+
+        /// <summary>
+        /// Player can pickup an item from a story and it adds to the players inventory.
+        /// </summary>
+        [HttpPost("pickupItem")]
         public async Task<IActionResult> AddItemToInventory([FromBody] AddToInventoryDTO dto)
         {
             dto.SessionId = GetCurrentUserId();
@@ -50,12 +62,15 @@ namespace EvoStory.BackendAPI.Controllers
             return Ok(new { message = "Sikeresen felvetted a tárgyat!" });
         }
 
-        [HttpGet("session")]
-        public async Task<ActionResult<List<InventoryItemDTO>>> GetInventory(Guid sessionId)
+        /// <summary>
+        /// Gives you whats in your inventory.
+        /// </summary>
+        [HttpGet("my-inventory")]
+        public async Task<ActionResult<List<InventoryItemDTO>>> GetInventory()
         {
             var currentUserId = GetCurrentUserId();
 
-            var inventory = await _service.GetInventoryBySessionIdAsync(sessionId);
+            var inventory = await _service.GetInventoryBySessionIdAsync(currentUserId);
             return Ok(inventory);
         }
     }
