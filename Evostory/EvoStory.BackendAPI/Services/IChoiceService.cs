@@ -10,5 +10,6 @@ namespace EvoStory.BackendAPI.Services
         Task<ChoiceDTO>  GetChoice(Guid choiceId);
         Task<IEnumerable<ChoiceDTO>>  GetChoices();
         Task<ChoiceDTO> DeleteChoice(Guid choiceId);
+        Task<IEnumerable<ChoiceDTO>> GetAvailableChoicesForPlayer(Guid sceneId, Guid userId);
     }
 }

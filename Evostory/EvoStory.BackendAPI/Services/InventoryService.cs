@@ -49,7 +49,19 @@ namespace EvoStory.BackendAPI.Services
         }
         public async Task AddItemToInventoryAsync(AddToInventoryDTO dto)
         {
+            var itemDefinition = await _repository.GetItemAsync(dto.ItemId);
+
+            if (itemDefinition == null)
+            {
+                throw new KeyNotFoundException("Ilyen tárgy nem létezik az adatbázisban!");
+            }
+
             var existingEntry = await _repository.GetInventoryItemAsync(dto.SessionId, dto.ItemId);
+
+            if (!itemDefinition.IsStackable && existingEntry != null)
+            {
+                throw new InvalidOperationException("Ebbõl a tárgyból csak egy lehet nálad!");
+            }
 
             if (existingEntry != null)
             {
@@ -80,6 +92,38 @@ namespace EvoStory.BackendAPI.Services
                 ItemDescription = i.Item.Description,
                 Quantity = i.Quantity
             }).ToList();
+        }
+        public async Task RemoveItemFromInventoryAsync(RemoveFromInventoryDTO dto, Guid userId)
+        {
+            var existingEntry = await _repository.GetInventoryItemAsync(userId, dto.ItemId);
+
+            if (existingEntry == null)
+            {
+                throw new InvalidOperationException("Nincs ilyen tárgy a hátizsákodban!");
+            }
+
+            if (dto.RemoveAll)
+            {
+                await _repository.DeleteInventoryItemAsync(existingEntry);
+                return;
+            }
+
+            if (existingEntry.Quantity < dto.Quantity)
+            {
+                throw new InvalidOperationException($"Nincs ennyi nálad! (Jelenleg: {existingEntry.Quantity} db)");
+            }
+
+            int newQuantity = existingEntry.Quantity - dto.Quantity;
+
+            if (newQuantity > 0)
+            {
+                existingEntry.Quantity = newQuantity;
+                await _repository.UpdateInventoryItemAsync(existingEntry);
+            }
+            else
+            {
+                await _repository.DeleteInventoryItemAsync(existingEntry);
+            }
         }
     }
 }

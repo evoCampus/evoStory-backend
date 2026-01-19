@@ -4,6 +4,7 @@ using EvoStory.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvoStory.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119145537_AddStackableAndConditions")]
+    partial class AddStackableAndConditions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +36,6 @@ namespace EvoStory.Database.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("NextSceneId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("RequiredItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SceneId")
@@ -232,7 +232,7 @@ namespace EvoStory.Database.Migrations
             modelBuilder.Entity("EvoStory.Database.Models.ChoiceRequirement", b =>
                 {
                     b.HasOne("EvoStory.Database.Models.Choice", "Choice")
-                        .WithMany()
+                        .WithMany("Requirements")
                         .HasForeignKey("ChoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -287,6 +287,11 @@ namespace EvoStory.Database.Migrations
                     b.Navigation("Content");
 
                     b.Navigation("Story");
+                });
+
+            modelBuilder.Entity("EvoStory.Database.Models.Choice", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("EvoStory.Database.Models.Scene", b =>

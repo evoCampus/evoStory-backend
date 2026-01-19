@@ -51,5 +51,14 @@ namespace EvoStory.Database.Repository
                 .Where(ii => ii.SessionId == sessionId)
                 .ToListAsync();
         }
+        public async Task<Item?> GetItemAsync(Guid id)
+        {
+            return await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
+        }
+        public async Task DeleteInventoryItemAsync(InventoryItem inventoryItem)
+        {
+            _context.InventoryItems.Remove(inventoryItem);
+            await _context.SaveChangesAsync();
+        }
     }
 }

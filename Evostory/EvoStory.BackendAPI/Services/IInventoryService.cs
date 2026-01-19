@@ -8,5 +8,6 @@ namespace EvoStory.BackendAPI.Services
         Task<List<ItemDTO>> GetItemsByStoryIdAsync(Guid storyId);
         Task AddItemToInventoryAsync(AddToInventoryDTO dto);
         Task<List<InventoryItemDTO>> GetInventoryBySessionIdAsync(Guid sessionId);
+        Task RemoveItemFromInventoryAsync(RemoveFromInventoryDTO dto, Guid userId);
     }
 }

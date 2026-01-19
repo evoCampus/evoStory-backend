@@ -15,6 +15,6 @@ namespace EvoStory.Database.Models
         [ForeignKey("NextSceneId")]
         public Scene NextScene { get; set; }
 
-        public ICollection<ChoiceRequirement> Requirements { get; set; } = new List<ChoiceRequirement>();
+        public Guid? RequiredItemId { get; set; }
     }
     }

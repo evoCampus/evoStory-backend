@@ -73,5 +73,26 @@ namespace EvoStory.BackendAPI.Controllers
             var inventory = await _service.GetInventoryBySessionIdAsync(currentUserId);
             return Ok(inventory);
         }
+
+        [HttpPost("remove")]
+        [Authorize]
+        public async Task<IActionResult> RemoveItem([FromBody] RemoveFromInventoryDTO dto)
+        {
+            try
+            {
+                var userId = GetCurrentUserId();
+                await _service.RemoveItemFromInventoryAsync(dto, userId);
+
+                return Ok(new { message = "Tárgy sikeresen eltávolítva/csökkentve." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Hiba történt a törlés során: " + ex.Message });
+            }
+        }
     }
 }
