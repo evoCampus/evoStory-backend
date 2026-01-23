@@ -58,14 +58,23 @@ namespace EvoStory.BackendAPI.Services
 
             var existingEntry = await _repository.GetInventoryItemAsync(dto.SessionId, dto.ItemId);
 
-            if (!itemDefinition.IsStackable && existingEntry != null)
+            if (!itemDefinition.IsStackable && (existingEntry != null || dto.Quantity > 1))
             {
                 throw new InvalidOperationException("Ebbõl a tárgyból csak egy lehet nálad!");
             }
 
             if (existingEntry != null)
             {
-                existingEntry.Quantity += dto.Quantity;
+
+                if ((long)existingEntry.Quantity + dto.Quantity > int.MaxValue)
+                {
+                    existingEntry.Quantity = int.MaxValue;
+                }
+                else
+                {
+                    existingEntry.Quantity += dto.Quantity;
+                }
+
                 await _repository.UpdateInventoryItemAsync(existingEntry);
             }
             else
