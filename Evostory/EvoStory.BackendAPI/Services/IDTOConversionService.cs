@@ -1,4 +1,4 @@
-﻿using Evostory.Story.Models;
+﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
 
 namespace EvoStory.BackendAPI.Services
@@ -9,6 +9,5 @@ namespace EvoStory.BackendAPI.Services
         SceneDTO ConvertSceneToSceneDTO(Scene scene);
         ChoiceDTO ConvertChoiceToChoiceDTO(Choice choice);
         UserDTO ConvertUserToUserDTO(User user);
-
     }
 }

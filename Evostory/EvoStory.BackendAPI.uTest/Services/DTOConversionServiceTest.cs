@@ -1,4 +1,4 @@
-﻿using Evostory.Story.Models;
+﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;

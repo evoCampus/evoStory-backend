@@ -1,4 +1,4 @@
-﻿namespace Evostory.Story.Models
+﻿namespace EvoStory.Database.Models
 {
     public class ImportStoryModel
     {

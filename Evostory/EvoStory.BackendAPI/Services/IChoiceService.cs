@@ -1,12 +1,14 @@
 ﻿using EvoStory.BackendAPI.DTO;
+using System.Threading.Tasks;
+using EvoStory.BackendAPI.DTO;
 
 namespace EvoStory.BackendAPI.Services
 {
     public interface IChoiceService
     {
-        ChoiceDTO CreateChoice(CreateChoiceDTO choice);
-        ChoiceDTO GetChoice(Guid choiceId);
-        IEnumerable<ChoiceDTO> GetChoices();
-        ChoiceDTO DeleteChoice(Guid choiceId);
+        Task<ChoiceDTO> CreateChoice(CreateChoiceDTO choice);
+        Task<ChoiceDTO>  GetChoice(Guid choiceId);
+        Task<IEnumerable<ChoiceDTO>>  GetChoices();
+        Task<ChoiceDTO> DeleteChoice(Guid choiceId);
     }
 }

@@ -20,11 +20,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EvoStory.BackendAPI\EvoStory.BackendAPI.csproj" />
-    <ProjectReference Include="..\Evostory.Story\Evostory.Story.csproj" />
+    <ProjectReference Include="..\Evostory.Story\EvoStory.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repository\" />
   </ItemGroup>
 
 </Project>

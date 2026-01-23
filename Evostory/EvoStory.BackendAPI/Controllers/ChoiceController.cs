@@ -1,9 +1,10 @@
 using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
 using Microsoft.AspNetCore.Cors;
-using EvoStory.BackendAPI.Exceptions;
+using EvoStory.Database.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -22,13 +23,13 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult CreateChoice(CreateChoiceDTO choice)
+        public async Task<ActionResult> CreateChoice(CreateChoiceDTO choice)
         {
             logger.LogInformation("Create choice endpoint was called.");
             ChoiceDTO result;
             try
             {
-                result = choiceService.CreateChoice(choice);
+                result = await choiceService.CreateChoice(choice);
             }
             catch (RepositoryException ex)
             {
@@ -50,17 +51,26 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult GetChoice(Guid choiceId)
+        public async Task<ActionResult> GetChoice(Guid choiceId)
         {
             logger.LogInformation($"Getting choice with Id: {choiceId}.");
             try
             {
-                var result = choiceService.GetChoice(choiceId);
+                var result = await choiceService.GetChoice(choiceId);
+
+                if (result is null)
+                {
+                    logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                    return NotFound();
+                }
+
                 return Ok(result);
+
             }
+
             catch (RepositoryException ex)
             {
-                logger.LogWarning($"Choice with Id: {choiceId} was not found.");
+                logger.LogWarning($"Choice with Id: {choiceId} was not found. Exception: {ex.Message}");
                 return NotFound(ex.Message);
             }
         }
@@ -72,11 +82,11 @@ namespace EvoStory.BackendAPI.Controllers
         [HttpGet(Name = nameof(GetChoices))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<ChoiceDTO>), StatusCodes.Status200OK)]
-        public ActionResult GetChoices()
+        public async Task<ActionResult> GetChoices()
         {
             logger.LogInformation("Getting all the choices.");
             IEnumerable<ChoiceDTO> result;
-            result = choiceService.GetChoices();
+            result = await choiceService.GetChoices();
             return Ok(result);
         }
 
@@ -90,14 +100,14 @@ namespace EvoStory.BackendAPI.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ChoiceDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeleteChoice(Guid choiceId)
+        public async Task<ActionResult> DeleteChoice(Guid choiceId)
         {
             ChoiceDTO result;
             logger.LogInformation($"Deleting choice with Id: {choiceId}.");
 
             try
             {
-                result = choiceService.DeleteChoice(choiceId);
+                result = await choiceService.DeleteChoice(choiceId);
             }
             catch (RepositoryException ex)
             {

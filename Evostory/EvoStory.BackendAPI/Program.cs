@@ -1,67 +1,36 @@
-using EvoStory.BackendAPI.Data;
-using EvoStory.BackendAPI.Repository;
+using EvoStory.Database;
 using EvoStory.BackendAPI.Services;
-using EvoStory.BackendAPI.Database;
 using EvoStory.BackendAPI.Importer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApiContext>(options =>
-options.UseInMemoryDatabase("StoryDb"));
+builder.Services.AddDatabaseServices(connectionString!);
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "auth.cookie";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromDays(1);
-        options.SlidingExpiration = true;
-
-        options.Events = new CookieAuthenticationEvents
-        {
-            OnRedirectToLogin = context =>
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Task.CompletedTask;
-            },
-            OnRedirectToAccessDenied = context =>
-            {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                return Task.CompletedTask;
-            }
-        };
-    });
 
 builder.Services.AddLogging(builder_ => builder_.AddConsole());
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ISceneRepository, SceneRepositoryInMemory>();
-builder.Services.AddSingleton<ISceneService, SceneService>();
 
-builder.Services.AddSingleton<IChoiceRepository, ChoiceRepositoryInMemory>();
-builder.Services.AddSingleton<IChoiceService, ChoiceService>();
+builder.Services.AddScoped<ISceneService, SceneService>();
 
-builder.Services.AddSingleton<IStoryRepository, StoryRepositoryInMemory>();
-builder.Services.AddSingleton<IStoryService, StoryService>();
+builder.Services.AddScoped<IChoiceService, ChoiceService>();
 
-builder.Services.AddSingleton<IUserRepository, UserRepositoryInMemory>();
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IStoryService, StoryService>();
 
-builder.Services.AddSingleton<IDTOConversionService, DTOConversionService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddSingleton<IDatabase, DatabaseInMemory>();
+builder.Services.AddScoped<IDTOConversionService, DTOConversionService>();
 
-builder.Services.AddSingleton<IStoryImporter, DefaultStoryImporter>();
+builder.Services.AddScoped<IStoryImporter, DefaultStoryImporter>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var allowedSpecificOrigins = "allowedOrigins";
 builder.Services.AddCors(options =>
@@ -71,14 +40,17 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("http://localhost:5173")
                             .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
+                            .AllowAnyMethod();
                       });
 });
 
 var app = builder.Build();
-IStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IStoryImporter>();
-defaultStoryImporter.ImportStory();
+using (var scope = app.Services.CreateScope())
+{
+	var scopedServices = scope.ServiceProvider;
+	var defaultStoryImporter = scopedServices.GetRequiredService<IStoryImporter>();
+	defaultStoryImporter.ImportStory();
+}
 app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.
@@ -88,12 +60,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

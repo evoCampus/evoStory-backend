@@ -1,4 +1,4 @@
-﻿namespace EvoStory.BackendAPI.Exceptions
+﻿namespace EvoStory.Database.Exceptions
 {
     public class RepositoryException : Exception
     {

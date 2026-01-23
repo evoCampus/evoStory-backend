@@ -1,7 +1,6 @@
-﻿using Evostory.Story.Models;
+﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
-using EvoStory.BackendAPI.Exceptions;
-using EvoStory.BackendAPI.Repository;
+using EvoStory.Database.Repository;
 using EvoStory.BackendAPI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -45,7 +44,7 @@ namespace EvoStory.BackendAPI.uTest.Services
             _sut = new ChoiceService(_mockChoiceRepository.Object, _mockDTOConversionService.Object, _mockLogger.Object);
         }
         [Test]
-        public void CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddedToRepository()
+        public async Task CreateChoice_ValidCreateChoiceDTO_ChoiceIsAddToRepository()
         {
             // Arrange
             var createChoiceDTO = new CreateChoiceDTO()
@@ -173,14 +172,24 @@ namespace EvoStory.BackendAPI.uTest.Services
                     Id = Guid.NewGuid(),
                 }
             };
-            _mockChoiceRepository.Setup(m=>m.GetChoices())
-                .Returns(choices);
+            var loggerMock =  new Mock<ILogger<ChoiceService>>();
+            var choiceRepositoryMock =  new Mock<IChoiceRepository>();
+            choiceRepositoryMock.Setup(m => m.CreateChoice(It.IsAny<Choice>(), It.IsAny<Guid>()))
+                .ReturnsAsync(choice);
+            var dtoConversionServiceMock = new Mock<IDTOConversionService>();
+            dtoConversionServiceMock.Setup(m => m.ConvertChoiceToChoiceDTO(It.IsAny<Choice>()))
+                .Returns(expectedChoiceDTO);
 
             //Act
             var resultChoices = _sut.GetChoices();
 
-            //Assert
-            Assert.That(resultChoices.Count(), Is.EqualTo(2));
+            // Act
+            var actualChoiceDTO = await sut.CreateChoice(createChoiceDTO);
+
+            // Assert
+            Assert.That(actualChoiceDTO.Id, Is.EqualTo(expectedChoiceDTO.Id));
+            Assert.That(actualChoiceDTO.ChoiceText, Is.EqualTo(expectedChoiceDTO.ChoiceText));
+            Assert.That(actualChoiceDTO.NextSceneId, Is.EqualTo(expectedChoiceDTO.NextSceneId));
         }
     }
 }
