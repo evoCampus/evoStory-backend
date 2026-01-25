@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 
 namespace EvoStory.BackendAPI.Controllers
@@ -147,10 +145,8 @@ namespace EvoStory.BackendAPI.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                logger.LogInformation($"User {user.UserName} logged in successfully.");
-                    authProperties);
-
                 logger.LogInformation($"User {user.UserName} logged in successfully");
+
                 return Ok(user);
             }
             catch (RepositoryException ex)
@@ -181,25 +177,22 @@ namespace EvoStory.BackendAPI.Controllers
         /// <response code="401">There is no user logged in.</response>
         [HttpGet("current", Name = nameof(GetCurrentUser))]
         [Produces(MediaTypeNames.Application.Json)]
-        public async Task<ActionResult> GetCurrentUser()
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-
         public async Task<ActionResult> GetCurrentUser()
-
-
+        {
             var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
 
             if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return Unauthorized("Invalid session");
             }
-                var user = await userService.GetUser(userId);
+
             try
             {
                 var user = await userService.GetUser(userId);
                 return Ok(user);
             }
-            catch (RepositoryException ex)
+            catch (Exception ex)
             {
                 return Unauthorized(ex.Message);
             }
