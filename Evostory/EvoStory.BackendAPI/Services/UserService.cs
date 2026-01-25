@@ -1,4 +1,5 @@
-﻿using EvoStory.BackendAPI.DTO;
+﻿using EvoStory.Database.Models;
+using EvoStory.BackendAPI.DTO;
 using EvoStory.Database.Exceptions;
 using EvoStory.Database.Models;
 using EvoStory.Database.Repository;

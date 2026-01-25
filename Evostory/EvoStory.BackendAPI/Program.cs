@@ -2,8 +2,8 @@ using EvoStory.BackendAPI.Importer;
 using EvoStory.BackendAPI.Services;
 using EvoStory.Database;
 using EvoStory.Database.Repository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,12 +71,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-	var scopedServices = scope.ServiceProvider;
-	var defaultStoryImporter = scopedServices.GetRequiredService<IStoryImporter>();
-	defaultStoryImporter.ImportStory();
-}
+IStoryImporter defaultStoryImporter = app.Services.GetRequiredService<IStoryImporter>();
+defaultStoryImporter.ImportStory();
 app.UseCors(allowedSpecificOrigins);
 
 // Configure the HTTP request pipeline.

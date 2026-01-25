@@ -36,6 +36,7 @@ namespace EvoStory.Database.Data
                 .WithMany(s => s.Choices)
                 .HasForeignKey(c => c.SceneId)
                 .OnDelete(DeleteBehavior.Cascade); 
+
           
             modelBuilder.Entity<Choice>()
                 .HasOne(c => c.NextScene)

@@ -7,6 +7,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 
 namespace EvoStory.BackendAPI.Controllers
@@ -147,6 +148,9 @@ namespace EvoStory.BackendAPI.Controllers
                     authProperties);
 
                 logger.LogInformation($"User {user.UserName} logged in successfully.");
+                    authProperties);
+
+                logger.LogInformation($"User {user.UserName} logged in successfully");
                 return Ok(user);
             }
             catch (RepositoryException ex)
@@ -177,11 +181,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// <response code="401">There is no user logged in.</response>
         [HttpGet("current", Name = nameof(GetCurrentUser))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
         public async Task<ActionResult> GetCurrentUser()
-        {
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+
+        public async Task<ActionResult> GetCurrentUser()
+
 
             var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
 
@@ -189,7 +193,7 @@ namespace EvoStory.BackendAPI.Controllers
             {
                 return Unauthorized("Invalid session");
             }
-
+                var user = await userService.GetUser(userId);
             try
             {
                 var user = await userService.GetUser(userId);

@@ -2,7 +2,6 @@
 using EvoStory.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace EvoStory.Database.Repository
 {
     public class StoryRepository : IStoryRepository
