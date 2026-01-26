@@ -14,5 +14,7 @@ namespace EvoStory.Database.Models
 
         [ForeignKey("NextSceneId")]
         public Scene NextScene { get; set; }
-        }
+
+        public Guid? RequiredItemId { get; set; }
+    }
     }

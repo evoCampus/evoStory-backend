@@ -1,9 +1,11 @@
 using EvoStory.BackendAPI.DTO;
 using EvoStory.BackendAPI.Services;
-using Microsoft.AspNetCore.Cors;
 using EvoStory.Database.Exceptions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Controllers
@@ -117,6 +119,42 @@ namespace EvoStory.BackendAPI.Controllers
 
             logger.LogInformation($"Choice with Id: {choiceId} was deleted.");
             return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Shows what choice is avaible compared what item does our inventory contains.
+        /// </summary>
+        [HttpGet("scene/{sceneId}/available")]
+        [Authorize]
+        public async Task<ActionResult<List<ChoiceDTO>>> GetAvailableChoices(Guid sceneId)
+        {
+            try
+            {
+                var userId = GetCurrentUserId();
+
+                var choices = await choiceService.GetAvailableChoicesForPlayer(sceneId, userId);
+
+                return Ok(choices);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Shows current user for ease of use.
+        /// </summary>
+        private Guid GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst("UserId");
+
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("Nem található érvényes felhasználói ID.");
         }
     }
 }

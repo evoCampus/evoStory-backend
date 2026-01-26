@@ -1,5 +1,7 @@
 ﻿using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
+using EvoStory.Database.Exceptions;
+using EvoStory.Database.Models;
 using EvoStory.Database.Repository;
 using System.Security.Cryptography;
 using System.Text;
@@ -61,6 +63,11 @@ namespace EvoStory.BackendAPI.Services
                 string hashedPassword = Convert.ToBase64String(hash);
 
                 var user = await userRepository.Login(username, hashedPassword);
+
+                if (user == null)
+                {
+                    throw new RepositoryException("Helytelen felhasználónév vagy jelszó!");
+                }
 
                 return dTOConversion.ConvertUserToUserDTO(user);
             }

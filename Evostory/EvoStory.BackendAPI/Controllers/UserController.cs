@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace EvoStory.BackendAPI.Controllers
 {
@@ -125,6 +125,28 @@ namespace EvoStory.BackendAPI.Controllers
             try
             {
                 var user = await userService.Login(loginDto.UserName, loginDto.Password);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(USER_ID_CLAIM_NAME, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddDays(7)
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
+                logger.LogInformation($"User {user.UserName} logged in successfully");
+
                 return Ok(user);
             }
             catch (RepositoryException ex)
@@ -155,12 +177,11 @@ namespace EvoStory.BackendAPI.Controllers
         /// <response code="401">There is no user logged in.</response>
         [HttpGet("current", Name = nameof(GetCurrentUser))]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
-        public ActionResult GetCurrentUser()
+        public async Task<ActionResult> GetCurrentUser()
         {
             var userIdClaim = User.FindFirst(USER_ID_CLAIM_NAME);
+
             if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return Unauthorized("Invalid session");
@@ -168,10 +189,10 @@ namespace EvoStory.BackendAPI.Controllers
 
             try
             {
-                var user = userService.GetUser(userId);
+                var user = await userService.GetUser(userId);
                 return Ok(user);
             }
-            catch (RepositoryException ex)
+            catch (Exception ex)
             {
                 return Unauthorized(ex.Message);
             }
