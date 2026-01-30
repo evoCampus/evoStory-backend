@@ -50,12 +50,17 @@ namespace EvoStory.BackendAPI.Services
             {
                 Id = choice.Id,
                 ChoiceText = choice.ChoiceText,
-                NextSceneId = choice.NextSceneId
+                NextSceneId = choice.NextSceneId,
+                RequiredItemId = choice.RequiredItemId
             };
         }
 
         public UserDTO ConvertUserToUserDTO(User user)
         {
+            if (user == null)
+            {
+                return null;
+            }
             logger.LogTrace($"Converting User with Id: {user.Id} to UserDTO.");
             return new UserDTO
             {

@@ -54,12 +54,19 @@ namespace EvoStory.BackendAPI.Controllers
         /// Player can pickup an item from a story and it adds to the players inventory.
         /// </summary>
         [HttpPost("pickupItem")]
+        [Authorize]
         public async Task<IActionResult> AddItemToInventory([FromBody] AddToInventoryDTO dto)
         {
-            dto.SessionId = GetCurrentUserId();
-
-            await _service.AddItemToInventoryAsync(dto);
-            return Ok(new { message = "Sikeresen felvetted a tárgyat!" });
+            try
+            {
+                var userId = GetCurrentUserId();
+                await _service.AddItemToInventoryAsync(dto, userId);
+                return Ok(new { message = "Tárgy felvéve." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         /// <summary>
@@ -74,24 +81,23 @@ namespace EvoStory.BackendAPI.Controllers
             return Ok(inventory);
         }
 
-        [HttpPost("remove")]
+
+        /// <summary>
+        /// Clears the user's inventory (Only for logged-in users).
+        /// </summary>
+        [HttpPost("clear")]
         [Authorize]
-        public async Task<IActionResult> RemoveItem([FromBody] RemoveFromInventoryDTO dto)
+        public async Task<IActionResult> ClearInventory()
         {
             try
             {
                 var userId = GetCurrentUserId();
-                await _service.RemoveItemFromInventoryAsync(dto, userId);
-
-                return Ok(new { message = "Tárgy sikeresen eltávolítva/csökkentve." });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { error = ex.Message });
+                await _service.ClearInventoryAsync(userId);
+                return Ok(new { message = "Hátizsák tiszta." });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = "Hiba történt a törlés során: " + ex.Message });
+                return BadRequest(new { error = ex.Message });
             }
         }
     }

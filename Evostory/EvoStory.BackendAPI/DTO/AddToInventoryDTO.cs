@@ -6,7 +6,6 @@ namespace EvoStory.BackendAPI.DTO
     public class AddToInventoryDTO
     {
         [Required]
-        [JsonIgnore]
         public Guid SessionId { get; set; }
 
         [Required]

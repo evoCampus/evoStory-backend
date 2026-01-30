@@ -47,7 +47,7 @@ namespace EvoStory.BackendAPI.Services
                 IsStackable = i.IsStackable
             }).ToList();
         }
-        public async Task AddItemToInventoryAsync(AddToInventoryDTO dto)
+        public async Task AddItemToInventoryAsync(AddToInventoryDTO dto, Guid userId)
         {
             var itemDefinition = await _repository.GetItemAsync(dto.ItemId);
 
@@ -56,24 +56,19 @@ namespace EvoStory.BackendAPI.Services
                 throw new KeyNotFoundException("Ilyen tárgy nem létezik az adatbázisban!");
             }
 
-            var existingEntry = await _repository.GetInventoryItemAsync(dto.SessionId, dto.ItemId);
+            var existingEntry = await _repository.GetInventoryItemAsync(userId, dto.ItemId);
 
-            if (!itemDefinition.IsStackable && (existingEntry != null || dto.Quantity > 1))
+            if (!itemDefinition.IsStackable && existingEntry != null)
             {
-                throw new InvalidOperationException("Ebbõl a tárgyból csak egy lehet nálad!");
+                return;
             }
 
             if (existingEntry != null)
             {
-
                 if ((long)existingEntry.Quantity + dto.Quantity > int.MaxValue)
-                {
                     existingEntry.Quantity = int.MaxValue;
-                }
                 else
-                {
                     existingEntry.Quantity += dto.Quantity;
-                }
 
                 await _repository.UpdateInventoryItemAsync(existingEntry);
             }
@@ -82,7 +77,7 @@ namespace EvoStory.BackendAPI.Services
                 var newEntry = new InventoryItem
                 {
                     Id = Guid.NewGuid(),
-                    SessionId = dto.SessionId,
+                    SessionId = userId,
                     ItemId = dto.ItemId,
                     Quantity = dto.Quantity
                 };
@@ -102,37 +97,10 @@ namespace EvoStory.BackendAPI.Services
                 Quantity = i.Quantity
             }).ToList();
         }
-        public async Task RemoveItemFromInventoryAsync(RemoveFromInventoryDTO dto, Guid userId)
+        public async Task ClearInventoryAsync(Guid sessionId)
         {
-            var existingEntry = await _repository.GetInventoryItemAsync(userId, dto.ItemId);
-
-            if (existingEntry == null)
-            {
-                throw new InvalidOperationException("Nincs ilyen tárgy a hátizsákodban!");
-            }
-
-            if (dto.RemoveAll)
-            {
-                await _repository.DeleteInventoryItemAsync(existingEntry);
-                return;
-            }
-
-            if (existingEntry.Quantity < dto.Quantity)
-            {
-                throw new InvalidOperationException($"Nincs ennyi nálad! (Jelenleg: {existingEntry.Quantity} db)");
-            }
-
-            int newQuantity = existingEntry.Quantity - dto.Quantity;
-
-            if (newQuantity > 0)
-            {
-                existingEntry.Quantity = newQuantity;
-                await _repository.UpdateInventoryItemAsync(existingEntry);
-            }
-            else
-            {
-                await _repository.DeleteInventoryItemAsync(existingEntry);
-            }
+         
+            await _repository.ClearInventoryAsync(sessionId);
         }
     }
 }

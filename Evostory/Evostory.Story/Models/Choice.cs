@@ -16,5 +16,12 @@ namespace EvoStory.Database.Models
         public Scene NextScene { get; set; }
 
         public Guid? RequiredItemId { get; set; }
+        public Guid? RewardItemId { get; set; }
+
+        [ForeignKey("RewardItemId")]
+        public virtual Item? RewardItem { get; set; }
+
+        [ForeignKey("RequiredItemId")]
+        public virtual Item? RequiredItem { get; set; }
     }
     }

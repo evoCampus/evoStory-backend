@@ -156,6 +156,44 @@ namespace EvoStory.BackendAPI.Controllers
             }
             throw new UnauthorizedAccessException("Nem található érvényes felhasználói ID.");
         }
+
+        /// <summary>
+        /// Select choice for trying out item giving to inventory.
+        /// </summary>
+        [HttpPost("select")]
+        public async Task<IActionResult> SelectChoice([FromQuery] Guid choiceId)
+        {
+            Guid finalSessionId = Guid.Empty;
+
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim != null)
+            {
+                Guid.TryParse(userIdClaim.Value, out finalSessionId);
+            }
+
+            if (finalSessionId == Guid.Empty)
+            {
+                if (Request.Headers.TryGetValue("X-Session-ID", out var headerId))
+                {
+                    Guid.TryParse(headerId, out finalSessionId);
+                }
+            }
+
+            if (finalSessionId == Guid.Empty)
+            {
+                return Unauthorized("Nem sikerült azonosítani a játékost (sem Login, sem SessionID).");
+            }
+
+            try
+            {
+                var nextSceneId = await choiceService.SelectChoiceAsync(finalSessionId, choiceId);
+                return Ok(new { NextSceneId = nextSceneId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
-

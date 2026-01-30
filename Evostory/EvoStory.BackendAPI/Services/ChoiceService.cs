@@ -30,8 +30,14 @@ namespace EvoStory.BackendAPI.Services
 
         public async Task<ChoiceDTO> GetChoice(Guid choiceId)
         {
+            Console.WriteLine($"--- Searching: {choiceId} ---");
             logger.LogDebug("Get choice service was called.");
             var result = await choiceRepository.GetChoice(choiceId);
+            if (result == null)
+            {
+                Console.WriteLine("--- Did not find! (NULL) ---");
+                return null;
+            }
             return dTOConversion.ConvertChoiceToChoiceDTO(result);
         }
 
@@ -52,7 +58,7 @@ namespace EvoStory.BackendAPI.Services
         }
         public async Task<IEnumerable<ChoiceDTO>> GetAvailableChoicesForPlayer(Guid sceneId, Guid userId)
         {
-            var allChoices = await choiceRepository.GetChoices();
+            var allChoices = await choiceRepository.GetChoicesBySceneId(sceneId);
 
             var playerInventory = await inventoryService.GetInventoryBySessionIdAsync(userId);
 
@@ -83,6 +89,37 @@ namespace EvoStory.BackendAPI.Services
             }
 
             return visibleChoices;
+        }
+        public async Task<Guid> SelectChoiceAsync(Guid userId, Guid choiceId)
+        {
+            var choice = await choiceRepository.GetChoice(choiceId);
+
+            if (choice == null)
+            {
+                throw new Exception("A választott lehetõség nem található.");
+            }
+
+            if (choice.RewardItemId != null)
+            {
+                logger.LogInformation($"A játékos ({userId}) jutalmat kap: {choice.RewardItemId}");
+
+                var playerInventory = await inventoryService.GetInventoryBySessionIdAsync(userId);
+                var existingItem = playerInventory.FirstOrDefault(i => i.ItemId == choice.RewardItemId.Value);
+
+                if (existingItem == null)
+                {
+                    var newItemDto = new AddToInventoryDTO
+                    {
+                        SessionId = userId,
+                        ItemId = choice.RewardItemId.Value,
+                        Quantity = 1
+                    };
+
+                    await inventoryService.AddItemToInventoryAsync(newItemDto, userId);
+                }
+            }
+
+            return choice.NextSceneId;
         }
     }
 }

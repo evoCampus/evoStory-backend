@@ -41,7 +41,23 @@ namespace EvoStory.Database.Repository
 
         public async Task<Choice> GetChoice(Guid choiceId)
         {
-            return await _context.Choises.AsNoTracking().FirstOrDefaultAsync(c => c.Id == choiceId);
+            Console.WriteLine($"[REPO] SQL Lekérdezés indítása ehhez az ID-hoz: {choiceId}");
+            var choice = await _context.Choises
+                   .AsNoTracking()
+                   .Include(c => c.RewardItem)
+                   .Include(c => c.RequiredItem)
+                   .FirstOrDefaultAsync(c => c.Id == choiceId);
+
+            if (choice == null)
+            {
+                Console.WriteLine("[REPO] EREDMÉNY: Az adatbázisban NEM található ilyen ID!");
+            }
+            else
+            {
+                Console.WriteLine($"[REPO] EREDMÉNY: Megtalálva! Jutalma: {(choice.RewardItem != null ? choice.RewardItem.Name : "Nincs")}");
+            }
+
+            return choice;
         }
 
         public async Task<IEnumerable<Choice>> GetChoices()
@@ -58,6 +74,12 @@ namespace EvoStory.Database.Repository
                 await _context.SaveChangesAsync();
             }
             return choice;
+        }
+        public async Task<IEnumerable<Choice>> GetChoicesBySceneId(Guid sceneId)
+        {
+            return await _context.Choises
+                                 .Where(c => c.SceneId == sceneId)
+                                 .ToListAsync();
         }
     }
 }

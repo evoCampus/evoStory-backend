@@ -11,5 +11,6 @@ namespace EvoStory.Database.Repository
         Task<Choice> GetChoice(Guid choiceId);
         Task<IEnumerable<Choice>> GetChoices();
         Task<Choice> DeleteChoice(Guid choiceId);
+        Task<IEnumerable<Choice>> GetChoicesBySceneId(Guid sceneId);
     }
 }
