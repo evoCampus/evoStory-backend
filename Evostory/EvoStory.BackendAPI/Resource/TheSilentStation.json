@@ -51,9 +51,13 @@
           "NextSceneId": 4
         },
         {
-          "ChoiceText": "Megpróbálod kinyitni a Híd ajtaját (Kell: Kártya)",
+          "ChoiceText": "Megpróbálod kinyitni a Híd ajtaját...",
           "NextSceneId": 5,
           "RequiredItemName": "Vörös Beléptetőkártya"
+        },
+        {
+          "ChoiceText": "Visszanézel a Krio-kamrába (Hátha hagytál ott valamit)",
+          "NextSceneId": 1
         }
       ]
     },
