@@ -19,6 +19,11 @@ namespace EvoStory.BackendAPI.Services
         {
             logger.LogTrace($"Converting Scene with Id: {scene.Id} to SceneDTO.");
 
+            if (scene == null)
+            {
+                return null;
+            }
+
             return new SceneDTO
             {
                 Id = scene.Id,

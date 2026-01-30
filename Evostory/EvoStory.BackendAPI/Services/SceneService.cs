@@ -53,7 +53,14 @@ namespace EvoStory.BackendAPI.Services
         public async Task<SceneDTO> GetScene(Guid sceneId)
         {
             _logger.LogDebug("Get scene service was called.");
+
             var result = await _sceneRepository.GetScene(sceneId);
+
+            if (sceneId == null)
+            {
+                throw new KeyNotFoundException($"Scene with ID {sceneId} not found.");
+            }
+
             return _dTOConversion.ConvertSceneToSceneDTO(result);
         }
 
