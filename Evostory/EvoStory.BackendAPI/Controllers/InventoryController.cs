@@ -69,7 +69,7 @@ namespace EvoStory.BackendAPI.Controllers
                 var userId = GetCurrentUserId();
                 await _service.AddItemToInventoryAsync(dto, userId);
                 return Ok(new { message = "Tárgy felvéve." });
-            }
+        }
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message });

@@ -65,10 +65,15 @@ namespace EvoStory.BackendAPI.Services
 
             if (existingEntry != null)
             {
+
                 if ((long)existingEntry.Quantity + dto.Quantity > int.MaxValue)
+                {
                     existingEntry.Quantity = int.MaxValue;
+                }
                 else
+                {
                     existingEntry.Quantity += dto.Quantity;
+                }
 
                 await _repository.UpdateInventoryItemAsync(existingEntry);
             }
@@ -99,7 +104,8 @@ namespace EvoStory.BackendAPI.Services
         }
         public async Task ClearInventoryAsync(Guid sessionId)
         {
-         
+            var existingEntry = await _repository.GetInventoryItemAsync(userId, dto.ItemId);
+
             await _repository.ClearInventoryAsync(sessionId);
         }
     }
