@@ -9,6 +9,7 @@ namespace EvoStory.BackendAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [Produces("application/json")]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _service;
