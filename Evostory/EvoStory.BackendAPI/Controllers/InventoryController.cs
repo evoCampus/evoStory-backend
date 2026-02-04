@@ -32,6 +32,8 @@ namespace EvoStory.BackendAPI.Controllers
         /// Can create a new Item.(name, description, ?Stackable, storyId)
         /// </summary>
         [HttpPost("createItem")]
+        [ProducesResponseType(typeof(ItemDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ItemDTO>> CreateItem([FromBody] CreateItemDTO dto)
         {
             var createdItem = await _service.CreateItemAsync(dto);
@@ -43,6 +45,7 @@ namespace EvoStory.BackendAPI.Controllers
         /// Gives all the items by storyId.
         /// </summary>
         [HttpGet("story/{storyId}/allItems")]
+        [ProducesResponseType(typeof(IEnumerable<ItemDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ItemDTO>>> GetItemsByStory(Guid storyId)
         {
             var items = await _service.GetItemsByStoryIdAsync(storyId);
@@ -55,6 +58,9 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         [HttpPost("pickupItem")]
         [Authorize]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddItemToInventory([FromBody] AddToInventoryDTO dto)
         {
             try
@@ -73,6 +79,8 @@ namespace EvoStory.BackendAPI.Controllers
         /// Gives you whats in your inventory.
         /// </summary>
         [HttpGet("my-inventory")]
+        [ProducesResponseType(typeof(IEnumerable<InventoryItemDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<InventoryItemDTO>>> GetInventory()
         {
             var currentUserId = GetCurrentUserId();
@@ -87,6 +95,9 @@ namespace EvoStory.BackendAPI.Controllers
         /// </summary>
         [HttpPost("clear")]
         [Authorize]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ClearInventory()
         {
             try

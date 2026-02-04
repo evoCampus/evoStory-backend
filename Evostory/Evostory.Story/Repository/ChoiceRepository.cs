@@ -7,6 +7,7 @@ using EvoStory.Database.Data;
 using EvoStory.Database.Models;     
 using Microsoft.EntityFrameworkCore;
 using EvoStory.Database.Exceptions;
+using Microsoft.Extensions.Logging;
 
 
 namespace EvoStory.Database.Repository
@@ -14,11 +15,13 @@ namespace EvoStory.Database.Repository
     public class ChoiceRepository : IChoiceRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ChoiceRepository> _logger;
 
         public ChoiceRepository(ApplicationDbContext context)
         {
             _context = context;
         }
+        
 
 
         public async Task<Choice> CreateChoice(Choice choice, Guid sceneId)
@@ -41,7 +44,7 @@ namespace EvoStory.Database.Repository
 
         public async Task<Choice> GetChoice(Guid choiceId)
         {
-            Console.WriteLine($"[REPO] SQL Lekérdezés indítása ehhez az ID-hoz: {choiceId}");
+            _logger.LogDebug($"[REPO] SQL Query start for the ID: {choiceId}");
             var choice = await _context.Choises
                    .AsNoTracking()
                    .Include(c => c.RewardItem)
@@ -50,11 +53,11 @@ namespace EvoStory.Database.Repository
 
             if (choice == null)
             {
-                Console.WriteLine("[REPO] EREDMÉNY: Az adatbázisban NEM található ilyen ID!");
+                _logger.LogDebug("[REPO] Result: There is no such Id!");
             }
             else
             {
-                Console.WriteLine($"[REPO] EREDMÉNY: Megtalálva! Jutalma: {(choice.RewardItem != null ? choice.RewardItem.Name : "Nincs")}");
+                _logger.LogDebug($"[REPO] RESULT: Found! The reward: {(choice.RewardItem != null ? choice.RewardItem.Name : "None")}");
             }
 
             return choice;

@@ -30,12 +30,12 @@ namespace EvoStory.BackendAPI.Services
 
         public async Task<ChoiceDTO> GetChoice(Guid choiceId)
         {
-            Console.WriteLine($"--- Searching: {choiceId} ---");
+            logger.LogDebug($"--- Searching: {choiceId} ---");
             logger.LogDebug("Get choice service was called.");
             var result = await choiceRepository.GetChoice(choiceId);
             if (result == null)
             {
-                Console.WriteLine("--- Did not find! (NULL) ---");
+                logger.LogError("--- Did not find! (NULL) ---");
                 return null;
             }
             return dTOConversion.ConvertChoiceToChoiceDTO(result);
@@ -96,12 +96,12 @@ namespace EvoStory.BackendAPI.Services
 
             if (choice == null)
             {
-                throw new Exception("A választott lehetõség nem található.");
+                throw new Exception("The option was not found.");
             }
 
             if (choice.RewardItemId != null)
             {
-                logger.LogInformation($"A játékos ({userId}) jutalmat kap: {choice.RewardItemId}");
+                logger.LogInformation($"The player ({userId}) gets the item: {choice.RewardItemId}");
 
                 var playerInventory = await inventoryService.GetInventoryBySessionIdAsync(userId);
                 var existingItem = playerInventory.FirstOrDefault(i => i.ItemId == choice.RewardItemId.Value);

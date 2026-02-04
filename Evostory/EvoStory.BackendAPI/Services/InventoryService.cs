@@ -35,7 +35,7 @@ namespace EvoStory.BackendAPI.Services
             };
         }
 
-        public async Task<List<ItemDTO>> GetItemsByStoryIdAsync(Guid storyId)
+        public async Task<IEnumerable<ItemDTO>> GetItemsByStoryIdAsync(Guid storyId)
         {
             var items = await _repository.GetItemsByStoryIdAsync(storyId);
 
@@ -45,7 +45,7 @@ namespace EvoStory.BackendAPI.Services
                 Name = i.Name,
                 Description = i.Description,
                 IsStackable = i.IsStackable
-            }).ToList();
+            });
         }
         public async Task AddItemToInventoryAsync(AddToInventoryDTO dto, Guid userId)
         {

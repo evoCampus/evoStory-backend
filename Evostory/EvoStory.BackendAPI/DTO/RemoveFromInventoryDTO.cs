@@ -8,7 +8,7 @@ namespace EvoStory.BackendAPI.DTO
         public Guid ItemId { get; set; }
 
         [Required]
-        [Range(1, 9999, ErrorMessage = "Legalább 1 darabot kell eldobnod.")]
+        [Range(1, 9999, ErrorMessage = "You must drop at least one.")]
         public int Quantity { get; set; }
         public bool RemoveAll { get; set; } = false;
     }
