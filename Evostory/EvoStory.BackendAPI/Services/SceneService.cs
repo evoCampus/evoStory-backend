@@ -34,10 +34,10 @@ namespace EvoStory.BackendAPI.Services
                 {
                     ChoiceText = choiceDTO.ChoiceText,
                     Id = Guid.NewGuid(),
-                    NextSceneId = choiceDTO.NextSceneId
+                    NextSceneId = null
               }).ToList()
             };
-            var createdScene = await _sceneRepository.CreateScene(newScene, scene.StoryId);
+            var createdScene = await _sceneRepository.CreateScene(newScene, Guid.Empty);
             _logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
             return _dTOConversion.ConvertSceneToSceneDTO(createdScene);
         }

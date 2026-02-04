@@ -55,7 +55,7 @@ namespace EvoStory.BackendAPI.Services
             {
                 Id = choice.Id,
                 ChoiceText = choice.ChoiceText,
-                NextSceneId = choice.NextSceneId,
+                NextSceneId = choice.NextSceneId ?? Guid.Empty,
                 RequiredItemId = choice.RequiredItemId
             };
         }

@@ -17,12 +17,12 @@ namespace EvoStory.BackendAPI.Services
             var newChoice = new EvoStory.Database.Models.Choice 
             {
                 Id = Guid.NewGuid(),
-                NextSceneId = choice.NextSceneId,
+                NextSceneId = null,
                 ChoiceText = choice.ChoiceText,
                 RequiredItemId = choice.RequiredItemId
             };
 
-            var createdChoice = await choiceRepository.CreateChoice(newChoice, choice.SceneId);
+            var createdChoice = await choiceRepository.CreateChoice(newChoice, Guid.Empty);
 
             logger.LogInformation($"Choice was created successfully with Id: {newChoice.Id}");
             return dTOConversion.ConvertChoiceToChoiceDTO(createdChoice);
@@ -119,7 +119,7 @@ namespace EvoStory.BackendAPI.Services
                 }
             }
 
-            return choice.NextSceneId;
+            return choice.NextSceneId ?? Guid.Empty;
         }
     }
 }
