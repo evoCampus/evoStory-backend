@@ -17,9 +17,10 @@ namespace EvoStory.Database.Repository
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ChoiceRepository> _logger;
 
-        public ChoiceRepository(ApplicationDbContext context)
+        public ChoiceRepository(ApplicationDbContext context, ILogger<ChoiceRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         
 
@@ -57,7 +58,7 @@ namespace EvoStory.Database.Repository
             }
             else
             {
-                _logger.LogDebug($"[REPO] RESULT: Found! The reward: {(choice.RewardItem != null ? choice.RewardItem.Name : "None")}");
+                _logger.LogDebug($"[REPO] RESULT: Found! The reward: {(choice.RewardItem != null ? choice.RewardItem.Name : "Did not found.")}");
             }
 
             return choice;

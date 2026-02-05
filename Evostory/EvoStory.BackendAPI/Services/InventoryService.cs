@@ -104,7 +104,6 @@ namespace EvoStory.BackendAPI.Services
         }
         public async Task ClearInventoryAsync(Guid sessionId)
         {
-            var existingEntry = await _repository.GetInventoryItemAsync(userId, dto.ItemId);
 
             await _repository.ClearInventoryAsync(sessionId);
         }
