@@ -1,151 +1,220 @@
 {
-    "Title": "Halvány emlékek",
-    "Scenes": [
+  "Title": "Halvány emlékek",
+  
+  "Items": [
+    {
+      "Name": "Zseblámpa",
+      "Description": "Egy régi, rozsdás elemlámpa. Segít a sötétben."
+    },
+    {
+      "Name": "Csillagmintás kulcs",
+      "Description": "Elizabeth szobájából való."
+    }
+  ],
+
+  "Scenes": [
+    {
+      "SceneId": 1,
+      "Content": {
+        "Text": "A 19 éves Noa Carter Ravenswoodba utazik, hogy megtalálja eltűnt nővérét, Elizabeth Cartert. Három hónapja tűnt el az egyetem közelében. A rendőrség lezárta az ügyet, de Noa nem hisz nekik. Nővére szobájában egy különös naplót, egy csillagmintás kulcsot és egy halványan fénylő medált talál. A napló utolsó sora: „Ma este megláthatom, mi rejtőzik az árnyak között.” A nyomok egy elhagyatott kúriához vezetnek Ravenswood határában."
+      },
+      "Choices": [
         {
-            "SceneId": 1,
-            "Content": {
-                "Text": "A 19 éves Noa Carter Ravenswoodba utazik, hogy felkutassa eltűnt nővérét, Elizabeth Cartert. Elizabeth a helyi egyetem hallgatója volt, mielőtt három hónappal ezelőtt nyomtalanul eltűnt. A rendőrség lezárta az ügyet, de Noa egy különös naplóra bukkan nővére szobájában. A napló szerint Elizabeth egy titkos társasággal, a „Csillagfény Klubbal” kezdett foglalkozni. A bejegyzések utolsó mondata: „Ma este végre megláthatom, mi rejtőzik az árnyak között.” A nyomok egy elhagyatott kúriába vezetnek a város szélén. Noa elhatározza, hogy kideríti az igazságot. A kúria hosszú, sötét folyosóján két ajtó áll előtted. Melyiket választod?"
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "A bal oldali régi kopott faajtót, ami mögül halk zene szűrődik ki.",
-                    "NextSceneId": 2
-                },
-                {
-                    "ChoiceText": "A jobb oldali modern, fémajtót, ami mögött teljes csend honol.",
-                    "NextSceneId": 3
-                }
-            ]
+          "ChoiceText": "Előbb kiveszed a zseblámpát a kocsiból",
+          "NextSceneId": 2,
+          "RewardItemName": "Zseblámpa"
         },
         {
-            "SceneId": 2,
-            "Content": {
-                "Text": "Belépsz egy poros bálterembe. A falakon régi fényképek lógnak – az egyik képen Elizabeth és más fiatalok állnak, akik mind a Csillagfény Klub tagjai lehettek. A terem végén egy rejtett ajtót találsz, amely egy alagsori lejáróhoz vezet."
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "Megérinted a fényképet",
-                    "NextSceneId": 4
-                },
-                {
-                    "ChoiceText": "Továbbmész a rejtett ajtón",
-                    "NextSceneId": 5
-                }
-            ]
+          "ChoiceText": "Belépsz a kúriába",
+          "NextSceneId": 2
         },
         {
-            "SceneId": 4,
-            "Content": {
-                "Text": "Mikor megérinted a képet hirtelen egy látomásod lesz: Elizabeth egy rituális kör közepén áll, miközben valami suttog a sötétből. Ekkor egy árny jelenik meg a terem sarkában, ami a látomás közben megöl!"
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 5,
-            "Content": {
-                "Text": "A rejtekajtón tovább menve egy alagsori folyosóra érsz, ahol egy láncra vert alakot látsz. Ez Elizabeth... vagy valami, ami rá hasonlít?"
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "Kiszabadítod Elizabeth-et.",
-                    "NextSceneId": 6
-                },
-                {
-                    "ChoiceText": "Elbújsz és figyelsz.",
-                    "NextSceneId": 7
-                }
-            ]
-        },
-        {
-            "SceneId": 6,
-            "Content": {
-                "Text": "Miután kiszabadítod Elizabeth megfordul, és a szeme teljesen fekete... Valami megszállta és megöl!"
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 7,
-            "Content": {
-                "Text": "A rejtekhelyedről látod, hogy a „lány” lassan megváltozik. Nem Elizabeth az, hanem valami, ami az ő testét használja..."
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 3,
-            "Content": {
-                "Text": "Egy laboratóriumszerű helyiségbe lépsz. Régi dokumentumok hevernek a földön, egyikben Elizabeth neve is szerepel. Egy monitor felvillan, és egy torz videófelvétel indul el."
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "Megnézed a felvételt",
-                    "NextSceneId": 8
-                },
-                {
-                    "ChoiceText": "Megpróbálsz kijutni",
-                    "NextSceneId": 9
-                }
-            ]
-        },
-        {
-            "SceneId": 8,
-            "Content": {
-                "Text": "A felvételen látod, ahogy Elizabeth egy rituálé során eltűnik, és valami más veszi át a helyét. A videó végén egy üzenet jelenik meg: „Ha ezt nézed, már figyel téged.”"
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 9,
-            "Content": {
-                "Text": "Egy titkos alagútba érsz, amely a kúria alatt húzódik. Az alagút egyre szűkebb lesz. Két lehetőséged van:"
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "Folytatod az alagútban",
-                    "NextSceneId": 10
-                },
-                {
-                    "ChoiceText": "Visszamész az épületbe",
-                    "NextSceneId": 11
-                }
-            ]
-        },
-        {
-            "SceneId": 11,
-            "Content": {
-                "Text": "Az épületbe visszaérve egy árnyalak vár rád, ami megöl!"
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 10,
-            "Content": {
-                "Text": "Az alagútban tovább menve találsz egy naplót, amely szerint a Csillagfény Klub valójában egy dimenziókaput nyitott meg - és Elizabeth már nem él, csak egy másolat létezik belőle. Az alagút végén egy csapóajtó van... Mostanra rájöttél, hogy Elizabeth vagy már halott, vagy valami megszállta."
-            },
-            "Choices": [
-                {
-                    "ChoiceText": "Megpróbálod megmenteni Elizabeth testét, még ha nem is ő van benne",
-                    "NextSceneId": 12
-                },
-                {
-                    "ChoiceText": "Végleg elpusztítod azt, ami Elizabeth-ből maradt",
-                    "NextSceneId": 13
-                }
-            ]
-        },
-        {
-            "SceneId": 12,
-            "Content": {
-                "Text": "Kiszabadítod a lényt, ami megszökik és meghódítja a világot"
-            },
-            "Choices": null
-        },
-        {
-            "SceneId": 13,
-            "Content": {
-                "Text": "Elhagyod a kúriát, de örökre megváltozol"
-            },
-            "Choices": null
+          "ChoiceText": "Zsebre teszed a kulcsot és elindulsz a kúriába.",
+          "NextSceneId": 2,
+          "RewardItemName": "Csillagmintás kulcs"
         }
-    ],
-    "StartingSceneId": 1
+      ]
+    },
+    {
+      "SceneId": 2,
+      "Content": {
+        "Text": "A kúria csarnokában por és suttogás fogad. Két ajtó áll előtted: balra egy régi bálterem, jobbra egy elhagyatott laboratórium."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Belépsz a bálterembe",
+          "NextSceneId": 3
+        },
+        {
+          "ChoiceText": "Kinyitod a labort a kulccsal",
+          "NextSceneId": 10,
+          "RequiredItemName": "Csillagmintás kulcs"
+        },
+        {
+          "ChoiceText": "Óvatosan lemész a sötét pincébe (Kell: Zseblámpa)",
+          "NextSceneId": 12,
+          "RequiredItemName": "Zseblámpa"
+        }
+      ]
+    },
+    {
+      "SceneId": 3,
+      "Content": {
+        "Text": "A bálterem poros, a falakon régi fényképek lógnak. Az egyik képen Elizabeth látható, a szemében halvány fény vibrál. A terem végében egy hatalmas tükör áll."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Megérinted a fényképet",
+          "NextSceneId": 4
+        },
+        {
+          "ChoiceText": "Megvizsgálod a tükröt",
+          "NextSceneId": 6
+        }
+      ]
+    },
+    {
+      "SceneId": 4,
+      "Content": {
+        "Text": "Amikor megérinted a képet, a medál felforrósodik és megvéd az árnyaktól. Látomásod támad: Elizabeth gyertyák között áll, és azt suttogja: „A tudat kapuja csak az igaz szívnek nyílik meg.”"
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Követed a látomás fényét",
+          "NextSceneId": 6
+        }
+      ]
+    },
+    {
+      "SceneId": 5,
+      "Content": {
+        "Text": "A medál nélkül az árny megragad. Sikítasz, de senki sem hallja. A sötétség elnyel."
+      },
+      "Choices": null
+    },
+    {
+      "SceneId": 6,
+      "Content": {
+        "Text": "A tükör mögött rejtett ajtó nyílik. Egy folyosóra jutsz, ahol Elizabeth láncra verve ül. A szeme követ téged."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Kiszabadítod Elizabethet",
+          "NextSceneId": 7
+        },
+        {
+          "ChoiceText": "Elbújsz és figyelsz",
+          "NextSceneId": 8
+        }
+      ]
+    },
+    {
+      "SceneId": 7,
+      "Content": {
+        "Text": "A napló segítségével felismered a rituális pecséteket. Feloldod a láncokat, Elizabeth lelke felszabadul. „Szabad vagyok… köszönöm…” – suttogja, majd teste elporlad."
+      },
+      "Choices": null
+    },
+    {
+      "SceneId": 8,
+      "Content": {
+        "Text": "Elizabeth teste eltorzul, a szeme fekete fénnyel izzik. Az árny megszólal: „A Csillagfény gyermekei nem menekülnek.” A medál fénye megvéd."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Szembenézel az igazsággal",
+          "NextSceneId": 15
+        }
+      ]
+    },
+    {
+      "SceneId": 9,
+      "Content": {
+        "Text": "A medál hiányában az árny az elmédbe férkőzik. A valóság széthullik körülötted."
+      },
+      "Choices": null
+    },
+    {
+      "SceneId": 10,
+      "Content": {
+        "Text": "A laboratóriumban régi gépek és jegyzetek hevernek. Egy torz videófelvétel villan fel, rajta Elizabeth egy rituális körben."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Megnézed a felvételt",
+          "NextSceneId": 11
+        },
+        {
+          "ChoiceText": "Megpróbálsz kijutni",
+          "NextSceneId": 12
+        }
+      ]
+    },
+    {
+      "SceneId": 11,
+      "Content": {
+        "Text": "„Ha ezt látod, Noa… túl késő.” – mondja Elizabeth. A képernyőn megjelenik: CANDIDATE_08 – NOA CARTER. A gépek lecsillapodnak."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Tovább kutatsz",
+          "NextSceneId": 15
+        }
+      ]
+    },
+    {
+      "SceneId": 12,
+      "Content": {
+        "Text": "Egy titkos alagútba menekülsz. A falakon szimbólumok izzanak. Egy ajtó felirata: „A tudat kapuja – csak a három fény vezet át.”"
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Belépsz az ajtón",
+          "NextSceneId": 15
+        }
+      ]
+    },
+    {
+      "SceneId": 15,
+      "Content": {
+        "Text": "Az igazság szobájában Elizabeth teste áll előtted. A hangja idegen: „Noa… egyek vagyunk.” Eljött az utolsó döntés."
+      },
+      "Choices": [
+        {
+          "ChoiceText": "Megmented Elizabethet",
+          "NextSceneId": 16
+        },
+        {
+          "ChoiceText": "Elpusztítod a lényt",
+          "NextSceneId": 17
+        },
+        {
+          "ChoiceText": "Feláldozod magad",
+          "NextSceneId": 18
+        }
+      ]
+    },
+    {
+      "SceneId": 16,
+      "Content": {
+        "Text": "A rituálé sikerül. Elizabeth lelke felszabadul, a Csillagfény Klub titka örökre eltűnik."
+      },
+      "Choices": null
+    },
+    {
+      "SceneId": 17,
+      "Content": {
+        "Text": "A medál fénye elnyeli a lényt. A kúria összeomlik, de a világ megmenekül."
+      },
+      "Choices": null
+    },
+    {
+      "SceneId": 18,
+      "Content": {
+        "Text": "A portál megnyílik. Noa átveszi az entitás helyét. A világ békében marad, de ő örökre az árnyak őrzője lesz."
+      },
+      "Choices": null
+    }
+  ],
+  "StartingSceneId": 1
 }

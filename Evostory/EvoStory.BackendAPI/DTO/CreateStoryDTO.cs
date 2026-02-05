@@ -4,6 +4,7 @@
     {
         public required string Title { get; set; }
         public IEnumerable<CreateSceneDTO> Scenes { get; set; }
-        public Guid? StartingSceneId { get; set; }
+        public int StartingSceneId { get; set; }
+        public List<CreateItemDTO> Items { get; set; } = new();
     }
 }

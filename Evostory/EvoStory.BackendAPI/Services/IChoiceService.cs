@@ -1,6 +1,4 @@
 ﻿using EvoStory.BackendAPI.DTO;
-using System.Threading.Tasks;
-using EvoStory.BackendAPI.DTO;
 
 namespace EvoStory.BackendAPI.Services
 {
@@ -11,5 +9,6 @@ namespace EvoStory.BackendAPI.Services
         Task<IEnumerable<ChoiceDTO>>  GetChoices();
         Task<ChoiceDTO> DeleteChoice(Guid choiceId);
         Task<IEnumerable<ChoiceDTO>> GetAvailableChoicesForPlayer(Guid sceneId, Guid userId);
+        Task<Guid> SelectChoiceAsync(Guid userId, Guid choiceId);
     }
 }

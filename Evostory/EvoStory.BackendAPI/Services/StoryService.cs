@@ -1,6 +1,7 @@
-using EvoStory.Database.Models;
 using EvoStory.BackendAPI.DTO;
+using EvoStory.Database.Models;
 using EvoStory.Database.Repository;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Services
@@ -10,17 +11,31 @@ namespace EvoStory.BackendAPI.Services
         public async Task<StoryDTO> CreateStory(CreateStoryDTO story)
         {
             logger.LogDebug($"Create story service was called where Title: {story.Title};");
+
+            var idMap = new Dictionary<int, Guid>();
+
+            if (story.Scenes != null)
+            {
+                foreach (var sceneDTO in story.Scenes)
+                {
+                    if (!idMap.ContainsKey(sceneDTO.SceneId))
+                    {
+                        idMap[sceneDTO.SceneId] = Guid.NewGuid();
+                    }
+                }
+            }
+
             var newStory = new Story
             {
                 Id = Guid.NewGuid(),
-                Scenes = story.Scenes.Select(sceneDTO => new Scene()
+                Title = story.Title,
+
+                StartingSceneId = idMap.ContainsKey(story.StartingSceneId) ? idMap[story.StartingSceneId] : Guid.Empty,
+
+                Scenes = story.Scenes?.Select(sceneDTO => new Scene()
                 {
-                    Choices = sceneDTO.Choices.Select(choiceDTO => new Choice()
-                    {
-                        ChoiceText = choiceDTO.ChoiceText,
-                        Id = Guid.NewGuid(),
-                        NextSceneId = choiceDTO.NextSceneId
-                    }).ToList(),
+                    Id = idMap[sceneDTO.SceneId],
+
                     Content = new Content
                     {
                         Id = Guid.NewGuid(),
@@ -28,14 +43,26 @@ namespace EvoStory.BackendAPI.Services
                         ImageId = sceneDTO.Content.ImageId,
                         SoundId = sceneDTO.Content.SoundId
                     },
-                    Id = Guid.NewGuid()
-                }).ToList(),
-                StartingSceneId = story.StartingSceneId ?? Guid.Empty,
-                Title = story.Title
+
+                    Choices = (sceneDTO.Choices ?? new List<CreateChoiceDTO>()).Select(choiceDTO => new Choice()
+                    {
+                        Id = Guid.NewGuid(),
+                        ChoiceText = choiceDTO.ChoiceText,
+
+
+                        NextSceneId = (choiceDTO.NextSceneId.HasValue && idMap.ContainsKey(choiceDTO.NextSceneId.Value))
+                                      ? idMap[choiceDTO.NextSceneId.Value]
+                                      : null
+
+
+                    }).ToList()
+
+                }).ToList() ?? new List<Scene>()
             };
-            
+
             logger.LogInformation($"Story was created successfully with Id: {newStory.Id}");
             var createdStory = await storyRepository.CreateStory(newStory);
+
             return dTOConversion.ConvertStoryToStoryDTO(createdStory);
         }
 

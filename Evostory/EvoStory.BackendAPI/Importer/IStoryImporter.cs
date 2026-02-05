@@ -2,6 +2,6 @@
 {
     interface IStoryImporter
     {
-        void ImportStory();
+        Task ImportStory();
     }
 }

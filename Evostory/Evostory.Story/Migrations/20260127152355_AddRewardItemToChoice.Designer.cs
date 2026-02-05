@@ -4,6 +4,7 @@ using EvoStory.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvoStory.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260127152355_AddRewardItemToChoice")]
+    partial class AddRewardItemToChoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,10 +50,6 @@ namespace EvoStory.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NextSceneId");
-
-                    b.HasIndex("RequiredItemId");
-
-                    b.HasIndex("RewardItemId");
 
                     b.HasIndex("SceneId");
 
@@ -225,14 +224,6 @@ namespace EvoStory.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EvoStory.Database.Models.Item", "RequiredItem")
-                        .WithMany()
-                        .HasForeignKey("RequiredItemId");
-
-                    b.HasOne("EvoStory.Database.Models.Item", "RewardItem")
-                        .WithMany()
-                        .HasForeignKey("RewardItemId");
-
                     b.HasOne("EvoStory.Database.Models.Scene", "Scene")
                         .WithMany("Choices")
                         .HasForeignKey("SceneId")
@@ -240,10 +231,6 @@ namespace EvoStory.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("NextScene");
-
-                    b.Navigation("RequiredItem");
-
-                    b.Navigation("RewardItem");
 
                     b.Navigation("Scene");
                 });

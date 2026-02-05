@@ -76,7 +76,7 @@ using (var scope = app.Services.CreateScope())
 {
     var scopedServices = scope.ServiceProvider;
     var defaultStoryImporter = scopedServices.GetRequiredService<IStoryImporter>();
-    defaultStoryImporter.ImportStory();
+    await defaultStoryImporter.ImportStory();
 }
 
 app.UseCors(allowedSpecificOrigins);

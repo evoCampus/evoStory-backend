@@ -66,7 +66,7 @@ namespace EvoStory.BackendAPI.Services
 
                 if (user == null)
                 {
-                    throw new RepositoryException("Helytelen felhasználónév vagy jelszó!");
+                    throw new RepositoryException("Bad Username or password!");
                 }
 
                 return dTOConversion.ConvertUserToUserDTO(user);

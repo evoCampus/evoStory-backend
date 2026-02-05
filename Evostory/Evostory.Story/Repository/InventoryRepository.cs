@@ -55,9 +55,11 @@ namespace EvoStory.Database.Repository
         {
             return await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         }
-        public async Task DeleteInventoryItemAsync(InventoryItem inventoryItem)
+
+        public async Task ClearInventoryAsync(Guid userId)
         {
-            _context.InventoryItems.Remove(inventoryItem);
+            var items = _context.InventoryItems.Where(i => i.SessionId == userId);
+            _context.InventoryItems.RemoveRange(items);
             await _context.SaveChangesAsync();
         }
     }

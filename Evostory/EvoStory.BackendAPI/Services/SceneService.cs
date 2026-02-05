@@ -34,10 +34,10 @@ namespace EvoStory.BackendAPI.Services
                 {
                     ChoiceText = choiceDTO.ChoiceText,
                     Id = Guid.NewGuid(),
-                    NextSceneId = choiceDTO.NextSceneId
+                    NextSceneId = null
               }).ToList()
             };
-            var createdScene = await _sceneRepository.CreateScene(newScene, scene.StoryId);
+            var createdScene = await _sceneRepository.CreateScene(newScene, Guid.Empty);
             _logger.LogInformation($"Scene was created successfully with Id: {newScene.Id}");
             return _dTOConversion.ConvertSceneToSceneDTO(createdScene);
         }
@@ -53,7 +53,14 @@ namespace EvoStory.BackendAPI.Services
         public async Task<SceneDTO> GetScene(Guid sceneId)
         {
             _logger.LogDebug("Get scene service was called.");
+
             var result = await _sceneRepository.GetScene(sceneId);
+
+            if (sceneId == null)
+            {
+                throw new KeyNotFoundException($"Scene with ID {sceneId} not found.");
+            }
+
             return _dTOConversion.ConvertSceneToSceneDTO(result);
         }
 

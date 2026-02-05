@@ -11,6 +11,6 @@ namespace EvoStory.Database.Repository
         Task UpdateInventoryItemAsync(InventoryItem inventoryItem);
         Task<List<InventoryItem>> GetInventoryBySessionIdAsync(Guid sessionId);
         Task<Item?> GetItemAsync(Guid id);
-        Task DeleteInventoryItemAsync(InventoryItem inventoryItem);
+        Task ClearInventoryAsync(Guid sessionId);
     }
 }

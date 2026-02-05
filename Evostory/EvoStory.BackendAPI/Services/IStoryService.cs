@@ -1,4 +1,5 @@
 ﻿using EvoStory.BackendAPI.DTO;
+using EvoStory.Database.Models;
 using System.Threading.Tasks;
 
 namespace EvoStory.BackendAPI.Services

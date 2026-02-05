@@ -60,11 +60,12 @@ namespace EvoStory.BackendAPI.Controllers
                 var result = await sceneService.GetScene(sceneId);
                 return Ok(result);
             }
-            catch (RepositoryException ex)
+            catch (KeyNotFoundException ex)
             {
                 logger.LogError($"No scene with Id: {sceneId} found.");
                 return NotFound(ex.Message);
             }
+
         }
 
         /// <summary>
